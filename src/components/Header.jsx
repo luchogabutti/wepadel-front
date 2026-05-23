@@ -1,16 +1,14 @@
 import { Link } from 'react-router-dom'
-import { theme, colors, typography } from '../styles/theme'
-
-const { borderRadius, spacing } = theme
+import './Header.css'
 
 function SearchIcon() {
   return (
     <svg
+      className="header__search-icon"
       width="18"
       height="18"
       viewBox="0 0 24 24"
       fill="none"
-      stroke={colors.textSecondary}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -63,109 +61,35 @@ function UserIcon() {
   )
 }
 
-const iconButtonStyle = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: spacing[10],
-  height: spacing[10],
-  padding: 0,
-  border: 'none',
-  borderRadius: borderRadius.md,
-  background: 'transparent',
-  color: colors.textPrimary,
-  cursor: 'pointer',
-}
-
 export function Header() {
   return (
-    <header
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 10,
-        width: '100%',
-        boxSizing: 'border-box',
-        display: 'flex',
-        alignItems: 'center',
-        gap: spacing[4],
-        padding: `${spacing[3]}px ${spacing[4]}px`,
-        backgroundColor: colors.background,
-        boxShadow: theme.shadows.sm,
-      }}
-    >
-      <Link
-        to="/"
-        style={{
-          flexShrink: 0,
-          fontFamily: typography.fontFamily,
-          fontSize: '22px',
-          fontWeight: 700,
-          color: colors.textPrimary,
-          textDecoration: 'none',
-          letterSpacing: '-0.02em',
-        }}
-      >
+    <header className="header">
+      <Link to="/" className="header__logo">
         WePadel
       </Link>
 
       <form
+        className="header__search-form"
         role="search"
-        style={{
-          flex: 1,
-          display: 'flex',
-          justifyContent: 'center',
-          maxWidth: '480px',
-          margin: '0 auto',
-        }}
         onSubmit={(e) => e.preventDefault()}
       >
-        <label
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: spacing[2],
-            width: '100%',
-            padding: `${spacing[2]}px ${spacing[4]}px`,
-            backgroundColor: colors.secondary,
-            borderRadius: borderRadius.full,
-            cursor: 'text',
-          }}
-        >
+        <label className="header__search">
           <SearchIcon />
           <input
             type="search"
             name="q"
-            className="header-search-input"
+            className="header__search-input"
             placeholder="Buscar"
             aria-label="Buscar"
-            style={{
-              flex: 1,
-              minWidth: 0,
-              border: 'none',
-              outline: 'none',
-              background: 'transparent',
-              fontFamily: typography.fontFamily,
-              fontSize: '15px',
-              fontWeight: 400,
-              color: colors.textPrimary,
-            }}
           />
         </label>
       </form>
 
-      <div
-        style={{
-          flexShrink: 0,
-          display: 'flex',
-          alignItems: 'center',
-          gap: spacing[2],
-        }}
-      >
-        <Link to="/carrito" aria-label="Carrito" style={iconButtonStyle}>
+      <div className="header__actions">
+        <Link to="/carrito" className="header__icon-btn" aria-label="Carrito">
           <CartIcon />
         </Link>
-        <Link to="/login" aria-label="Perfil" style={iconButtonStyle}>
+        <Link to="/login" className="header__icon-btn" aria-label="Perfil">
           <UserIcon />
         </Link>
       </div>

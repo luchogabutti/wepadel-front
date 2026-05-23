@@ -1,21 +1,12 @@
 import { Outlet } from 'react-router-dom'
 import { Header } from '../components/Header'
-import { colors, typography } from '../styles/theme'
+import './MainLayout.css'
 
 export function MainLayout() {
   return (
-    <div
-      style={{
-        minHeight: '100svh',
-        width: '100%',
-        boxSizing: 'border-box',
-        backgroundColor: colors.background,
-        color: colors.textPrimary,
-        fontFamily: typography.fontFamily,
-      }}
-    >
+    <div className="layout">
       <Header />
-      <main>
+      <main className="layout__main">
         <Outlet />
       </main>
     </div>

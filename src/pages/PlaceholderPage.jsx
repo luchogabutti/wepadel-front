@@ -1,16 +1,9 @@
-import { colors } from '../styles/theme'
+import './Page.css'
 
 export function PlaceholderPage({ title = 'Página' }) {
   return (
-    <div style={{ padding: 24, textAlign: 'left' }}>
-      <h1
-        style={{
-          fontSize: '21px',
-          fontWeight: 600,
-          margin: 0,
-          color: colors.textSecondary,
-        }}
-      >
+    <div className="page">
+      <h1 className="page__title page__title--muted">
         {title} (próximamente)
       </h1>
     </div>
