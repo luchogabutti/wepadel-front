@@ -1,0 +1,11 @@
+.layout {
+  min-height: 100svh;
+  width: 100%;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+}
+
+.layout__main {
+  display: block;
+}
