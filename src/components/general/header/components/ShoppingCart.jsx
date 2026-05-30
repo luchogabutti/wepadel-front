@@ -2,7 +2,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { IconButton } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-export function ShoppingCart() {
+export const ShoppingCart = () => {
   return (
     <IconButton 
       component={RouterLink} 

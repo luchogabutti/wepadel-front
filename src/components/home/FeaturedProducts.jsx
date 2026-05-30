@@ -35,7 +35,7 @@ const products = [
   },
 ];
 
-export function FeaturedProducts() {
+export const FeaturedProducts = () => {
   return (
     <Box component="section" sx={{ py: 6, px: { xs: 2, md: 4 }, backgroundColor: 'background.default' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mb: 4 }}>

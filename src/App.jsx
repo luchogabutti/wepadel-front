@@ -4,7 +4,7 @@ import { HomePage } from './pages/HomePage'
 import { TestPage } from './pages/TestPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 
-function App() {
+const App = () => {
   return (
     <Routes>
       <Route element={<MainLayout />}>

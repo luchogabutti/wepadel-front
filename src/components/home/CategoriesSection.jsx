@@ -24,7 +24,7 @@ const categories = [
   },
 ];
 
-export function CategoriesSection() {
+export const CategoriesSection = () => {
   return (
     <Box component="section" sx={{ py: 6, bgcolor: 'background.default' }}>
       <Typography variant="h4" sx={{ textAlign: 'center', mb: 6, fontWeight: 700, px: 2 }}>
@@ -93,7 +93,7 @@ export function CategoriesSection() {
                   p: 4,
                 }}
               >
-                <IconComponent sx={{ fontSize: 52, color: 'white', mb: 2 }} />
+                <IconComponent sx={{ fontSize: 52, color: 'primary.light', mb: 2 }} />
                 <Typography variant="h5" sx={{ fontWeight: 700, color: 'white', letterSpacing: '0.05em' }}>
                   {cat.title}
                 </Typography>

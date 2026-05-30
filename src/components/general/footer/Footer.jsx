@@ -2,7 +2,7 @@ import { Box, Typography, Link, IconButton, Container } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
-function FooterColumn({ title, children }) {
+const FooterColumn = ({ title, children }) => {
   return (
     <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
       <Typography
@@ -24,7 +24,7 @@ function FooterColumn({ title, children }) {
   );
 }
 
-export function Footer() {
+export const Footer = () => {
   return (
     <Box
       component="footer"

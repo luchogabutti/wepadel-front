@@ -4,7 +4,7 @@ import { FeaturedProducts } from '../components/home/FeaturedProducts';
 import { CategoriesSection } from '../components/home/CategoriesSection';
 import { Footer } from '../components/general/footer/Footer';
 
-export function HomePage() {
+export const HomePage = () => {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <HeroSection />

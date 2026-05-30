@@ -2,7 +2,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { IconButton } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-export function UserLogin() {
+export const UserLogin = () => {
   return (
     <IconButton 
       component={RouterLink} 

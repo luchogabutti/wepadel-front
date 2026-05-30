@@ -1,7 +1,7 @@
 import { Box, InputBase, alpha } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-export function HeaderSearch() {
+export const HeaderSearch = () => {
   return (
     <Box
       sx={{

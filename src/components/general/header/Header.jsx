@@ -4,7 +4,7 @@ import { UserLogin } from './components/UserLogin';
 import { ShoppingCart } from './components/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
 
-export function Header() {
+export const Header = () => {
   return (
     <AppBar position="fixed" elevation={0} sx={{ height: '64px', justifyContent: 'center' }}>
       <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 6 } }}>

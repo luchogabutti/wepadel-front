@@ -1,6 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
 
-export function HeroSection() {
+export const HeroSection = () => {
   return (
     <Box
       component="section"
