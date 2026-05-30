@@ -1,14 +1,14 @@
 import { Outlet } from 'react-router-dom'
-import { Header } from '../components/Header'
-import './MainLayout.css'
+import { Header } from '../components/general/header/Header'
+import { Box, Container } from '@mui/material'
 
 export function MainLayout() {
   return (
-    <div className="layout">
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
-      <main className="layout__main">
+      <Container component="main" maxWidth="lg" sx={{ flexGrow: 1, py: 4 }}>
         <Outlet />
-      </main>
-    </div>
+      </Container>
+    </Box>
   )
 }

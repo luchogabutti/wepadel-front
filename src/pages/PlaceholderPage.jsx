@@ -1,11 +1,11 @@
-import './Page.css'
+import { Box, Typography } from '@mui/material'
 
 export function PlaceholderPage({ title = 'Página' }) {
   return (
-    <div className="page">
-      <h1 className="page__title page__title--muted">
+    <Box sx={{ textAlign: 'left' }}>
+      <Typography variant="h5" component="h1" color="text.secondary" sx={{ fontWeight: 600 }}>
         {title} (próximamente)
-      </h1>
-    </div>
+      </Typography>
+    </Box>
   )
 }

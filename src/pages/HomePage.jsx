@@ -1,16 +1,18 @@
-import { Link } from 'react-router-dom'
-import './Page.css'
+import { Link as RouterLink } from 'react-router-dom'
+import { Box, Typography, Link } from '@mui/material'
 
 export function HomePage() {
   return (
-    <div className="page">
-      <h1 className="page__title">Inicio</h1>
-      <p className="page__text">
+    <Box sx={{ textAlign: 'left' }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+        Inicio
+      </Typography>
+      <Typography variant="body1" color="text.secondary" paragraph>
         Ruta de prueba: <strong>/</strong>
-      </p>
-      <Link to="/prueba" className="page__link">
+      </Typography>
+      <Link component={RouterLink} to="/prueba" color="primary" sx={{ fontWeight: 500, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
         Ir a /prueba
       </Link>
-    </div>
+    </Box>
   )
 }

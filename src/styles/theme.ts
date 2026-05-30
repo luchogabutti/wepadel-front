@@ -1,83 +1,68 @@
-/**
- * Paleta de colores de marca, fondos, texto y estados semánticos (error, acciones).
- */
-export const colors = {
-  primary: '#0066FF',
-  secondary: '#141C24',
-  tertiary: '#00CC99',
-  background: '#0C0B12',
-  textPrimary: '#FFFFFF',
-  textSecondary: '#A0AEC0',
-  error: '#FF4444',
-};
+import { createTheme } from '@mui/material/styles';
 
 /**
- * Escala tipográfica con la familia Outfit y roles jerárquicos (títulos, cuerpo, etiquetas).
+ * Tema global de MUI para WePadel basado en los tokens originales.
  */
-export const typography = {
-  fontFamily: 'Outfit',
-  headline: {
-    fontWeight: { min: 700, max: 800 },
-    fontSize: { min: 28, max: 48 },
+export const theme = createTheme({
+  palette: {
+    // Al ser un fondo oscuro y texto claro, habilitamos el modo oscuro por defecto
+    mode: 'dark',
+    primary: {
+      main: '#0066FF',
+    },
+    secondary: {
+      main: '#141C24',
+    },
+    // En MUI, podemos mapear tu color terciario a "success" o "info" si se usa para eso,
+    // o declararlo dentro de la paleta.
+    success: {
+      main: '#00CC99', 
+    },
+    error: {
+      main: '#FF4444',
+    },
+    background: {
+      default: '#0C0B12',
+      paper: '#141C24', // Usado para tarjetas, modales y headers
+    },
+    text: {
+      primary: '#FFFFFF',
+      secondary: '#A0AEC0',
+    },
   },
-  subheading: {
-    fontWeight: { min: 600, max: 600 },
-    fontSize: { min: 18, max: 24 },
+  typography: {
+    fontFamily: '"Outfit", system-ui, sans-serif',
+    h1: {
+      fontWeight: 700,
+      fontSize: '38px',
+    },
+    subtitle1: {
+      fontWeight: 600,
+      fontSize: '21px',
+    },
+    body1: {
+      fontWeight: 400,
+      fontSize: '15px',
+    },
+    caption: {
+      fontWeight: 500,
+      fontSize: '12px',
+    },
   },
-  body: {
-    fontWeight: { min: 400, max: 400 },
-    fontSize: { min: 14, max: 16 },
+  shape: {
+    // MUI usa un número base para el radio de los bordes.
+    // 8px corresponde a tu "md".
+    borderRadius: 8,
   },
-  label: {
-    fontWeight: { min: 500, max: 500 },
-    fontSize: { min: 11, max: 13 },
+  components: {
+    // Aquí puedes personalizar componentes específicos
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8, // --radius-md
+          textTransform: 'none', // Quita las mayúsculas automáticas de MUI
+        },
+      },
+    },
   },
-};
-
-/**
- * Radios de borde para botones, tarjetas, inputs y contenedores redondeados.
- */
-const borderRadius = {
-  none: 0,
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 16,
-  full: 9999,
-};
-
-/**
- * Sombras de elevación para capas superpuestas (tarjetas, modales, elementos flotantes).
- */
-const shadows = {
-  sm: '0 1px 2px rgba(0, 0, 0, 0.4)',
-  md: '0 4px 12px rgba(0, 0, 0, 0.45)',
-  lg: '0 8px 24px rgba(0, 0, 0, 0.5)',
-  glow: '0 0 20px rgba(0, 102, 255, 0.35)',
-};
-
-/**
- * Escala de espaciado (márgenes, padding y gaps) basada en unidad de 4px.
- */
-const spacing = {
-  0: 0,
-  1: 4,
-  2: 8,
-  3: 12,
-  4: 16,
-  5: 20,
-  6: 24,
-  8: 32,
-  10: 40,
-  12: 48,
-  16: 64,
-};
-
-/** Tokens de diseño centralizados para la aplicación WePadel. */
-export const theme = {
-  colors,
-  typography,
-  borderRadius,
-  shadows,
-  spacing,
-};
+});
