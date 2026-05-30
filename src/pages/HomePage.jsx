@@ -1,16 +1,16 @@
-import { Link } from 'react-router-dom'
-import './Page.css'
+import { Box } from '@mui/material';
+import { HeroSection } from '../components/home/HeroSection';
+import { FeaturedProducts } from '../components/home/FeaturedProducts';
+import { CategoriesSection } from '../components/home/CategoriesSection';
+import { Footer } from '../components/general/footer/Footer';
 
-export function HomePage() {
+export const HomePage = () => {
   return (
-    <div className="page">
-      <h1 className="page__title">Inicio</h1>
-      <p className="page__text">
-        Ruta de prueba: <strong>/</strong>
-      </p>
-      <Link to="/prueba" className="page__link">
-        Ir a /prueba
-      </Link>
-    </div>
-  )
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <HeroSection />
+      <FeaturedProducts />
+      <CategoriesSection />
+      <Footer />
+    </Box>
+  );
 }
