@@ -1,6 +1,7 @@
 import { Box, Typography, Button, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { Link } from 'react-router-dom';
 
 const products = [
   {
@@ -48,6 +49,8 @@ export const FeaturedProducts = () => {
           </Typography>
         </Box>
         <Button
+          component={Link}
+          to="/catalogo"
           endIcon={<ArrowForwardIcon sx={{ fontSize: '16px' }} />}
           sx={{ fontWeight: 'bold', whiteSpace: 'nowrap', color: 'primary.light' }}
         >

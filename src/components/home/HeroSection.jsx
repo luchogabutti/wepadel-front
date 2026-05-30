@@ -1,6 +1,13 @@
 import { Box, Typography, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleSeeCatalog = () => {
+    navigate('/catalogo');
+  };
+
   return (
     <Box
       component="section"
@@ -78,7 +85,7 @@ export const HeroSection = () => {
           golpe. Tecnología de fibra de carbono de última generación.
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-          <Button variant="contained" color="primary" sx={{ px: 4, py: 2, fontWeight: 'bold' }}>
+          <Button variant="contained" color="primary" sx={{ px: 4, py: 2, fontWeight: 'bold' }} onClick={handleSeeCatalog}>
             Ver catálogo
           </Button>
           <Button

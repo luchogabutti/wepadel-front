@@ -12,12 +12,26 @@ export const Header = () => {
           variant="h5"
           component={RouterLink}
           to="/"
-          sx={{ textDecoration: 'none', color: 'primary.light', fontWeight: 800, letterSpacing: '-0.02em' }}
+          sx={{
+            textDecoration: 'none',
+            color: 'primary.light',
+            fontWeight: 800,
+            letterSpacing: '-0.02em',
+            fontSize: { xs: '18px', sm: '24px' },
+            whiteSpace: 'nowrap',
+          }}
         >
           WePadel
         </Typography>
 
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, flex: 1, maxWidth: '600px', mx: 4 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flex: 1,
+            maxWidth: { xs: '130px', sm: '260px', md: '600px' },
+            mx: { xs: 1, sm: 2, md: 4 },
+          }}
+        >
           <Box
             sx={{
               display: 'flex',
