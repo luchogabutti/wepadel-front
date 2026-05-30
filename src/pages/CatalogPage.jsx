@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -22,9 +23,11 @@ const categories = [
   { id: 'pelotas', label: 'PELOTAS', active: false },
 ];
 
-const mockProducts = [
+const allProducts = [
+  // PALETAS
   {
     id: 1,
+    categoryId: 'paletas',
     title: 'Pro Carbon Stealth',
     category: 'Paleta de Ataque',
     price: 349.99,
@@ -35,6 +38,7 @@ const mockProducts = [
   },
   {
     id: 2,
+    categoryId: 'paletas',
     title: 'Viper Ultra Light',
     category: 'Paleta de Control',
     price: 289.00,
@@ -45,6 +49,7 @@ const mockProducts = [
   },
   {
     id: 3,
+    categoryId: 'paletas',
     title: 'Neon Strike Hybrid',
     category: 'Paleta Híbrida',
     price: 315.00,
@@ -55,6 +60,7 @@ const mockProducts = [
   },
   {
     id: 4,
+    categoryId: 'paletas',
     title: 'Apex Control Orange',
     category: 'Paleta de Control',
     price: 245.00,
@@ -65,6 +71,7 @@ const mockProducts = [
   },
   {
     id: 5,
+    categoryId: 'paletas',
     title: 'Toxic Green Power',
     category: 'Paleta de Potencia',
     price: 399.00,
@@ -75,6 +82,7 @@ const mockProducts = [
   },
   {
     id: 6,
+    categoryId: 'paletas',
     title: 'Shadow Master X',
     category: 'Paleta de Control',
     price: 425.00,
@@ -83,13 +91,142 @@ const mockProducts = [
     img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB7fZlU74dofDzZEurUTUK9OF8JaJo8fS5421Tp3C7x7IQ4zi9_70UUTtEgKbV9m8YvMrtsukuL4zzJUdw18Miad9t4m94bRjBDoU9qIXMFK6ATuD2-AF0YMhK6sf5sf6QwfrvZOtftmAU9H8HP38E89MW82FkMzXCekgIPtKJn4uD5CBCmdAPV6BCIcWZ5RTF1xblnWIoytdma7xbhoPNXTBOHYY-1o1ejKfUUGjX0qIhB5d_pzlYYXZaYZuojZLYCJ8EF21TGSMTC',
     inStock: true,
   },
+  // ACCESORIOS
+  {
+    id: 7,
+    categoryId: 'accesorios',
+    title: 'Overgrip Ultra-Tack',
+    category: 'Grip',
+    price: 12.00,
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXypnPtcErqB05TGTM9EDj44pvzdZIVDxMb7cRHE1KrMP_2RYjxi0wpswxwLVJyskgXZEwb6PnDE9_LvU5WkOwE7-X7mdvVy65P0s8lPzqR5yYY57OLolpY3aY-nGv_ltKKEM6tqQXWHou06Asmk0bb9CJ8VPzcCwKOxzDY8l4HS5oYojeAof4X3cS483V4XSvedheq2_4T5CIl6-5o38ysdzd4SvmZ7GvnDJE4LT3yc6xI9mGx1vLctWYWk3M51hh6yV_IKSu',
+    inStock: true,
+  },
+  {
+    id: 8,
+    categoryId: 'accesorios',
+    title: 'Bolso Pro Tour 2024',
+    category: 'Bolso',
+    price: 89.00,
+    oldPrice: 110.00,
+    badge: '19% OFF',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFE3tklQN7U-ivmNkLhFz9ZwFlnN0dY4DhqfZ8KIG_w7N6zb2pzaM_5ITEeuv-5niLJ7BVpgZfJ73F3CCswxbxkYD8hRTfEzlfKYVgwKuSx61kVIgacCFbRCMwZPhiXNWrxSaRgCqiFPiytqi56R_PiBA8LnlO-fM0aSsz3yHPtCVmnhdiF6KkZq0i7c5YFaaFMDO9OpctDI8OKOrRQqC9e7Z5oGrnY8UWGJzm4TMFrwZGQYMn49R5JbXPNJ9hoyZdKsfwPSOL1OPM',
+    inStock: true,
+  },
+  {
+    id: 9,
+    categoryId: 'accesorios',
+    title: 'Zapatillas Speed X3',
+    category: 'Calzado',
+    price: 145.00,
+    oldPrice: 175.00,
+    badge: '17% OFF',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXypnPtcErqB05TGTM9EDj44pvzdZIVDxMb7cRHE1KrMP_2RYjxi0wpswxwLVJyskgXZEwb6PnDE9_LvU5WkOwE7-X7mdvVy65P0s8lPzqR5yYY57OLolpY3aY-nGv_ltKKEM6tqQXWHou06Asmk0bb9CJ8VPzcCwKOxzDY8l4HS5oYojeAof4X3cS483V4XSvedheq2_4T5CIl6-5o38ysdzd4SvmZ7GvnDJE4LT3yc6xI9mGx1vLctWYWk3M51hh6yV_IKSu',
+    inStock: true,
+  },
+  {
+    id: 10,
+    categoryId: 'accesorios',
+    title: 'Muñequera Elite Pack',
+    category: 'Protección',
+    price: 18.00,
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFE3tklQN7U-ivmNkLhFz9ZwFlnN0dY4DhqfZ8KIG_w7N6zb2pzaM_5ITEeuv-5niLJ7BVpgZfJ73F3CCswxbxkYD8hRTfEzlfKYVgwKuSx61kVIgacCFbRCMwZPhiXNWrxSaRgCqiFPiytqi56R_PiBA8LnlO-fM0aSsz3yHPtCVmnhdiF6KkZq0i7c5YFaaFMDO9OpctDI8OKOrRQqC9e7Z5oGrnY8UWGJzm4TMFrwZGQYMn49R5JbXPNJ9hoyZdKsfwPSOL1OPM',
+    inStock: false,
+  },
+  {
+    id: 11,
+    categoryId: 'accesorios',
+    title: 'Protector de Paleta Carbon',
+    category: 'Protección',
+    price: 24.00,
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXypnPtcErqB05TGTM9EDj44pvzdZIVDxMb7cRHE1KrMP_2RYjxi0wpswxwLVJyskgXZEwb6PnDE9_LvU5WkOwE7-X7mdvVy65P0s8lPzqR5yYY57OLolpY3aY-nGv_ltKKEM6tqQXWHou06Asmk0bb9CJ8VPzcCwKOxzDY8l4HS5oYojeAof4X3cS483V4XSvedheq2_4T5CIl6-5o38ysdzd4SvmZ7GvnDJE4LT3yc6xI9mGx1vLctWYWk3M51hh6yV_IKSu',
+    inStock: true,
+  },
+  {
+    id: 12,
+    categoryId: 'accesorios',
+    title: 'Bolso Compact Training',
+    category: 'Bolso',
+    price: 55.00,
+    oldPrice: 68.00,
+    badge: '19% OFF',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFE3tklQN7U-ivmNkLhFz9ZwFlnN0dY4DhqfZ8KIG_w7N6zb2pzaM_5ITEeuv-5niLJ7BVpgZfJ73F3CCswxbxkYD8hRTfEzlfKYVgwKuSx61kVIgacCFbRCMwZPhiXNWrxSaRgCqiFPiytqi56R_PiBA8LnlO-fM0aSsz3yHPtCVmnhdiF6KkZq0i7c5YFaaFMDO9OpctDI8OKOrRQqC9e7Z5oGrnY8UWGJzm4TMFrwZGQYMn49R5JbXPNJ9hoyZdKsfwPSOL1OPM',
+    inStock: true,
+  },
+  // PELOTAS
+  {
+    id: 13,
+    categoryId: 'pelotas',
+    title: 'Master Tour Pack x3',
+    category: 'Competición',
+    price: 15.00,
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwhFL8X7mj_JWYy12l9tfBKQzs5PLliUkicLnkHqNf5_3skuYd9TXlqI9spd7vjxhPthvOnxwDawbGR3vL0iEb6_vbhdX9XiUZVfLm0llgi6Kjd8jElAbtannG6R9PJBsTGtkj8lgZEFYAhQ7HQTkOfXPybdKW_A5c1dNmQPFXLSn5-9UkLyGPussTcwj_cCcBvkIxexi-eJhe4s7Fw4MHZvIvHMxESdbF8fiVK4N0wSep5FdsJiIRs5ypytjO7Gq8c5WE48Wnz-ep',
+    inStock: true,
+  },
+  {
+    id: 14,
+    categoryId: 'pelotas',
+    title: 'Speed Pro x6',
+    category: 'Entrenamiento',
+    price: 22.00,
+    oldPrice: 28.00,
+    badge: '21% OFF',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwhFL8X7mj_JWYy12l9tfBKQzs5PLliUkicLnkHqNf5_3skuYd9TXlqI9spd7vjxhPthvOnxwDawbGR3vL0iEb6_vbhdX9XiUZVfLm0llgi6Kjd8jElAbtannG6R9PJBsTGtkj8lgZEFYAhQ7HQTkOfXPybdKW_A5c1dNmQPFXLSn5-9UkLyGPussTcwj_cCcBvkIxexi-eJhe4s7Fw4MHZvIvHMxESdbF8fiVK4N0wSep5FdsJiIRs5ypytjO7Gq8c5WE48Wnz-ep',
+    inStock: true,
+  },
+  {
+    id: 15,
+    categoryId: 'pelotas',
+    title: 'Elite Match x3',
+    category: 'Competición',
+    price: 19.00,
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwhFL8X7mj_JWYy12l9tfBKQzs5PLliUkicLnkHqNf5_3skuYd9TXlqI9spd7vjxhPthvOnxwDawbGR3vL0iEb6_vbhdX9XiUZVfLm0llgi6Kjd8jElAbtannG6R9PJBsTGtkj8lgZEFYAhQ7HQTkOfXPybdKW_A5c1dNmQPFXLSn5-9UkLyGPussTcwj_cCcBvkIxexi-eJhe4s7Fw4MHZvIvHMxESdbF8fiVK4N0wSep5FdsJiIRs5ypytjO7Gq8c5WE48Wnz-ep',
+    inStock: true,
+  },
+  {
+    id: 16,
+    categoryId: 'pelotas',
+    title: 'Training Pack x12',
+    category: 'Entrenamiento',
+    price: 35.00,
+    oldPrice: 42.00,
+    badge: '17% OFF',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwhFL8X7mj_JWYy12l9tfBKQzs5PLliUkicLnkHqNf5_3skuYd9TXlqI9spd7vjxhPthvOnxwDawbGR3vL0iEb6_vbhdX9XiUZVfLm0llgi6Kjd8jElAbtannG6R9PJBsTGtkj8lgZEFYAhQ7HQTkOfXPybdKW_A5c1dNmQPFXLSn5-9UkLyGPussTcwj_cCcBvkIxexi-eJhe4s7Fw4MHZvIvHMxESdbF8fiVK4N0wSep5FdsJiIRs5ypytjO7Gq8c5WE48Wnz-ep',
+    inStock: true,
+  },
+  {
+    id: 17,
+    categoryId: 'pelotas',
+    title: 'WePadel Official x3',
+    category: 'Competición',
+    price: 17.00,
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwhFL8X7mj_JWYy12l9tfBKQzs5PLliUkicLnkHqNf5_3skuYd9TXlqI9spd7vjxhPthvOnxwDawbGR3vL0iEb6_vbhdX9XiUZVfLm0llgi6Kjd8jElAbtannG6R9PJBsTGtkj8lgZEFYAhQ7HQTkOfXPybdKW_A5c1dNmQPFXLSn5-9UkLyGPussTcwj_cCcBvkIxexi-eJhe4s7Fw4MHZvIvHMxESdbF8fiVK4N0wSep5FdsJiIRs5ypytjO7Gq8c5WE48Wnz-ep',
+    inStock: false,
+  },
+  {
+    id: 18,
+    categoryId: 'pelotas',
+    title: 'Junior Pack x6',
+    category: 'Entrenamiento',
+    price: 14.00,
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwhFL8X7mj_JWYy12l9tfBKQzs5PLliUkicLnkHqNf5_3skuYd9TXlqI9spd7vjxhPthvOnxwDawbGR3vL0iEb6_vbhdX9XiUZVfLm0llgi6Kjd8jElAbtannG6R9PJBsTGtkj8lgZEFYAhQ7HQTkOfXPybdKW_A5c1dNmQPFXLSn5-9UkLyGPussTcwj_cCcBvkIxexi-eJhe4s7Fw4MHZvIvHMxESdbF8fiVK4N0wSep5FdsJiIRs5ypytjO7Gq8c5WE48Wnz-ep',
+    inStock: true,
+  },
 ];
 
 export const CatalogPage = () => {
-  const [activeCategory, setActiveCategory] = useState('paletas');
+  const { categoria } = useParams();
+  const navigate = useNavigate();
+  const activeCategory = categoria ?? 'paletas';
+
   const [sortOrder, setSortOrder] = useState('default');
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [visibleCount, setVisibleCount] = useState(6);
+
+  useEffect(() => {
+    setSortOrder('default');
+    setPriceRange([0, 500]);
+    setVisibleCount(6);
+  }, [activeCategory]);
 
   const handlePriceChange = (event, newValue) => {
     setPriceRange(newValue);
@@ -100,14 +237,12 @@ export const CatalogPage = () => {
   };
 
   const filteredAndSortedProducts = useMemo(() => {
-    let result = [...mockProducts];
+    let result = allProducts.filter((p) => p.categoryId === activeCategory);
 
-    // Filter by price
     result = result.filter(
       (product) => product.price >= priceRange[0] && product.price <= priceRange[1]
     );
 
-    // Sort
     if (sortOrder === 'asc') {
       result.sort((a, b) => a.price - b.price);
     } else if (sortOrder === 'desc') {
@@ -115,7 +250,7 @@ export const CatalogPage = () => {
     }
 
     return result;
-  }, [sortOrder, priceRange]);
+  }, [activeCategory, sortOrder, priceRange]);
 
   const displayedProducts = useMemo(() => {
     return filteredAndSortedProducts.slice(0, visibleCount);
@@ -147,7 +282,7 @@ export const CatalogPage = () => {
             <Box
               key={cat.id}
               component="button"
-              onClick={() => setActiveCategory(cat.id)}
+              onClick={() => navigate(cat.id === 'paletas' ? '/catalogo' : `/catalogo/${cat.id}`)}
               sx={{
                 background: 'none',
                 border: 'none',
@@ -296,7 +431,7 @@ export const CatalogPage = () => {
                 color: 'text.primary',
               }}
             >
-              Elite Paletas
+              Elite {categories.find(cat => cat.id === activeCategory)?.label}
             </Typography>
             <Typography variant="body1" sx={{ color: 'text.secondary' }}>
               Equipamiento de alto rendimiento para jugadores exigentes.
@@ -496,9 +631,9 @@ export const CatalogPage = () => {
                         {product.title}
                       </Typography>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexShrink: 0 }}>
-                        <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'success.main' }} />
-                        <Typography variant="caption" sx={{ color: 'success.main', fontWeight: 600, fontSize: '11px' }}>
-                          Stock disponible
+                        <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: product.inStock ? 'success.main' : 'error.main' }} />
+                        <Typography variant="caption" sx={{ color: product.inStock ? 'success.main' : 'error.main', fontWeight: 600, fontSize: '11px' }}>
+                          {product.inStock ? 'Stock disponible' : 'Sin stock'}
                         </Typography>
                       </Box>
                     </Box>

@@ -10,6 +10,7 @@ const App = () => {
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="catalogo" element={<CatalogPage />} />
+        <Route path="catalogo/:categoria" element={<CatalogPage />} />
         <Route path="carrito" element={<PlaceholderPage title="Carrito" />} />
         <Route path="login" element={<PlaceholderPage title="Iniciar sesión" />} />
       </Route>
