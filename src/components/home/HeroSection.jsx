@@ -8,6 +8,7 @@ export const HeroSection = () => {
         position: 'relative',
         width: '100%',
         height: { xs: '819px', md: '921px' },
+        mt: '-64px',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
