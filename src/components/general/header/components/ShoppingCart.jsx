@@ -9,7 +9,7 @@ export function ShoppingCart() {
       to="/carrito" 
       aria-label="Carrito"
       sx={{
-        color: 'inherit',
+        color: 'primary.light',
         transition: 'opacity 0.2s ease-in-out',
         '&:hover': {
           opacity: 0.7,

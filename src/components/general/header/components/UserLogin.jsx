@@ -9,7 +9,7 @@ export function UserLogin() {
       to="/login" 
       aria-label="Perfil"
       sx={{
-        color: 'inherit',
+        color: 'primary.light',
         transition: 'opacity 0.2s ease-in-out',
         '&:hover': {
           opacity: 0.7,

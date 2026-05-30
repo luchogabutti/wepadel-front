@@ -1,44 +1,47 @@
-import { AppBar, Toolbar, Typography, Grid, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, InputBase } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserLogin } from './components/UserLogin';
 import { ShoppingCart } from './components/ShoppingCart';
-import { HeaderSearch } from './components/HeaderSearch';
+import SearchIcon from '@mui/icons-material/Search';
 
 export function Header() {
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Grid container alignItems="center" justifyContent="space-between" spacing={2}>
+    <AppBar position="fixed" elevation={0} sx={{ height: '64px', justifyContent: 'center' }}>
+      <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 6 } }}>
+        <Typography
+          variant="h5"
+          component={RouterLink}
+          to="/"
+          sx={{ textDecoration: 'none', color: 'primary.light', fontWeight: 800, letterSpacing: '-0.02em' }}
+        >
+          WePadel
+        </Typography>
 
-          <Grid item xs={6} sm={3} md={2}>
-            <Typography
-              variant="h6"
-              component={RouterLink}
-              to="/"
-              sx={{ textDecoration: 'none', color: 'inherit', fontWeight: 'bold' }}
-            >
-              WePadel
-            </Typography>
-          </Grid>
-
-          <Grid
-            item
-            xs={0} sm={6} md={7}
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, flex: 1, maxWidth: '600px', mx: 4 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              bgcolor: '#2a2931',
+              px: 2,
+              py: 0.5,
+              borderRadius: '9999px',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
           >
-            <HeaderSearch />
-          </Grid>
+            <SearchIcon sx={{ color: 'text.secondary', fontSize: '20px', mr: 1 }} />
+            <InputBase
+              placeholder="Buscar"
+              sx={{ color: 'text.primary', width: '100%', fontSize: '14px' }}
+            />
+          </Box>
+        </Box>
 
-          <Grid
-            item
-            xs={6} sm={3} md={3}
-            sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}
-          >
-            <ShoppingCart />
-            <UserLogin />
-          </Grid>
-
-        </Grid>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <ShoppingCart />
+          <UserLogin />
+        </Box>
       </Toolbar>
     </AppBar>
   );

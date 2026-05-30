@@ -1,18 +1,16 @@
-import { Link as RouterLink } from 'react-router-dom'
-import { Box, Typography, Link } from '@mui/material'
+import { Box } from '@mui/material';
+import { HeroSection } from '../components/home/HeroSection';
+import { FeaturedProducts } from '../components/home/FeaturedProducts';
+import { CategoriesSection } from '../components/home/CategoriesSection';
+import { Footer } from '../components/general/footer/Footer';
 
 export function HomePage() {
   return (
-    <Box sx={{ textAlign: 'left' }}>
-      <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-        Inicio
-      </Typography>
-      <Typography variant="body1" color="text.secondary" paragraph>
-        Ruta de prueba: <strong>/</strong>
-      </Typography>
-      <Link component={RouterLink} to="/prueba" color="primary" sx={{ fontWeight: 500, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
-        Ir a /prueba
-      </Link>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <HeroSection />
+      <FeaturedProducts />
+      <CategoriesSection />
+      <Footer />
     </Box>
-  )
+  );
 }
