@@ -2,12 +2,14 @@ import { Routes, Route } from 'react-router-dom'
 import { MainLayout } from './layouts/MainLayout'
 import { HomePage } from './pages/HomePage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
+import { CatalogPage } from './pages/CatalogPage'
 
 const App = () => {
   return (
     <Routes>
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="catalogo" element={<CatalogPage />} />
         <Route path="carrito" element={<PlaceholderPage title="Carrito" />} />
         <Route path="login" element={<PlaceholderPage title="Iniciar sesión" />} />
       </Route>
