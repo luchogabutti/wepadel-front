@@ -1,8 +1,8 @@
 import { AppBar, Toolbar, Typography, Grid, Box } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { HeaderSearch } from './components/HeaderSearch/HeaderSearch';
-import { ShoppingCart } from './components/ShoppingCart/ShoppingCart';
-import { UserLogin } from './components/UserLogin/UserLogin';
+import { UserLogin } from './components/UserLogin';
+import { ShoppingCart } from './components/ShoppingCart';
+import { HeaderSearch } from './components/HeaderSearch';
 
 export function Header() {
   return (

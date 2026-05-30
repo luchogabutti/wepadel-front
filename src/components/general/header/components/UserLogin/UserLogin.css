@@ -1,8 +1,0 @@
-.user-login-wrapper {
-  color: inherit;
-  transition: opacity 0.2s ease-in-out;
-}
-
-.user-login-wrapper:hover {
-  opacity: 0.7;
-}

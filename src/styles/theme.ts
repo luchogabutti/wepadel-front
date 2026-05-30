@@ -55,12 +55,24 @@ export const theme = createTheme({
     borderRadius: 8,
   },
   components: {
-    // Aquí puedes personalizar componentes específicos
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          // Desactiva el overlay blanco por defecto del modo oscuro en MUI
+          backgroundImage: 'none',
+          // Top Bar: Blurred backdrop (Glassmorphism) with 80% opacity Deep Black
+          backgroundColor: 'rgba(12, 11, 18, 0.8)',
+          backdropFilter: 'blur(12px)',
+          boxShadow: 'none',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8, // --radius-md
-          textTransform: 'none', // Quita las mayúsculas automáticas de MUI
+          borderRadius: 8,
+          textTransform: 'none',
         },
       },
     },
