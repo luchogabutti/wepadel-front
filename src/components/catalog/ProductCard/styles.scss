@@ -1,0 +1,129 @@
+.card {
+  background-color: var(--mui-palette-background-paper);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 102, 255, 0.2);
+    border-color: rgba(0, 102, 255, 0.2);
+
+    .productImg {
+      transform: scale(1.06);
+    }
+
+    .floatingCartBtn {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.imageArea {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background-color: #19171e;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.productImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background-color: var(--mui-palette-success-main);
+  color: var(--mui-palette-success-contrastText);
+  font-weight: 700;
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  letter-spacing: 0.05em;
+}
+
+// position/opacity/transform only — bgcolor, color, p, and hover bgcolor stay in sx
+.floatingCartBtn {
+  position: absolute !important;
+  bottom: 16px !important;
+  right: 16px !important;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+.content {
+  padding: 20px;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.productTitle {
+  color: var(--mui-palette-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stockInfo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.stockDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.inStock {
+    background-color: var(--mui-palette-success-main);
+  }
+
+  &.outOfStock {
+    background-color: var(--mui-palette-error-main);
+  }
+}
+
+.stockLabel {
+  &.inStock {
+    color: var(--mui-palette-success-main);
+  }
+
+  &.outOfStock {
+    color: var(--mui-palette-error-main);
+  }
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.price {
+  color: var(--mui-palette-primary-main);
+}
+
+.oldPrice {
+  color: var(--mui-palette-text-secondary);
+  text-decoration: line-through;
+}
