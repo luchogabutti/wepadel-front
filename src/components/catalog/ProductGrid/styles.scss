@@ -1,0 +1,121 @@
+.product-grid {
+  display: flex;
+  flex: 1;
+  gap: 32px;
+
+  .sidebar {
+    display: none;
+    flex-direction: column;
+    width: 260px;
+    flex-shrink: 0;
+    background-color: var(--mui-palette-background-paper);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 24px;
+    height: fit-content;
+    position: sticky;
+    top: 84px;
+
+    @media (min-width: 1200px) {
+      display: flex;
+    }
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .filter-section {
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .filter-label {
+    color: var(--mui-palette-text-secondary);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .price-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .main {
+    flex-grow: 1;
+  }
+
+  .mobile-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: var(--mui-palette-background-paper);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 16px 24px;
+    gap: 32px;
+    width: 100%;
+    margin-bottom: 32px;
+
+    @media (min-width: 600px) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    @media (min-width: 1200px) {
+      display: none;
+    }
+  }
+
+  .mobile-sort {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobile-price {
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+
+    @media (min-width: 600px) {
+      flex-grow: 0;
+    }
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+
+    @media (min-width: 600px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 900px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .empty {
+    padding: 64px 0;
+    text-align: center;
+  }
+
+  .empty-message {
+    color: var(--mui-palette-text-secondary);
+    margin-bottom: 16px;
+  }
+
+  .load-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+  }
+}
