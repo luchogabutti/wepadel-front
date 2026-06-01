@@ -75,5 +75,34 @@ export const theme = createTheme({
         },
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor: '#201f26',
+          borderRadius: 8,
+          color: '#e5e1eb',
+          '& fieldset': {
+            borderColor: 'rgba(66, 70, 86, 0.3)',
+          },
+          '&:hover fieldset': {
+            borderColor: 'rgba(179, 197, 255, 0.3)',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: theme.palette.primary.main,
+            boxShadow: '0 0 0 1px rgba(0, 102, 255, 0.3)',
+          },
+        }),
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: '#c2c6d8',
+          '&.Mui-focused': {
+            color: theme.palette.primary.light,
+          },
+        }),
+      },
+    },
   },
 });

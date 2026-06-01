@@ -3,18 +3,20 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
 import { featuredProducts } from '../../../data/productsData';
+import { useCart } from '../../../context/CartContext';
 import './styles.scss';
 
 export const FeaturedProducts = () => {
   const navigate = useNavigate();
+  const { addItem } = useCart();
 
   const handleCardClick = (productId) => {
     navigate(`/producto/${productId}`);
   };
 
-  const handleCartClick = (e) => {
+  const handleCartClick = (e, product) => {
     e.stopPropagation();
-    // Logic for adding to cart
+    addItem(product);
   };
 
   return (
@@ -59,7 +61,8 @@ export const FeaturedProducts = () => {
               )}
               <IconButton
                 className="cart-button"
-                onClick={handleCartClick}
+                onClick={(e) => handleCartClick(e, product)}
+                aria-label="Agregar al carrito"
                 sx={{
                   bgcolor: 'primary.main',
                   color: 'primary.contrastText',
