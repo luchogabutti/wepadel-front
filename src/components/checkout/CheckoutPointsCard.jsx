@@ -70,15 +70,7 @@ export const CheckoutPointsCard = ({
           placeholder="Cantidad de puntos"
           value={manualPoints}
           onChange={(e) => onManualPointsChange(e.target.value)}
-          sx={{
-            mt: 1,
-            '& .MuiOutlinedInput-root': {
-              bgcolor: '#201f26',
-              borderRadius: 2,
-              color: '#e5e1eb',
-              '& fieldset': { borderColor: 'rgba(66, 70, 86, 0.3)' },
-            },
-          }}
+          sx={{ mt: 1 }}
         />
       )}
     </Box>
