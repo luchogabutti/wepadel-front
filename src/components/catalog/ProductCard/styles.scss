@@ -1,4 +1,4 @@
-.card {
+.product-card {
   background-color: var(--mui-palette-background-paper);
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -11,119 +11,119 @@
     box-shadow: 0 8px 24px rgba(0, 102, 255, 0.2);
     border-color: rgba(0, 102, 255, 0.2);
 
-    .productImg {
+    .img {
       transform: scale(1.06);
     }
 
-    .floatingCartBtn {
+    .cart-btn {
       opacity: 1;
       transform: translateY(0);
     }
   }
-}
 
-.imageArea {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  background-color: #19171e;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .image {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background-color: #19171e;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.productImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
+  .img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
 
-.badge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background-color: var(--mui-palette-success-main);
-  color: var(--mui-palette-success-contrastText);
-  font-weight: 700;
-  font-size: 11px;
-  padding: 4px 12px;
-  border-radius: 99px;
-  letter-spacing: 0.05em;
-}
-
-// position/opacity/transform only — bgcolor, color, p, and hover bgcolor stay in sx
-.floatingCartBtn {
-  position: absolute !important;
-  bottom: 16px !important;
-  right: 16px !important;
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.3s ease, transform 0.3s ease !important;
-}
-
-.content {
-  padding: 20px;
-}
-
-.titleRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  gap: 8px;
-}
-
-.productTitle {
-  color: var(--mui-palette-text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.stockInfo {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
-.stockDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-
-  &.inStock {
+  .badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
     background-color: var(--mui-palette-success-main);
+    color: var(--mui-palette-success-contrastText);
+    font-weight: 700;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    letter-spacing: 0.05em;
   }
 
-  &.outOfStock {
-    background-color: var(--mui-palette-error-main);
+  // position/opacity/transform only — bgcolor, color, p, and hover bgcolor stay in sx
+  .cart-btn {
+    position: absolute !important;
+    bottom: 16px !important;
+    right: 16px !important;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease !important;
   }
-}
 
-.stockLabel {
-  &.inStock {
-    color: var(--mui-palette-success-main);
+  .content {
+    padding: 20px;
   }
 
-  &.outOfStock {
-    color: var(--mui-palette-error-main);
+  .title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 8px;
   }
-}
 
-.priceRow {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-}
+  .title {
+    color: var(--mui-palette-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.price {
-  color: var(--mui-palette-primary-main);
-}
+  .stock-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
 
-.oldPrice {
-  color: var(--mui-palette-text-secondary);
-  text-decoration: line-through;
+  .stock-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &.in-stock {
+      background-color: var(--mui-palette-success-main);
+    }
+
+    &.out-of-stock {
+      background-color: var(--mui-palette-error-main);
+    }
+  }
+
+  .stock-label {
+    &.in-stock {
+      color: var(--mui-palette-success-main);
+    }
+
+    &.out-of-stock {
+      color: var(--mui-palette-error-main);
+    }
+  }
+
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .price {
+    color: var(--mui-palette-primary-main);
+  }
+
+  .old-price {
+    color: var(--mui-palette-text-secondary);
+    text-decoration: line-through;
+  }
 }

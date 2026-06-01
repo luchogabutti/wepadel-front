@@ -4,12 +4,12 @@ import './styles.scss';
 
 export const ProductCard = ({ product }) => {
   return (
-    <div className="card">
-      <div className="imageArea">
+    <div className="product-card">
+      <div className="image">
         <img
           src={product.img}
           alt={product.title}
-          className="productImg"
+          className="img"
         />
 
         {product.badge && (
@@ -17,7 +17,7 @@ export const ProductCard = ({ product }) => {
         )}
 
         <IconButton
-          className="floatingCartBtn"
+          className="cart-btn"
           sx={{
             bgcolor: 'primary.main',
             color: 'primary.contrastText',
@@ -30,24 +30,24 @@ export const ProductCard = ({ product }) => {
       </div>
 
       <div className="content">
-        <div className="titleRow">
+        <div className="title-row">
           <Typography
             variant="body1"
-            className="productTitle"
+            className="title"
             sx={{ fontWeight: 700, fontSize: '16px' }}
           >
             {product.title}
           </Typography>
-          <div className="stockInfo">
+          <div className="stock-info">
             <div
-              className={`stockDot ${
-                product.inStock ? 'inStock' : 'outOfStock'
+              className={`stock-dot ${
+                product.inStock ? 'in-stock' : 'out-of-stock'
               }`}
             />
             <Typography
               variant="caption"
-              className={`stockLabel ${
-                product.inStock ? 'inStock' : 'outOfStock'
+              className={`stock-label ${
+                product.inStock ? 'in-stock' : 'out-of-stock'
               }`}
               sx={{ fontWeight: 600, fontSize: '11px' }}
             >
@@ -56,7 +56,7 @@ export const ProductCard = ({ product }) => {
           </div>
         </div>
 
-        <div className="priceRow">
+        <div className="price-row">
           <Typography
             variant="h5"
             className="price"
@@ -67,7 +67,7 @@ export const ProductCard = ({ product }) => {
           {product.oldPrice && (
             <Typography
               variant="body2"
-              className="oldPrice"
+              className="old-price"
               sx={{ fontSize: '12px' }}
             >
               ${product.oldPrice.toFixed(2)}
