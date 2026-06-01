@@ -1,5 +1,6 @@
 import { Typography, Button, TextField } from '@mui/material';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import { formatShippingField, isShippingValid } from '../../../utils/checkoutValidation';
 import './styles.scss';
 
 export const CheckoutShippingCard = ({
@@ -10,6 +11,18 @@ export const CheckoutShippingCard = ({
   onEdit,
 }) => {
   const formattedAddress = `${shippingData.address}, ${shippingData.city}`;
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    if (!isShippingValid(shippingData)) return;
+
+    onSubmit();
+  };
+
+  const handleChange = (field) => (e) => {
+    onFieldChange(field, formatShippingField(field, e.target.value));
+  };
 
   if (isCompleted) {
     return (
@@ -41,40 +54,48 @@ export const CheckoutShippingCard = ({
         </Typography>
       </div>
 
-      <div className="form-fields">
+      <form onSubmit={handleFormSubmit} className="form-fields">
         <TextField
           fullWidth
+          required
           label="Dirección"
           placeholder="Av. Libertador 1234"
           value={shippingData.address}
-          onChange={(e) => onFieldChange('address', e.target.value)}
+          onChange={handleChange('address')}
         />
         <div className="form-row">
           <TextField
             fullWidth
+            required
             label="Ciudad"
             placeholder="CABA"
             value={shippingData.city}
-            onChange={(e) => onFieldChange('city', e.target.value)}
+            onChange={handleChange('city')}
           />
           <TextField
             fullWidth
+            required
             label="Código postal"
             placeholder="1425"
             value={shippingData.postalCode}
-            onChange={(e) => onFieldChange('postalCode', e.target.value)}
+            onChange={handleChange('postalCode')}
+            inputProps={{
+              inputMode: 'numeric',
+              pattern: '[0-9]{4,8}',
+              maxLength: 8,
+              title: 'Ingresá entre 4 y 8 números',
+            }}
           />
         </div>
         <Button
+          type="submit"
           variant="contained"
-          onClick={onSubmit}
-          disabled={!shippingData.address.trim() || !shippingData.city.trim()}
           className="submit-btn"
           sx={{ bgcolor: 'primary.main', color: '#f8f7ff', '&:hover': { bgcolor: 'primary.main' } }}
         >
           Confirmar envío
         </Button>
-      </div>
+      </form>
     </div>
   );
 };

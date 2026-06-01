@@ -64,9 +64,22 @@
     font-weight: 700;
     box-shadow: 0 8px 24px rgba(0, 102, 255, 0.2);
 
-    &:hover {
+    &:hover:not(:disabled) {
       transform: scale(1.02);
     }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  }
+
+  .validation-hint {
+    margin-top: 12px;
+    text-align: center;
+    color: #8c90a1;
+    font-size: 13px;
   }
 
   .secure-notice {

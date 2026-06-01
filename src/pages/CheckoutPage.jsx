@@ -12,6 +12,7 @@ import {
   CHECKOUT_SUMMARY,
   AVAILABLE_POINTS,
 } from '../data/cartData';
+import { isCheckoutReady, isShippingValid, getPointsDiscount } from '../utils/checkoutValidation';
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -36,15 +37,33 @@ export const CheckoutPage = () => {
 
   const subtotal = CHECKOUT_SUMMARY.subtotal;
 
-  const pointsDiscount = usePoints ? CHECKOUT_SUMMARY.pointsDiscount : 0;
+  const pointsDiscount = getPointsDiscount(
+    usePoints,
+    pointsMode,
+    manualPoints,
+    AVAILABLE_POINTS
+  );
 
-  const total = usePoints ? CHECKOUT_SUMMARY.total : CHECKOUT_SUMMARY.subtotal;
+  const total = Math.max(subtotal - pointsDiscount, 0);
+
+  const canConfirm = isCheckoutReady(shippingCompleted, formData, {
+    usePoints,
+    pointsMode,
+    manualPoints,
+    availablePoints: AVAILABLE_POINTS,
+  });
+
+  const handleManualPointsChange = (value) => {
+    setManualPoints(value);
+  };
 
   const handleShippingFieldChange = (field, value) => {
     setShippingData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleShippingSubmit = () => {
+    if (!isShippingValid(shippingData)) return;
+
     setShippingCompleted(true);
   };
 
@@ -57,6 +76,17 @@ export const CheckoutPage = () => {
   };
 
   const handleConfirm = () => {
+    if (
+      !isCheckoutReady(shippingCompleted, formData, {
+        usePoints,
+        pointsMode,
+        manualPoints,
+        availablePoints: AVAILABLE_POINTS,
+      })
+    ) {
+      return;
+    }
+
     const orderId = `WP-${Math.floor(10000 + Math.random() * 90000)}`;
     navigate(`/checkout/confirmacion/${orderId}`, {
       state: { pointsEarned: 120 },
@@ -109,12 +139,13 @@ export const CheckoutPage = () => {
               pointsMode={pointsMode}
               onPointsModeChange={setPointsMode}
               manualPoints={manualPoints}
-              onManualPointsChange={setManualPoints}
+              onManualPointsChange={handleManualPointsChange}
             />
             <CheckoutPaymentDetail
               subtotal={subtotal}
               pointsDiscount={pointsDiscount}
               total={total}
+              canConfirm={canConfirm}
               onConfirm={handleConfirm}
             />
           </Box>
