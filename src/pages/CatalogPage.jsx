@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
-import { CategoryTabs } from '../components/catalog/CategoryTabs';
+import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
 import { ProductGrid } from '../components/catalog/ProductGrid';
 import { Footer } from '../components/general/footer/Footer';
 import { categories } from '../data/categoriesData';
