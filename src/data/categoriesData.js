@@ -15,13 +15,13 @@ export const categories = [
     label: 'ACCESORIOS',
     icon: FitnessCenterIcon,
     img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFE3tklQN7U-ivmNkLhFz9ZwFlnN0dY4DhqfZ8KIG_w7N6zb2pzaM_5ITEeuv-5niLJ7BVpgZfJ73F3CCswxbxkYD8hRTfEzlfKYVgwKuSx61kVIgacCFbRCMwZPhiXNWrxSaRgCqiFPiytqi56R_PiBA8LnlO-fM0aSsz3yHPtCVmnhdiF6KkZq0i7c5YFaaFMDO9OpctDI8OKOrRQqC9e7Z5oGrnY8UWGJzm4TMFrwZGQYMn49R5JbXPNJ9hoyZdKsfwPSOL1OPM',
-    path: '#catalogo/accesiorios',
+    path: '/catalogo/accesorios',
   },
   {
     id: 'pelotas',
     label: 'PELOTAS',
     icon: SportsTennisIcon,
     img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCcIwhbeLBb9-7Z1Y9OKmPRAwl4iNRjMpe6II3UUNm2_Co3oMFwt_z0l9Dr5PQ5Z0VVEqdW2QfZz1VDppNCuPTejusMSVmakC3DAHKG22UI6BJbPJqxxVFpuhyJA7pajmnU9oqukmMbJ9GmdJFRt_3bpYc6iuYbl-r83DIWTgRQmbvV6AdAJn-lULhJb7vI2IEurv1yFmfSihJCMqlQozTo-BWuBs8GEg9PIsTn9VEsufbeUxsQxLcM_vnfbD2P8H0VvPSFoJdX-LZ5',
-    path: '#catalogo/pelotas',
+    path: '/catalogo/pelotas',
   },
 ];
