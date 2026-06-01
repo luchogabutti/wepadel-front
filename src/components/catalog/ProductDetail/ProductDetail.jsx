@@ -8,12 +8,14 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useCart } from '../../../context/CartContext';
 import './styles.scss';
 
 export const ProductDetail = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedImg, setSelectedImg] = useState(product?.img || '');
   const navigate = useNavigate();
+  const { addItem } = useCart();
 
   if (!product) {
     return (
@@ -35,6 +37,10 @@ export const ProductDetail = ({ product }) => {
 
   const handleIncrease = () => {
     setQuantity(quantity + 1);
+  };
+
+  const handleAddToCart = () => {
+    addItem(product, quantity);
   };
 
   // Generate mock specifications based on category
@@ -197,6 +203,7 @@ export const ProductDetail = ({ product }) => {
               startIcon={<AddShoppingCartIcon />}
               className="add-to-cart-btn"
               disabled={product.inStock === false}
+              onClick={handleAddToCart}
               sx={{ fontWeight: 'bold', textTransform: 'none' }}
             >
               Agregar al carrito

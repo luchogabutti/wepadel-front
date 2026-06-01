@@ -1,10 +1,12 @@
 import { Typography, IconButton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../../../context/CartContext';
 import './styles.scss';
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const { addItem } = useCart();
 
   const handleCardClick = () => {
     navigate(`/producto/${product.id}`);
@@ -12,7 +14,7 @@ export const ProductCard = ({ product }) => {
 
   const handleCartClick = (e) => {
     e.stopPropagation();
-    // Logic for adding to cart
+    addItem(product);
   };
 
   return (
@@ -31,6 +33,8 @@ export const ProductCard = ({ product }) => {
         <IconButton
           className="cart-btn"
           onClick={handleCartClick}
+          disabled={!product.inStock}
+          aria-label="Agregar al carrito"
           sx={{
             bgcolor: 'primary.main',
             color: 'primary.contrastText',
