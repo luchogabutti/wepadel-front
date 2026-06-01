@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
-import { HeroSection } from '../components/home/HeroSection';
-import { FeaturedProducts } from '../components/home/FeaturedProducts';
-import { CategoriesSection } from '../components/home/CategoriesSection';
+import { HeroSection } from '../components/home/HeroSection/HeroSection';
+import { FeaturedProducts } from '../components/home/FeaturedProducts/FeaturedProducts';
+import { CategoriesSection } from '../components/home/CategoriesSection/CategoriesSection';
 import { Footer } from '../components/general/footer/Footer';
 
 export const HomePage = () => {
@@ -14,3 +14,4 @@ export const HomePage = () => {
     </Box>
   );
 }
+

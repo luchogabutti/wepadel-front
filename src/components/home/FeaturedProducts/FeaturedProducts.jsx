@@ -1,7 +1,8 @@
-import { Box, Typography, Button, IconButton } from '@mui/material';
+import { Typography, Button, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link } from 'react-router-dom';
+import './styles.scss';
 
 const products = [
   {
@@ -38,130 +39,83 @@ const products = [
 
 export const FeaturedProducts = () => {
   return (
-    <Box component="section" sx={{ py: 6, px: { xs: 2, md: 4 }, backgroundColor: 'background.default' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mb: 4 }}>
-        <Box>
-          <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
+    <section className="featured-products">
+      <div className="section-header">
+        <div className="header-info">
+          <Typography variant="h4" className="header-title" sx={{ fontWeight: 700 }}>
             Productos destacados
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography variant="body2" className="header-subtitle">
             La selección de élite para esta temporada.
           </Typography>
-        </Box>
+        </div>
         <Button
           component={Link}
           to="/catalogo"
           endIcon={<ArrowForwardIcon sx={{ fontSize: '16px' }} />}
-          sx={{ fontWeight: 'bold', whiteSpace: 'nowrap', color: 'primary.light' }}
+          className="view-all-btn"
+          sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}
         >
           VER TODO
         </Button>
-      </Box>
+      </div>
 
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
-          },
-          gap: 2,
-        }}
-      >
+      <div className="products-grid">
         {products.map((product) => (
-          <Box
+          <div
             key={product.id}
-            sx={{
-              bgcolor: 'background.paper',
-              borderRadius: 2,
-              border: '1px solid rgba(160, 174, 192, 0.1)',
-              overflow: 'hidden',
-              cursor: 'pointer',
-              transition: 'box-shadow 0.3s',
-              '&:hover': {
-                boxShadow: '0 8px 24px rgba(0,102,255,0.15)',
-                '& .product-image': { transform: 'scale(1.07)' },
-                '& .cart-button': { opacity: 1, transform: 'translateY(0)' },
-              },
-            }}
+            className="product-card"
           >
-            <Box sx={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden', bgcolor: '#201f26' }}>
-              <Box
-                component="img"
+            <div className="product-image-container">
+              <img
                 src={product.img}
                 alt={product.title}
                 className="product-image"
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  transition: 'transform 0.5s ease',
-                }}
               />
               {product.badge && (
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 12,
-                    left: 12,
-                    bgcolor: 'primary.main',
-                    color: 'primary.contrastText',
-                    px: 1,
-                    py: 0.5,
-                    borderRadius: 1,
-                    fontSize: '11px',
-                    fontWeight: 'bold',
-                    letterSpacing: '0.05em',
-                  }}
-                >
+                <span className="product-badge">
                   {product.badge}
-                </Box>
+                </span>
               )}
               <IconButton
                 className="cart-button"
                 sx={{
-                  position: 'absolute',
-                  bottom: 12,
-                  right: 12,
                   bgcolor: 'primary.main',
                   color: 'primary.contrastText',
-                  opacity: 0,
-                  transform: 'translateY(12px)',
-                  transition: 'all 0.3s',
                   '&:hover': { bgcolor: 'primary.light' },
                 }}
               >
                 <AddShoppingCartIcon fontSize="small" />
               </IconButton>
-            </Box>
+            </div>
 
-            <Box sx={{ p: 2 }}>
+            <div className="product-info">
               <Typography
                 variant="caption"
-                sx={{ color: 'text.secondary', textTransform: 'uppercase', display: 'block', mb: 0.5, letterSpacing: '0.08em' }}
+                className="product-category"
               >
                 {product.category}
               </Typography>
               <Typography
                 variant="body1"
-                sx={{ fontWeight: 600, mb: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                className="product-title"
               >
                 {product.title}
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography variant="body1" sx={{ fontWeight: 700 }}>
+              <div className="product-price-container">
+                <Typography variant="body1" className="product-price">
                   {product.price}
                 </Typography>
                 {product.oldPrice && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary', textDecoration: 'line-through' }}>
+                  <Typography variant="body2" className="product-old-price">
                     {product.oldPrice}
                   </Typography>
                 )}
-              </Box>
-            </Box>
-          </Box>
+              </div>
+            </div>
+          </div>
         ))}
-      </Box>
-    </Box>
+      </div>
+    </section>
   );
-}
+};
