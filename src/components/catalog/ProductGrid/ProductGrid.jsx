@@ -28,11 +28,15 @@ export const ProductGrid = ({ products, activeCategory }) => {
       (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
     );
 
-    if (sortOrder === 'asc') result.sort((a, b) => a.price - b.price);
-    else if (sortOrder === 'desc') result.sort((a, b) => b.price - a.price);
+    if (sortOrder === 'asc') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortOrder === 'desc') {
+      result.sort((a, b) => b.price - a.price);
+    }
 
     return result;
   }, [products, sortOrder, priceRange]);
+
 
   const displayed = filteredAndSorted.slice(0, visibleCount);
 

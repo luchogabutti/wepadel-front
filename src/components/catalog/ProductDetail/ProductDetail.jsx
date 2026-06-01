@@ -27,8 +27,11 @@ export const ProductDetail = ({ product }) => {
   }
 
   const handleDecrease = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
   };
+
 
   const handleIncrease = () => {
     setQuantity(quantity + 1);
