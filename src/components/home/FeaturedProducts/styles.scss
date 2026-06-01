@@ -1,0 +1,133 @@
+.featured-products {
+  padding: 48px 16px;
+  background-color: var(--mui-palette-background-default);
+
+  @media (min-width: 900px) {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+  }
+
+  .header-info {
+    .header-title {
+      margin-bottom: 4px;
+    }
+
+    .header-subtitle {
+      color: var(--mui-palette-text-secondary);
+    }
+  }
+
+  .view-all-btn {
+    color: var(--mui-palette-primary-light) !important;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+
+    @media (min-width: 900px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .product-card {
+    background-color: var(--mui-palette-background-paper);
+    border-radius: 16px;
+    border: 1px solid rgba(160, 174, 192, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 102, 255, 0.15);
+
+      .product-image {
+        transform: scale(1.07);
+      }
+
+      .cart-button {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  .product-image-container {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #201f26;
+  }
+
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .product-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+  }
+
+  .cart-button {
+    position: absolute !important;
+    bottom: 12px !important;
+    right: 12px !important;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.3s ease !important;
+  }
+
+  .product-info {
+    padding: 16px;
+  }
+
+  .product-category {
+    color: var(--mui-palette-text-secondary);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 0.08em;
+  }
+
+  .product-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .product-price-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .product-price {
+    font-weight: 700;
+  }
+
+  .product-old-price {
+    color: var(--mui-palette-text-secondary);
+    text-decoration: line-through;
+  }
+}

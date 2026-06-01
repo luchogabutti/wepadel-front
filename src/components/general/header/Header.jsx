@@ -1,48 +1,39 @@
-import { AppBar, Toolbar, Typography, Box, InputBase } from '@mui/material';
+import { AppBar, Toolbar, Typography, InputBase } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserLogin } from './components/UserLogin';
 import { ShoppingCart } from './components/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
+import './styles.scss';
 
 export const Header = () => {
   return (
-    <AppBar position="fixed" elevation={0} sx={{ height: '64px', justifyContent: 'center' }}>
-      <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 6 } }}>
+    <AppBar position="fixed" elevation={0} className="app-header-bar">
+      <Toolbar className="header-toolbar">
         <Typography
           variant="h5"
           component={RouterLink}
           to="/"
-          sx={{ textDecoration: 'none', color: 'primary.light', fontWeight: 800, letterSpacing: '-0.02em' }}
+          className="header-logo"
         >
           WePadel
         </Typography>
 
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, flex: 1, maxWidth: '600px', mx: 4 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              bgcolor: '#2a2931',
-              px: 2,
-              py: 0.5,
-              borderRadius: '9999px',
-              border: '1px solid rgba(255, 255, 255, 0.1)'
-            }}
-          >
+        <div className="search-container">
+          <div className="search-box">
             <SearchIcon sx={{ color: 'text.secondary', fontSize: '20px', mr: 1 }} />
             <InputBase
               placeholder="Buscar"
-              sx={{ color: 'text.primary', width: '100%', fontSize: '14px' }}
+              className="search-input"
             />
-          </Box>
-        </Box>
+          </div>
+        </div>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <div className="header-actions">
           <ShoppingCart />
           <UserLogin />
-        </Box>
+        </div>
       </Toolbar>
     </AppBar>
   );
-}
+};
+
