@@ -1,0 +1,105 @@
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  width: 256px;
+  background-color: #141C24; // Gris Carbón — background.paper
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 24px 16px;
+  position: fixed;
+  left: 0;
+  top: 64px;
+  z-index: 10;
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+
+  @media (max-width: 900px) {
+    display: none; // Hide on tablet and mobile
+  }
+
+  .user-profile-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    .user-avatar {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 16px;
+      border: 2px solid #0066FF;
+      padding: 2px;
+    }
+
+    .user-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+
+    .user-email {
+      color: #A0AEC0;
+      font-size: 13px;
+    }
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: #A0AEC0;
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+        color: #FFFFFF;
+      }
+
+      &.active {
+        background-color: #0066FF;
+        color: #FFFFFF;
+        font-weight: 700;
+
+        .nav-icon {
+          color: #FFFFFF;
+        }
+
+        .nav-text {
+          font-weight: 700;
+        }
+      }
+
+      .nav-icon {
+        font-size: 22px;
+        color: inherit;
+      }
+
+      .nav-text {
+        font-size: 15px;
+        font-family: 'Outfit', sans-serif;
+      }
+
+      &.logout-item {
+        margin-top: auto;
+        margin-bottom: 16px;
+        color: rgba(255, 68, 68, 0.85);
+
+        &:hover {
+          background-color: rgba(255, 68, 68, 0.1);
+          color: #FF4444;
+        }
+      }
+    }
+  }
+}

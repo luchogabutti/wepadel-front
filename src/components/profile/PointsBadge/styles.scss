@@ -1,0 +1,83 @@
+.points-badge-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px;
+  background: linear-gradient(135deg, #0066FF 0%, #003fa4 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 102, 255, 0.25);
+  gap: 24px;
+  width: 100%;
+
+  .card-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), transparent);
+    pointer-events: none;
+  }
+
+  .points-header {
+    z-index: 2;
+
+    .points-label {
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .points-display {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+
+      .points-number {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 64px;
+        line-height: 1;
+        color: #FFFFFF;
+      }
+
+      .points-unit {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        color: #FFFFFF;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .points-details-box {
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+
+    .details-title {
+      color: #FFFFFF;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .details-text {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+  }
+
+  .redeem-btn {
+    z-index: 2;
+  }
+}
