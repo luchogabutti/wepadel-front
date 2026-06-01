@@ -7,8 +7,7 @@ import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 import { CatalogPage } from './pages/CatalogPage'
 import { ProductDetailPage } from './pages/ProductDetailPage'
-import { LoginPage } from './pages/LoginPage'
-import { RegisterPage } from './pages/RegisterPage'
+import { AuthPage } from './pages/AuthPage'
 
 const App = () => {
   return (
@@ -21,8 +20,8 @@ const App = () => {
         <Route path="catalogo" element={<CatalogPage />} />
         <Route path="catalogo/:categoria" element={<CatalogPage />} />
         <Route path="producto/:id" element={<ProductDetailPage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="registro" element={<RegisterPage />} />
+        <Route path="login" element={<AuthPage />} />
+        <Route path="registro" element={<AuthPage />} />
         <Route path="mis-pedidos" element={<PlaceholderPage title="Mis pedidos" />} />
       </Route>
     </Routes>
