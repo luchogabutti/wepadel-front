@@ -1,11 +1,22 @@
 import { Typography, Button, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { featuredProducts } from '../../../data/productsData';
 import './styles.scss';
 
 export const FeaturedProducts = () => {
+  const navigate = useNavigate();
+
+  const handleCardClick = (productId) => {
+    navigate(`/producto/${productId}`);
+  };
+
+  const handleCartClick = (e) => {
+    e.stopPropagation();
+    // Logic for adding to cart
+  };
+
   return (
     <section className="featured-products">
       <div className="section-header">
@@ -33,6 +44,7 @@ export const FeaturedProducts = () => {
           <div
             key={product.id}
             className="product-card"
+            onClick={() => handleCardClick(product.id)}
           >
             <div className="product-image-container">
               <img
@@ -47,6 +59,7 @@ export const FeaturedProducts = () => {
               )}
               <IconButton
                 className="cart-button"
+                onClick={handleCartClick}
                 sx={{
                   bgcolor: 'primary.main',
                   color: 'primary.contrastText',
@@ -87,4 +100,3 @@ export const FeaturedProducts = () => {
     </section>
   );
 };
-

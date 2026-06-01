@@ -1,10 +1,22 @@
 import { Typography, IconButton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { useNavigate } from 'react-router-dom';
 import './styles.scss';
 
 export const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/producto/${product.id}`);
+  };
+
+  const handleCartClick = (e) => {
+    e.stopPropagation();
+    // Logic for adding to cart
+  };
+
   return (
-    <div className="product-card">
+    <div className="product-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="image">
         <img
           src={product.img}
@@ -18,6 +30,7 @@ export const ProductCard = ({ product }) => {
 
         <IconButton
           className="cart-btn"
+          onClick={handleCartClick}
           sx={{
             bgcolor: 'primary.main',
             color: 'primary.contrastText',
@@ -40,15 +53,13 @@ export const ProductCard = ({ product }) => {
           </Typography>
           <div className="stock-info">
             <div
-              className={`stock-dot ${
-                product.inStock ? 'in-stock' : 'out-of-stock'
-              }`}
+              className={`stock-dot ${product.inStock ? 'in-stock' : 'out-of-stock'
+                }`}
             />
             <Typography
               variant="caption"
-              className={`stock-label ${
-                product.inStock ? 'in-stock' : 'out-of-stock'
-              }`}
+              className={`stock-label ${product.inStock ? 'in-stock' : 'out-of-stock'
+                }`}
               sx={{ fontWeight: 600, fontSize: '11px' }}
             >
               {product.inStock ? 'Stock disponible' : 'Sin stock'}

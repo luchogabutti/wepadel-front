@@ -3,6 +3,7 @@ import { MainLayout } from './layouts/MainLayout'
 import { HomePage } from './pages/HomePage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 import { CatalogPage } from './pages/CatalogPage'
+import { ProductDetailPage } from './pages/ProductDetailPage'
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
         <Route index element={<HomePage />} />
         <Route path="catalogo" element={<CatalogPage />} />
         <Route path="catalogo/:categoria" element={<CatalogPage />} />
+        <Route path="producto/:id" element={<ProductDetailPage />} />
         <Route path="carrito" element={<PlaceholderPage title="Carrito" />} />
         <Route path="login" element={<PlaceholderPage title="Iniciar sesión" />} />
       </Route>
