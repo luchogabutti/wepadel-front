@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Typography, Button, TextField } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Form } from '../../general/Form/Form';
+import { Form } from '../Form/Form';
 import './styles.scss';
 
 export const RegisterForm = () => {

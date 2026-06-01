@@ -4,7 +4,7 @@ import { Box, Typography, Button, TextField, FormControlLabel, Checkbox, Link, I
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LockIcon from '@mui/icons-material/Lock';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Form } from '../../general/Form/Form';
+import { Form } from '../Form/Form';
 import './styles.scss';
 
 export const LoginForm = () => {
