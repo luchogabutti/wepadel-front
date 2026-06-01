@@ -19,7 +19,7 @@ export const RegisterPage = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          py: 8,
+          py: { xs: 4, sm: 8 },
           px: 2,
         }}
       >

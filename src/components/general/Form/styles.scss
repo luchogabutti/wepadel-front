@@ -31,12 +31,15 @@
   }
 
   .form-card {
-    background: rgba(20, 28, 36, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(160, 174, 192, 0.1);
-    border-radius: 12px;
+    background-color: #1c1b22;
+    border: 1px solid rgba(66, 70, 86, 0.1);
+    border-radius: 24px;
     padding: 32px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    @media (max-width: 480px) {
+      padding: 20px;
+      border-radius: 16px;
+    }
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -48,12 +51,12 @@
         font-family: 'Outfit', sans-serif;
         font-weight: 700;
         font-size: 28px;
-        color: #FFFFFF;
+        color: #e5e1eb;
         margin-bottom: 6px;
       }
 
       .card-subtitle {
-        color: #A0AEC0;
+        color: #c2c6d8;
         font-size: 14px;
         line-height: 1.4;
       }

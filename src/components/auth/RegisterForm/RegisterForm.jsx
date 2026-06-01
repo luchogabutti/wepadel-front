@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Typography, Button, TextField, Grid } from '@mui/material';
+import { Box, Typography, Button, TextField } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../../general/Form/Form';
 import './styles.scss';
@@ -27,86 +27,36 @@ export const RegisterForm = () => {
       maxWidth="450px"
     >
       {/* Nombre y Apellido lado a lado */}
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Box className="form-field">
-            <Typography variant="caption" className="field-label">
-              Nombre
-            </Typography>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Ej: Juan"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  bgcolor: '#141C24',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(160, 174, 192, 0.1)',
-                  '& fieldset': { border: 'none' },
-                  '&:hover': {
-                    border: '1px solid rgba(0, 102, 255, 0.5)',
-                  },
-                  '&.Mui-focused': {
-                    border: '2px solid #0066FF',
-                  },
-                },
-                '& .MuiInputBase-input': {
-                  color: '#FFFFFF',
-                  py: '12px',
-                  px: '16px',
-                  '&::placeholder': {
-                    color: '#A0AEC0',
-                    opacity: 1,
-                  },
-                },
-              }}
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={6}>
-          <Box className="form-field">
-            <Typography variant="caption" className="field-label">
-              Apellido
-            </Typography>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Ej: Perez"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  bgcolor: '#141C24',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(160, 174, 192, 0.1)',
-                  '& fieldset': { border: 'none' },
-                  '&:hover': {
-                    border: '1px solid rgba(0, 102, 255, 0.5)',
-                  },
-                  '&.Mui-focused': {
-                    border: '2px solid #0066FF',
-                  },
-                },
-                '& .MuiInputBase-input': {
-                  color: '#FFFFFF',
-                  py: '12px',
-                  px: '16px',
-                  '&::placeholder': {
-                    color: '#A0AEC0',
-                    opacity: 1,
-                  },
-                },
-              }}
-            />
-          </Box>
-        </Grid>
-      </Grid>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+        <Box className="form-field" sx={{ flex: 1 }}>
+          <Typography variant="caption" className="field-label">
+            Nombre
+          </Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Ej: Juan"
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+        </Box>
+        <Box className="form-field" sx={{ flex: 1 }}>
+          <Typography variant="caption" className="field-label">
+            Apellido
+          </Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Ej: Perez"
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+        </Box>
+      </Box>
 
       {/* Email */}
       <Box className="form-field">
@@ -121,29 +71,6 @@ export const RegisterForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              bgcolor: '#141C24',
-              borderRadius: '8px',
-              border: '1px solid rgba(160, 174, 192, 0.1)',
-              '& fieldset': { border: 'none' },
-              '&:hover': {
-                border: '1px solid rgba(0, 102, 255, 0.5)',
-              },
-              '&.Mui-focused': {
-                border: '2px solid #0066FF',
-              },
-            },
-            '& .MuiInputBase-input': {
-              color: '#FFFFFF',
-              py: '12px',
-              px: '16px',
-              '&::placeholder': {
-                color: '#A0AEC0',
-                opacity: 1,
-              },
-            },
-          }}
         />
       </Box>
 
@@ -160,29 +87,6 @@ export const RegisterForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              bgcolor: '#141C24',
-              borderRadius: '8px',
-              border: '1px solid rgba(160, 174, 192, 0.1)',
-              '& fieldset': { border: 'none' },
-              '&:hover': {
-                border: '1px solid rgba(0, 102, 255, 0.5)',
-              },
-              '&.Mui-focused': {
-                border: '2px solid #0066FF',
-              },
-            },
-            '& .MuiInputBase-input': {
-              color: '#FFFFFF',
-              py: '12px',
-              px: '16px',
-              '&::placeholder': {
-                color: '#A0AEC0',
-                opacity: 1,
-              },
-            },
-          }}
         />
         <Typography variant="caption" className="field-help-text">
           Mínimo 12 caracteres, una mayúscula, un número y un símbolo especial

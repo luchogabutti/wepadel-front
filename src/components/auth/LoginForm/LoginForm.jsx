@@ -48,29 +48,6 @@ export const LoginForm = () => {
               </InputAdornment>
             ),
           }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              bgcolor: '#141C24',
-              borderRadius: '8px',
-              border: '1px solid rgba(160, 174, 192, 0.1)',
-              '& fieldset': { border: 'none' },
-              '&:hover': {
-                border: '1px solid rgba(0, 102, 255, 0.5)',
-              },
-              '&.Mui-focused': {
-                border: '2px solid #0066FF',
-              },
-            },
-            '& .MuiInputBase-input': {
-              color: '#FFFFFF',
-              py: '12px',
-              px: '16px',
-              '&::placeholder': {
-                color: '#A0AEC0',
-                opacity: 1,
-              },
-            },
-          }}
         />
       </Box>
 
@@ -102,29 +79,6 @@ export const LoginForm = () => {
                 <LockIcon className="field-icon" />
               </InputAdornment>
             ),
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              bgcolor: '#141C24',
-              borderRadius: '8px',
-              border: '1px solid rgba(160, 174, 192, 0.1)',
-              '& fieldset': { border: 'none' },
-              '&:hover': {
-                border: '1px solid rgba(0, 102, 255, 0.5)',
-              },
-              '&.Mui-focused': {
-                border: '2px solid #0066FF',
-              },
-            },
-            '& .MuiInputBase-input': {
-              color: '#FFFFFF',
-              py: '12px',
-              px: '16px',
-              '&::placeholder': {
-                color: '#A0AEC0',
-                opacity: 1,
-              },
-            },
           }}
         />
       </Box>
