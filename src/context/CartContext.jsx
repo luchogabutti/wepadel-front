@@ -1,12 +1,40 @@
 import { createContext, useContext, useState, useMemo } from 'react';
-import { INITIAL_CART_ITEMS } from '../data/cartData';
+import { INITIAL_CART_ITEMS, mapProductToCartItem } from '../data/cartData';
 
 const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
   const [items, setItems] = useState(INITIAL_CART_ITEMS);
+  const [notification, setNotification] = useState({ open: false, message: '' });
 
   const itemCount = useMemo(() => items.length, [items]);
+
+  const closeNotification = () => {
+    setNotification((prev) => ({ ...prev, open: false }));
+  };
+
+  const addItem = (product, quantity = 1) => {
+    if (!product?.inStock) return;
+
+    setItems((prev) => {
+      const existingItem = prev.find((item) => item.id === product.id);
+
+      if (existingItem) {
+        return prev.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+
+      return [...prev, mapProductToCartItem(product, quantity)];
+    });
+
+    setNotification({
+      open: true,
+      message: `¡Listo! Agregaste "${product.title}" al carrito`,
+    });
+  };
 
   const updateQuantity = (id, quantity) => {
     setItems((prev) =>
@@ -19,7 +47,9 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ items, itemCount, updateQuantity, removeItem }}>
+    <CartContext.Provider
+      value={{ items, itemCount, notification, addItem, updateQuantity, removeItem, closeNotification }}
+    >
       {children}
     </CartContext.Provider>
   );
