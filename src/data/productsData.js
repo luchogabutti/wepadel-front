@@ -187,3 +187,11 @@ export const allProducts = [
     inStock: true,
   },
 ];
+
+export const featuredProducts = [
+  allProducts[0],  // Pro Carbon Stealth (id 1)
+  allProducts[12], // Master Tour Pack x3 (id 13)
+  allProducts[2],  // Neon Strike Hybrid (id 3)
+  allProducts[7]   // Bolso Pro Tour 2024 (id 8)
+];
+
