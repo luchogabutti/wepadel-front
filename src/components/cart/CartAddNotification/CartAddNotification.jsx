@@ -18,6 +18,12 @@ export const CartAddNotification = () => {
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       className="cart-add-notification"
+      sx={{
+        top: 72,
+        right: { xs: 16, md: 48 },
+        left: 'auto',
+        transform: 'none',
+      }}
     >
       <div className="notification-content" role="alert">
         <CheckCircleOutlinedIcon className="notification-icon" />

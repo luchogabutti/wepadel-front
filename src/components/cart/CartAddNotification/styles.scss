@@ -1,13 +1,4 @@
 .cart-add-notification {
-  top: 72px !important;
-  right: 16px !important;
-  left: auto !important;
-  transform: none !important;
-
-  @media (min-width: 900px) {
-    right: 48px !important;
-  }
-
   .notification-content {
     display: flex;
     align-items: center;

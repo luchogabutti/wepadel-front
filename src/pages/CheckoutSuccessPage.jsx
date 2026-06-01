@@ -1,6 +1,6 @@
 import { Box, Container } from '@mui/material';
 import { useParams, useLocation } from 'react-router-dom';
-import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard';
+import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard/CheckoutSuccessCard';
 import { Footer } from '../components/general/footer/Footer';
 import { CHECKOUT_ITEMS } from '../data/cartData';
 

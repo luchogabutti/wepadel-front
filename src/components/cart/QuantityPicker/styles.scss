@@ -6,11 +6,11 @@
   padding: 2px 4px;
   border: 1px solid rgba(66, 70, 86, 0.2);
 
-  .control-btn {
-    color: var(--mui-palette-text-secondary) !important;
+  .control-btn.MuiIconButton-root {
+    color: var(--mui-palette-text-secondary);
 
     &:hover {
-      color: var(--mui-palette-primary-light) !important;
+      color: var(--mui-palette-primary-light);
     }
   }
 

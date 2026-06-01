@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Container, Typography } from '@mui/material';
-import { CheckoutProductSummary } from '../components/checkout/CheckoutProductSummary';
+import { CheckoutProductSummary } from '../components/checkout/CheckoutProductSummary/CheckoutProductSummary';
 import { CheckoutShippingCard } from '../components/checkout/CheckoutShippingCard/CheckoutShippingCard';
 import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/CheckoutPaymentForm';
-import { CheckoutPointsCard } from '../components/checkout/CheckoutPointsCard';
-import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDetail';
+import { CheckoutPointsCard } from '../components/checkout/CheckoutPointsCard/CheckoutPointsCard';
+import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDetail/CheckoutPaymentDetail';
 import { Footer } from '../components/general/footer/Footer';
 import {
   CHECKOUT_ITEMS,
