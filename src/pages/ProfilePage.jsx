@@ -43,7 +43,7 @@ export const ProfilePage = () => {
             {/* Bento Grid Layout */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
               {/* Mis Datos (Ancho: 2 columnas en lg) */}
-              <Grid item xs={12} lg={8}>
+              <Grid item size={{ xs: 12, lg: 8 }}>
                 <Box
                   sx={{
                     bgcolor: '#141C24',
@@ -53,7 +53,6 @@ export const ProfilePage = () => {
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between',
                     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                   }}
                 >
@@ -66,16 +65,16 @@ export const ProfilePage = () => {
                       variant="outlined"
                       size="small"
                       sx={{
-                        borderColor: '#0066FF',
-                        color: '#0066FF',
+                        borderColor: 'primary.light',
+                        color: 'primary.light',
                         fontWeight: 700,
                         textTransform: 'none',
                         px: 3,
                         py: 0.8,
                         borderRadius: '8px',
                         '&:hover': {
-                          bgcolor: 'rgba(0, 102, 255, 0.08)',
-                          borderColor: '#0066FF',
+                          bgcolor: 'rgba(179, 197, 255, 0.08)',
+                          borderColor: 'primary.light',
                         },
                       }}
                     >
@@ -85,7 +84,7 @@ export const ProfilePage = () => {
 
                   {/* Campos Formulario */}
                   <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item size={{ xs: 12, sm: 6 }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         <Typography variant="caption" sx={{ color: '#A0AEC0', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                           Nombre
@@ -112,7 +111,7 @@ export const ProfilePage = () => {
                         />
                       </Box>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item size={{xs: 12, sm: 6}}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         <Typography variant="caption" sx={{ color: '#A0AEC0', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                           Apellido
@@ -139,7 +138,7 @@ export const ProfilePage = () => {
                         />
                       </Box>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item size={{ xs: 12 }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         <Typography variant="caption" sx={{ color: '#A0AEC0', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                           Email
@@ -171,14 +170,14 @@ export const ProfilePage = () => {
               </Grid>
 
               {/* Mis Puntos (Ancho: 1 columna en lg) */}
-              <Grid item xs={12} lg={4}>
+              <Grid item size={{ xs: 12, lg: 4 }}>
                 <PointsBadge pointsValue={500} />
               </Grid>
             </Grid>
 
             {/* Fichas de Beneficios de Bento */}
             <Grid container spacing={3}>
-              <Grid item xs={12} md={4}>
+              <Grid item size={{ xs: 12, md: 4 }}>
                 <Card
                   sx={{
                     bgcolor: '#141C24',
@@ -199,7 +198,7 @@ export const ProfilePage = () => {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item size={{ xs: 12, md: 4 }}>
                 <Card
                   sx={{
                     bgcolor: '#141C24',
@@ -220,7 +219,7 @@ export const ProfilePage = () => {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item size={{ xs: 12, md: 4 }}>
                 <Card
                   sx={{
                     bgcolor: '#141C24',

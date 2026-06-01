@@ -1,5 +1,7 @@
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Typography, Avatar, Link } from '@mui/material';
+import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -7,7 +9,13 @@ import './styles.scss';
 
 export const ProfileSidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+
+  const handleLogout = () => {
+    navigate('/login');
+  };
 
   return (
     <Box component="aside" className="profile-sidebar">
@@ -49,8 +57,9 @@ export const ProfileSidebar = () => {
         </Link>
 
         <Link
-          component={RouterLink}
-          to="/login"
+          component="button"
+          type="button"
+          onClick={() => setLogoutDialogOpen(true)}
           className="nav-item logout-item"
           underline="none"
         >
@@ -58,6 +67,17 @@ export const ProfileSidebar = () => {
           <Typography className="nav-text">Cerrar sesión</Typography>
         </Link>
       </Box>
+
+      <ConfirmationDialog
+        open={logoutDialogOpen}
+        onClose={() => setLogoutDialogOpen(false)}
+        onConfirm={handleLogout}
+        title="¿Cerrar sesión?"
+        subtitle="Vas a salir de tu cuenta en WePadel."
+        confirmLabel="Cerrar sesión"
+        cancelLabel="Cancelar"
+        confirmColor="primary"
+      />
     </Box>
   );
 };

@@ -1,10 +1,14 @@
 import { Box, Typography, Button } from '@mui/material';
+import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './styles.scss';
 
 export const PointsBadge = ({ pointsValue = 500 }) => {
-  const handleRedeemPoints = () => {
-    console.log('Redeem points clicked');
-    // Implementación futura de canje de puntos
+  const [usePointsDialogOpen, setUsePointsDialogOpen] = useState(false);
+  const navigate = useNavigate();
+  const handleUsePoints = () => {
+    setUsePointsDialogOpen(true);
   };
 
   return (
@@ -41,7 +45,7 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
       <Button
         fullWidth
         variant="contained"
-        onClick={handleRedeemPoints}
+        onClick={handleUsePoints}
         className="redeem-btn"
         sx={{
           bgcolor: '#FFFFFF',
@@ -61,8 +65,17 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
           transition: 'all 0.15s ease',
         }}
       >
-        CANJEAR PUNTOS
+        USAR MIS PUNTOS
       </Button>
+      <ConfirmationDialog
+        open={usePointsDialogOpen}
+        onClose={() => setUsePointsDialogOpen(false)}
+        onConfirm={() => navigate('/catalogo')}
+        title="Usar mis puntos"
+        subtitle="Seras redirigido al cátalogo de productos para poder utilizar tus puntos en la compra de un producto."
+        confirmLabel="Ir al catálogo"
+        cancelLabel="Cerrar"
+      />
     </Box>
   );
 };

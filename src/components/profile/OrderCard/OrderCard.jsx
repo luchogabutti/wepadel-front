@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
+import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog';
 import './styles.scss';
 
 export const OrderCard = ({
@@ -8,6 +10,8 @@ export const OrderCard = ({
   total,
   items = [], // array de { image, name }
 }) => {
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+
   const getStatusLabel = () => {
     switch (status) {
       case 'confirmada':
@@ -22,7 +26,7 @@ export const OrderCard = ({
   };
 
   const handleCancelOrder = () => {
-    console.log(`Cancel order clicked for ID: ${id}`);
+    console.log(`Order cancelled for ID: ${id}`);
   };
 
   const handleViewDetails = () => {
@@ -82,7 +86,7 @@ export const OrderCard = ({
           {status === 'pendiente' && (
             <Button
               variant="outlined"
-              onClick={handleCancelOrder}
+              onClick={() => setCancelDialogOpen(true)}
               className="action-btn cancel-btn"
               sx={{
                 borderColor: '#FF4444',
@@ -132,16 +136,16 @@ export const OrderCard = ({
               onClick={handleViewDetails}
               className="action-btn details-btn"
               sx={{
-                borderColor: '#0066FF',
-                color: '#0066FF',
+                color: 'primary.light',
+                borderColor: 'primary.light',
                 fontWeight: 600,
                 textTransform: 'none',
                 borderRadius: '8px',
                 px: 3,
                 py: 1,
                 '&:hover': {
-                  bgcolor: 'rgba(0, 102, 255, 0.08)',
-                  borderColor: '#0066FF',
+                  borderColor: 'primary.light',
+                  bgcolor: 'rgba(179, 197, 255, 0.08)',
                 },
               }}
             >
@@ -150,6 +154,17 @@ export const OrderCard = ({
           )}
         </Box>
       </Box>
+
+      <ConfirmationDialog
+        open={cancelDialogOpen}
+        onClose={() => setCancelDialogOpen(false)}
+        onConfirm={handleCancelOrder}
+        title="¿Cancelar esta orden?"
+        subtitle="La orden pendiente se cancelará. Esta acción no se puede deshacer."
+        confirmLabel="Sí, cancelar"
+        cancelLabel="Volver"
+        confirmColor="error"
+      />
     </Box>
   );
 };
