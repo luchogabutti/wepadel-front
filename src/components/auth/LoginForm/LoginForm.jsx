@@ -110,26 +110,8 @@ export const LoginForm = () => {
         type="submit"
         fullWidth
         variant="contained"
-        className="submit-btn"
         endIcon={<ArrowForwardIcon />}
-        sx={{
-          bgcolor: '#0066FF',
-          color: '#FFFFFF',
-          py: '12px',
-          fontWeight: 700,
-          fontSize: '16px',
-          textTransform: 'none',
-          borderRadius: '8px',
-          boxShadow: '0 4px 12px rgba(0, 102, 255, 0.3)',
-          '&:hover': {
-            bgcolor: '#0052cc',
-            opacity: 0.95,
-          },
-          '&:active': {
-            transform: 'scale(0.98)',
-          },
-          transition: 'all 0.2s ease',
-        }}
+        sx={{py: '12px'}}
       >
         Iniciar sesión
       </Button>
