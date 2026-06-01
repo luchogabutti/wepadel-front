@@ -1,99 +1,81 @@
-import { Box, Typography, Link, IconButton, Container } from '@mui/material';
+import { Typography, Link, IconButton, Container } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import './styles.scss';
 
 const FooterColumn = ({ title, children }) => {
   return (
-    <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+    <div className="footer-column">
       <Typography
         variant="overline"
-        sx={{
-          display: 'block',
-          fontWeight: 'bold',
-          color: 'text.primary',
-          mb: 2,
-          letterSpacing: '0.1em',
-        }}
+        className="column-title"
+        sx={{ fontWeight: 'bold' }}
       >
         {title}
       </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: { xs: 'center', md: 'flex-start' } }}>
+      <div className="column-links">
         {children}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
-}
+};
 
 export const Footer = () => {
   return (
-    <Box
-      component="footer"
-      sx={{
-        width: '100%',
-        py: 6,
-        borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-        bgcolor: '#0e0d14',
-      }}
-    >
+    <footer className="app-footer">
       <Container maxWidth="lg">
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            justifyContent: { xs: 'center', md: 'space-between' },
-            alignItems: { xs: 'center', md: 'flex-start' },
-            gap: { xs: 4, md: 0 },
-          }}
-        >
-          <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+        <div className="footer-content">
+          <div className="footer-brand">
             <Typography
               variant="h5"
-              sx={{ fontFamily: 'Outfit', fontWeight: 800, color: 'primary.light', mb: 1 }}
+              className="brand-title"
+              sx={{ fontFamily: 'Outfit', fontWeight: 800 }}
             >
               WePadel
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" className="brand-desc">
               Elite Performance Equipment.
             </Typography>
-          </Box>
+          </div>
 
           <FooterColumn title="Compañía">
-            <Link href="#" underline="hover" color="text.secondary" sx={{ '&:hover': { color: 'primary.main' } }}>
+            <Link href="#" className="column-link" underline="hover">
               Sobre nosotros
             </Link>
-            <Link href="#" underline="hover" color="text.secondary" sx={{ '&:hover': { color: 'primary.main' } }}>
+            <Link href="#" className="column-link" underline="hover">
               Contacto
             </Link>
           </FooterColumn>
 
           <FooterColumn title="Soporte">
-            <Link href="#" underline="hover" color="text.secondary" sx={{ '&:hover': { color: 'primary.main' } }}>
+            <Link href="#" className="column-link" underline="hover">
               Política de privacidad
             </Link>
-            <Link href="#" underline="hover" color="text.secondary" sx={{ '&:hover': { color: 'primary.main' } }}>
+            <Link href="#" className="column-link" underline="hover">
               Términos de servicio
             </Link>
           </FooterColumn>
 
           <FooterColumn title="Síguenos">
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+            <div className="social-icons">
+              <IconButton className="icon-btn">
                 <ShareIcon />
               </IconButton>
-              <IconButton sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+              <IconButton className="icon-btn">
                 <CameraAltIcon />
               </IconButton>
-            </Box>
+            </div>
           </FooterColumn>
-        </Box>
+        </div>
 
         <Typography
           variant="body2"
-          sx={{ color: 'text.secondary', opacity: 0.6, mt: 6, textAlign: 'center' }}
+          className="footer-copy"
         >
           © 2026 WePadel. Elite Performance Equipment.
         </Typography>
       </Container>
-    </Box>
+    </footer>
   );
-}
+};
+
