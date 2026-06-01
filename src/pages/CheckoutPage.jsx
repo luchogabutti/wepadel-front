@@ -6,7 +6,6 @@ import { CheckoutShippingCard } from '../components/checkout/CheckoutShippingCar
 import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/CheckoutPaymentForm';
 import { CheckoutPointsCard } from '../components/checkout/CheckoutPointsCard/CheckoutPointsCard';
 import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDetail/CheckoutPaymentDetail';
-import { Footer } from '../components/general/footer/Footer';
 import {
   CHECKOUT_ITEMS,
   CHECKOUT_SUMMARY,
@@ -120,7 +119,6 @@ export const CheckoutPage = () => {
           </Box>
         </Box>
       </Container>
-      <Footer />
     </Box>
   );
 };

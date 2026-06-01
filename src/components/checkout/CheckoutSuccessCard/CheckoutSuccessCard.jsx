@@ -46,12 +46,12 @@ export const CheckoutSuccessCard = ({ orderId, pointsEarned, productImages, extr
       </div>
 
       <div className="actions-row">
-        <Button component={RouterLink} to="/mis-pedidos" variant="outlined" className="orders-btn">
+        <Button component={RouterLink} to="/perfil/ordenes" variant="outlined" className="orders-btn">
           Ver mis órdenes
         </Button>
         <Button
           component={RouterLink}
-          to="/"
+          to="/perfil/ordenes"
           variant="contained"
           className="continue-btn"
           sx={{ bgcolor: 'primary.light', color: '#002b75', '&:hover': { bgcolor: '#dae1ff' } }}

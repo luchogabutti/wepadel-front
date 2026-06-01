@@ -3,7 +3,6 @@ import { Box, Container, Button, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link as RouterLink } from 'react-router-dom';
 import { ProductDetail } from '../components/catalog/ProductDetail/ProductDetail';
-import { Footer } from '../components/general/footer/Footer';
 import { allProducts } from '../data/productsData';
 
 export const ProductDetailPage = () => {
@@ -34,7 +33,6 @@ export const ProductDetailPage = () => {
             Volver al catálogo
           </Button>
         </Container>
-        <Footer />
       </Box>
     );
   }
@@ -44,7 +42,6 @@ export const ProductDetailPage = () => {
       <Box sx={{ flexGrow: 1 }}>
         <ProductDetail product={product} />
       </Box>
-      <Footer />
     </Box>
   );
 };

@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
 import { ProductGrid } from '../components/catalog/ProductGrid/ProductGrid';
-import { Footer } from '../components/general/footer/Footer';
 import { categories } from '../data/categoriesData';
 import { allProducts } from '../data/productsData';
 
@@ -53,7 +52,6 @@ export const CatalogPage = () => {
           <ProductGrid products={categoryProducts} activeCategory={activeCategory} />
         </Box>
       </Box>
-      <Footer />
     </Box>
   );
 };

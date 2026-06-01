@@ -2,7 +2,6 @@ import { Box, Container } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { LoginForm } from '../components/auth/LoginForm/LoginForm';
 import { RegisterForm } from '../components/auth/RegisterForm/RegisterForm';
-import { Footer } from '../components/general/footer/Footer';
 
 export const AuthPage = () => {
   const { pathname } = useLocation();
@@ -30,7 +29,6 @@ export const AuthPage = () => {
       >
         {isRegister ? <RegisterForm /> : <LoginForm />}
       </Container>
-      <Footer />
     </Box>
   );
 };

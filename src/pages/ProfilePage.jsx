@@ -4,22 +4,18 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import { ProfileSidebar } from '../components/profile/ProfileSidebar/ProfileSidebar';
 import { PointsBadge } from '../components/profile/PointsBadge/PointsBadge';
-import { Footer } from '../components/general/footer/Footer';
 
 export const ProfilePage = () => {
   return (
-    <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 64px)', bgcolor: 'background.default' }}>
-      {/* Sidebar de Perfil */}
+    <Box sx={{ display: 'flex', alignItems: 'flex-start', minHeight: 'calc(100vh - 64px)', bgcolor: 'background.default' }}>
       <ProfileSidebar />
 
-      {/* Área Principal de Contenido */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           flexGrow: 1,
-          ml: { xs: 0, md: '256px' }, // Offset for the fixed sidebar on desktop
-          width: { xs: '100%', md: 'calc(100% - 256px)' },
+          minWidth: 0,
         }}
       >
         {/* Cuerpo de la Página */}
@@ -248,9 +244,6 @@ export const ProfilePage = () => {
             </Grid>
           </Box>
         </Box>
-
-        {/* Footer */}
-        <Footer />
       </Box>
     </Box>
   );

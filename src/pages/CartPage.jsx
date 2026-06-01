@@ -2,7 +2,6 @@ import { Box, Container, Typography } from '@mui/material';
 import { CartItem } from '../components/cart/CartItem/CartItem';
 import { CartSummary } from '../components/cart/CartSummary/CartSummary';
 import { CartEmptyState } from '../components/cart/CartEmptyState/CartEmptyState';
-import { Footer } from '../components/general/footer/Footer';
 import { useCart } from '../context/CartContext';
 import { CART_SUMMARY } from '../data/cartData';
 
@@ -52,7 +51,6 @@ export const CartPage = () => {
           </Box>
         )}
       </Container>
-      <Footer />
     </Box>
   );
 };
