@@ -2,8 +2,11 @@ import { Outlet } from 'react-router-dom';
 import { Header } from '../components/general/header/Header';
 import { CartProvider } from '../context/CartContext';
 import { Box } from '@mui/material';
+import { useScrollToTop } from '../hooks/useScrollToTop';
 
 export const MainLayout = () => {
+  useScrollToTop();
+
   return (
     <CartProvider>
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', bgcolor: 'background.default' }}>
