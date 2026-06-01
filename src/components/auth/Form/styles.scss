@@ -1,0 +1,92 @@
+.generic-form-container {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  z-index: 1;
+
+  .ambient-light-top {
+    position: absolute;
+    top: -80px;
+    right: -120px;
+    width: 320px;
+    height: 320px;
+    background: rgba(0, 102, 255, 0.15); // Electric blue light
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .ambient-light-bottom {
+    position: absolute;
+    bottom: -80px;
+    left: -120px;
+    width: 320px;
+    height: 320px;
+    background: rgba(0, 204, 153, 0.08); // Success light
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .form-card {
+    background-color: #1c1b22;
+    border: 1px solid rgba(66, 70, 86, 0.1);
+    border-radius: 24px;
+    padding: 32px;
+
+    @media (max-width: 480px) {
+      padding: 20px;
+      border-radius: 16px;
+    }
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .card-header {
+      text-align: center;
+
+      .card-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 28px;
+        color: #e5e1eb;
+        margin-bottom: 6px;
+      }
+
+      .card-subtitle {
+        color: #c2c6d8;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+    }
+
+    .form-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card-footer {
+      text-align: center;
+      margin-top: 8px;
+
+      .footer-text {
+        color: #A0AEC0;
+        font-size: 14px;
+
+        .footer-action-link {
+          color: #0066FF;
+          font-weight: 700;
+          text-decoration: none;
+          margin-left: 6px;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
