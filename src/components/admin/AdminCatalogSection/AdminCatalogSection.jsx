@@ -22,36 +22,41 @@ export const AdminCatalogSection = ({
   })
 
   const totalProducts = products.length
-  const enabledProducts = products.filter((product) => product.enabled).length
   const lowStockProducts = products.filter((product) => product.stock <= 10).length
-  const disabledProducts = products.filter((product) => !product.enabled).length
+  const activeProducts = products.filter((product) => product.enabled).length
+  const categoriesCount = new Set(products.map((product) => product.category)).size
 
   const catalogStats = [
     {
       id: 'total-products',
-      label: 'Total productos',
+      label: 'TOTAL PRODUCTOS',
       value: totalProducts,
-      variant: 'primary',
-    },
-    {
-      id: 'enabled-products',
-      label: 'Habilitados',
-      value: enabledProducts,
-      variant: 'success',
+      variant: 'default',
     },
     {
       id: 'low-stock-products',
-      label: 'Stock bajo',
+      label: 'STOCK BAJO',
       value: lowStockProducts,
-      variant: 'warning',
-    },
-    {
-      id: 'disabled-products',
-      label: 'Deshabilitados',
-      value: disabledProducts,
       variant: 'danger',
     },
+    {
+      id: 'active-products',
+      label: 'ACTIVOS',
+      value: activeProducts,
+      variant: 'success',
+    },
+    {
+      id: 'categories',
+      label: 'CATEGORÍAS',
+      value: categoriesCount,
+      variant: 'default',
+    },
   ]
+
+  const showingText =
+    filteredProducts.length > 0
+      ? `Mostrando 1-${filteredProducts.length} de ${products.length} productos`
+      : `Mostrando 0 de ${products.length} productos`
 
   return (
     <section className="admin-catalog-section">
@@ -162,9 +167,7 @@ export const AdminCatalogSection = ({
         </table>
 
         <div className="admin-table-footer">
-          <p>
-            Mostrando {filteredProducts.length} de {products.length} productos
-          </p>
+          <p>{showingText}</p>
 
           <div className="admin-pagination">
             <button type="button">

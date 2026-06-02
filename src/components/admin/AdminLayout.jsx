@@ -1,13 +1,34 @@
 import { Box, Button, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined'
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined'
+import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
 import './styles.scss'
 
 const adminSections = [
-  { id: 'profile', label: 'Perfil' },
-  { id: 'catalog', label: 'Catálogo' },
-  { id: 'stock', label: 'Stock' },
-  { id: 'discounts', label: 'Descuentos' },
+  {
+    id: 'profile',
+    label: 'Perfil',
+    icon: <PersonOutlineOutlinedIcon />,
+  },
+  {
+    id: 'catalog',
+    label: 'Catálogo',
+    icon: <CategoryOutlinedIcon />,
+  },
+  {
+    id: 'stock',
+    label: 'Stock',
+    icon: <Inventory2OutlinedIcon />,
+  },
+  {
+    id: 'discounts',
+    label: 'Descuentos',
+    icon: <LocalOfferOutlinedIcon />,
+  },
 ]
 
 export const AdminLayout = ({
@@ -26,8 +47,12 @@ export const AdminLayout = ({
         </Box>
 
         <Box className="admin-user-box">
-          <Box className="admin-avatar" />
+          <Box className="admin-avatar">
+            <span>AU</span>
+          </Box>
+
           <Typography className="admin-user-name">Admin User</Typography>
+
           <Typography className="admin-user-email">
             admin@padelpro.com
           </Typography>
@@ -38,6 +63,7 @@ export const AdminLayout = ({
             <Button
               key={section.id}
               fullWidth
+              startIcon={section.icon}
               className={`admin-nav-button ${
                 activeSection === section.id ? 'active' : ''
               }`}
@@ -48,7 +74,10 @@ export const AdminLayout = ({
           ))}
         </nav>
 
-        <Button className="admin-logout-button">
+        <Button
+          className="admin-logout-button"
+          startIcon={<LogoutOutlinedIcon />}
+        >
           Cerrar sesión
         </Button>
       </aside>
@@ -71,7 +100,7 @@ export const AdminLayout = ({
         </header>
 
         <main className="admin-main">
-          {children}
+          <div className="admin-main-inner">{children}</div>
         </main>
       </section>
     </Box>

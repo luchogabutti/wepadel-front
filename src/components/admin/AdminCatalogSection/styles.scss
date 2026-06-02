@@ -11,22 +11,24 @@
 }
 
 .admin-stat-card {
+  min-height: 82px;
   background: #111720;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 18px 20px;
+  border-radius: 9px;
+  padding: 17px 20px;
 }
 
 .admin-stat-label {
-  margin: 0 0 10px;
-  color: #a9adbb;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.8px;
+  margin: 0 0 9px;
+  color: #b7bac8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
 }
 
 .admin-stat-value {
   font-size: 26px;
+  line-height: 1;
   font-weight: 900;
   color: #e8ebf7;
 
@@ -53,14 +55,15 @@
   th {
     padding: 18px 22px;
     text-align: left;
-    color: #b8bbc9;
+    color: #c3c6d5;
     font-size: 12px;
     font-weight: 800;
-    letter-spacing: 1.8px;
+    letter-spacing: 2px;
+    background: #171821;
   }
 
   td {
-    padding: 18px 22px;
+    padding: 17px 22px;
     color: #e8ebf7;
     font-size: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -72,11 +75,12 @@
 }
 
 .admin-product-image {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
+  width: 46px;
+  height: 46px;
+  border-radius: 7px;
   object-fit: cover;
   display: block;
+  background: #242630;
 }
 
 .admin-product-info {
@@ -87,13 +91,14 @@
   strong {
     color: #f4f4fb;
     font-size: 15px;
-    font-weight: 800;
+    font-weight: 900;
+    line-height: 1.25;
   }
 
   span {
-    color: #a5a9b9;
+    color: #b7bac8;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
   }
 }
 
@@ -104,12 +109,14 @@
   border-radius: 5px;
   background: #4b5563;
   color: #e5e7eb;
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
 }
 
 .admin-price {
-  font-weight: 800;
+  font-weight: 900;
+  color: #f4f4fb;
 }
 
 .stock-low {
@@ -121,7 +128,7 @@
   color: #f0a4a4;
   font-size: 11px;
   font-weight: 900;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.4px;
 }
 
 .admin-switch {
@@ -139,7 +146,7 @@
     width: 16px;
     height: 16px;
     border-radius: 999px;
-    background: white;
+    background: #ffffff;
     transition: 0.2s ease;
   }
 
@@ -154,7 +161,8 @@
 
 .admin-actions {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 14px;
 
   button {
     display: inline-flex;
@@ -167,7 +175,7 @@
     cursor: pointer;
 
     svg {
-      font-size: 22px;
+      font-size: 21px;
     }
 
     &:hover {
@@ -184,15 +192,16 @@
 }
 
 .admin-table-footer {
+  min-height: 70px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 22px;
+  padding: 0 22px;
   background: #1a1b25;
 
   p {
     margin: 0;
-    color: #c6c8d6;
+    color: #f4f4fb;
     font-size: 14px;
   }
 }
@@ -200,7 +209,7 @@
 .admin-pagination {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
 
   button {
     min-width: 36px;
@@ -209,8 +218,11 @@
     border-radius: 9px;
     background: transparent;
     color: #e8ebf7;
-    font-weight: 800;
+    font-weight: 900;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
     svg {
       font-size: 22px;
