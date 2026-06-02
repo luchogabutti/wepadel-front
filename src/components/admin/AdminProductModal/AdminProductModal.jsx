@@ -8,29 +8,36 @@ import './styles.scss'
 const DEFAULT_PRODUCT_IMAGE =
   'https://placehold.co/96x96/2a2b36/f4f4fb?text=WP'
 
-export const AdminProductModal = ({ open, onClose, onCreate }) => {
+export const AdminProductModal = ({
+  open,
+  productToEdit,
+  onClose,
+  onSave,
+}) => {
   if (!open) {
     return null
   }
+
+  const isEditing = Boolean(productToEdit)
 
   const handleSubmit = (event) => {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget)
 
-    const newProduct = {
-      id: Date.now(),
-      image: DEFAULT_PRODUCT_IMAGE,
+    const savedProduct = {
+      id: productToEdit?.id ?? Date.now(),
+      image: productToEdit?.image ?? DEFAULT_PRODUCT_IMAGE,
       name: formData.get('name'),
       sku: formData.get('sku'),
       category: formData.get('category'),
       description: formData.get('description'),
       price: Number(formData.get('price')),
       stock: Number(formData.get('stock')),
-      enabled: true,
+      enabled: productToEdit?.enabled ?? true,
     }
 
-    onCreate(newProduct)
+    onSave(savedProduct)
     event.currentTarget.reset()
   }
 
@@ -39,8 +46,12 @@ export const AdminProductModal = ({ open, onClose, onCreate }) => {
       <form className="admin-product-modal" onSubmit={handleSubmit}>
         <header className="admin-product-modal-header">
           <div>
-            <h2>Crear Nuevo Producto</h2>
-            <p>Introduce los detalles técnicos del nuevo equipo de padel.</p>
+            <h2>{isEditing ? 'Editar Producto' : 'Crear Nuevo Producto'}</h2>
+            <p>
+              {isEditing
+                ? 'Modifica los detalles técnicos del producto seleccionado.'
+                : 'Introduce los detalles técnicos del nuevo equipo de padel.'}
+            </p>
           </div>
 
           <button
@@ -79,6 +90,7 @@ export const AdminProductModal = ({ open, onClose, onCreate }) => {
                 name="name"
                 type="text"
                 placeholder="Ej: Wilson Carbon Force Pro"
+                defaultValue={productToEdit?.name ?? ''}
                 required
               />
             </label>
@@ -90,13 +102,18 @@ export const AdminProductModal = ({ open, onClose, onCreate }) => {
                   name="sku"
                   type="text"
                   placeholder="WP-CAN-001"
+                  defaultValue={productToEdit?.sku ?? ''}
                   required
                 />
               </label>
 
               <label className="admin-form-field">
                 <span>Category</span>
-                <select name="category" defaultValue="PALETAS" required>
+                <select
+                  name="category"
+                  defaultValue={productToEdit?.category ?? 'PALETAS'}
+                  required
+                >
                   <option value="PALETAS">Paletas</option>
                   <option value="PELOTAS">Pelotas</option>
                   <option value="ACCESORIOS">Accesorios</option>
@@ -110,6 +127,7 @@ export const AdminProductModal = ({ open, onClose, onCreate }) => {
               <textarea
                 name="description"
                 placeholder="Describe las características técnicas y materiales..."
+                defaultValue={productToEdit?.description ?? ''}
               />
             </label>
 
@@ -122,6 +140,7 @@ export const AdminProductModal = ({ open, onClose, onCreate }) => {
                   min="0"
                   step="0.01"
                   placeholder="0.00"
+                  defaultValue={productToEdit?.price ?? ''}
                   required
                 />
               </label>
@@ -133,6 +152,7 @@ export const AdminProductModal = ({ open, onClose, onCreate }) => {
                   type="number"
                   min="0"
                   placeholder="Cant. disponible"
+                  defaultValue={productToEdit?.stock ?? ''}
                   required
                 />
               </label>
@@ -141,10 +161,8 @@ export const AdminProductModal = ({ open, onClose, onCreate }) => {
             <div className="admin-product-note">
               <InfoOutlinedIcon />
               <p>
-                <strong>Nota:</strong> Al crear el producto, se notificará
-                automáticamente a los usuarios que tengan este item en su
-                "Lista de Deseos". Asegúrate de que las especificaciones sean
-                precisas.
+                <strong>Nota:</strong> Al guardar el producto, los cambios se
+                verán reflejados en la tabla del catálogo de forma mockeada.
               </p>
             </div>
           </div>
@@ -161,7 +179,7 @@ export const AdminProductModal = ({ open, onClose, onCreate }) => {
 
           <button type="submit" className="admin-modal-submit-button">
             <SaveOutlinedIcon />
-            Crear Producto
+            {isEditing ? 'Guardar cambios' : 'Crear Producto'}
           </button>
         </footer>
       </form>

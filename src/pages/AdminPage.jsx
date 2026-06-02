@@ -32,15 +32,41 @@ const sectionContent = {
 export const AdminPage = () => {
   const [activeSection, setActiveSection] = useState('catalog')
   const [searchTerm, setSearchTerm] = useState('')
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false)
   const [products, setProducts] = useState(adminProducts)
   const [productToDelete, setProductToDelete] = useState(null)
+  const [productToEdit, setProductToEdit] = useState(null)
 
   const currentSection = sectionContent[activeSection]
 
-  const handleCreateProduct = (newProduct) => {
-    setProducts((currentProducts) => [newProduct, ...currentProducts])
-    setIsCreateModalOpen(false)
+  const handleOpenCreateProduct = () => {
+    setProductToEdit(null)
+    setIsProductModalOpen(true)
+  }
+
+  const handleCloseProductModal = () => {
+    setIsProductModalOpen(false)
+    setProductToEdit(null)
+  }
+
+  const handleSaveProduct = (savedProduct) => {
+    if (productToEdit) {
+      setProducts((currentProducts) =>
+        currentProducts.map((product) =>
+          product.id === savedProduct.id ? savedProduct : product
+        )
+      )
+    } else {
+      setProducts((currentProducts) => [savedProduct, ...currentProducts])
+    }
+
+    setIsProductModalOpen(false)
+    setProductToEdit(null)
+  }
+
+  const handleRequestEditProduct = (product) => {
+    setProductToEdit(product)
+    setIsProductModalOpen(true)
   }
 
   const handleRequestDeleteProduct = (product) => {
@@ -52,6 +78,10 @@ export const AdminPage = () => {
   }
 
   const handleConfirmDeleteProduct = () => {
+    if (!productToDelete) {
+      return
+    }
+
     setProducts((currentProducts) =>
       currentProducts.filter((product) => product.id !== productToDelete.id)
     )
@@ -104,7 +134,7 @@ export const AdminPage = () => {
             {activeSection === 'catalog' && (
               <Button
                 variant="contained"
-                onClick={() => setIsCreateModalOpen(true)}
+                onClick={handleOpenCreateProduct}
                 sx={{
                   background: '#0d6efd',
                   borderRadius: '7px',
@@ -123,6 +153,7 @@ export const AdminPage = () => {
             <AdminCatalogSection
               searchTerm={searchTerm}
               products={products}
+              onRequestEdit={handleRequestEditProduct}
               onRequestDelete={handleRequestDeleteProduct}
             />
           ) : (
@@ -147,9 +178,10 @@ export const AdminPage = () => {
       </AdminLayout>
 
       <AdminProductModal
-        open={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreate={handleCreateProduct}
+        open={isProductModalOpen}
+        productToEdit={productToEdit}
+        onClose={handleCloseProductModal}
+        onSave={handleSaveProduct}
       />
 
       <AdminDeleteProductModal

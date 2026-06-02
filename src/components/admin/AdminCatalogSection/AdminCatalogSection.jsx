@@ -8,6 +8,7 @@ import './styles.scss'
 export const AdminCatalogSection = ({
   searchTerm = '',
   products = [],
+  onRequestEdit,
   onRequestDelete,
 }) => {
   const normalizedSearch = searchTerm.toLowerCase().trim()
@@ -97,7 +98,11 @@ export const AdminCatalogSection = ({
 
                 <td>
                   <div className="admin-actions">
-                    <button type="button" aria-label="Editar producto">
+                    <button
+                      type="button"
+                      aria-label="Editar producto"
+                      onClick={() => onRequestEdit(product)}
+                    >
                       <EditOutlinedIcon />
                     </button>
 
