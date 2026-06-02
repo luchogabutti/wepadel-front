@@ -34,7 +34,7 @@ export const OrderCard = ({order}) => {
   const remainingCount = order.items.length - 2;
 
   return (
-    <Box className={`order-card-container ${order.status}`}>
+    <Box className={`surface-card--paper order-card-container ${order.status}`}>
       <Box className="order-card-header">
         <Box className="order-meta-info">
           <Typography variant="caption" className="order-id">
@@ -76,7 +76,7 @@ export const OrderCard = ({order}) => {
             <Button
               variant="outlined"
               onClick={() => setCancelDialogOpen(true)}
-              sx={{borderColor: 'error.dark', color: 'error.dark'}}
+              sx={{borderColor: 'error.main', color: 'error.main'}}
             >
               Cancelar orden
             </Button>

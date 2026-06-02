@@ -12,7 +12,7 @@ export const CheckoutPointsCard = ({
   onManualPointsChange,
 }) => {
   return (
-    <div className="checkout-points-card">
+    <div className="surface-card checkout-points-card">
       <div className="points-header">
         <div className="points-title-row">
           <StarOutlinedIcon className="points-icon" />

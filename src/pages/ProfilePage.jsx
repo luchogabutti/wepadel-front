@@ -1,198 +1,29 @@
-import { Box, Typography, Button, TextField, Grid, Card, CardContent } from '@mui/material';
-import { alpha } from '@mui/material/styles';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import { ProfileSidebar } from '../components/profile/ProfileSidebar/ProfileSidebar';
+import { Grid } from '@mui/material';
+import { ProfilePageLayout } from '../components/layout/ProfilePageLayout';
+import { PageHeader } from '../components/layout/PageHeader';
+import { ProfileDataCard } from '../components/profile/ProfileDataCard/ProfileDataCard';
+import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/ProfileBenefitsGrid';
 import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
-
-const profileCardSx = {
-  bgcolor: 'background.paper',
-  border: 1,
-  borderColor: 'divider',
-  borderRadius: '12px',
-};
-
-const disabledFieldSx = (theme) => ({
-  '& .MuiOutlinedInput-root': {
-    bgcolor: alpha(theme.palette.background.default, 0.2),
-    borderRadius: '8px',
-    border: 1,
-    borderColor: alpha(theme.palette.text.secondary, 0.1),
-    '& fieldset': { border: 'none' },
-  },
-  '& .MuiInputBase-input.Mui-disabled': {
-    color: 'text.primary',
-    WebkitTextFillColor: theme.palette.text.primary,
-    py: '12px',
-    px: '16px',
-  },
-});
-
-const benefitCardSx = {
-  ...profileCardSx,
-  boxShadow: (theme) => `0 4px 12px ${alpha(theme.palette.background.default, 0.15)}`,
-  height: '100%',
-};
 
 export const ProfilePage = () => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'flex-start', minHeight: 'calc(100vh - 64px)', bgcolor: 'background.default' }}>
-      <ProfileSidebar />
+    <ProfilePageLayout>
+      <PageHeader
+        variant="profile"
+        title="Mi Perfil"
+        subtitle="Administra tu cuenta y revisa tus beneficios exclusivos."
+      />
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          flexGrow: 1,
-          minWidth: 0,
-        }}
-      >
-        {/* Cuerpo de la Página */}
-        <Box sx={{ flexGrow: 1, px: { xs: 2, md: 6 }, py: 6 }}>
-          <Box sx={{ maxWidth: '1024px', mx: 'auto' }}>
-            {/* Cabecera del Perfil */}
-            <Box sx={{ mb: 6 }}>
-              <Typography
-                variant="h1"
-                sx={{
-                  fontWeight: 800,
-                  fontSize: { xs: '32px', md: '44px' },
-                  letterSpacing: '-0.02em',
-                  mb: 1,
-                  color: 'primary.light',
-                }}
-              >
-                Mi Perfil
-              </Typography>
-              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '16px' }}>
-                Administra tu cuenta y revisa tus beneficios exclusivos.
-              </Typography>
-            </Box>
+      <Grid container spacing={3} className="profile-section">
+        <Grid size={{ xs: 12, lg: 8 }}>
+          <ProfileDataCard />
+        </Grid>
+        <Grid size={{ xs: 12, lg: 4 }}>
+          <PointsBadge pointsValue={500} />
+        </Grid>
+      </Grid>
 
-            {/* Bento Grid Layout */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
-              {/* Mis Datos (Ancho: 2 columnas en lg) */}
-              <Grid item size={{ xs: 12, lg: 8 }}>
-                <Box
-                  sx={{
-                    ...profileCardSx,
-                    p: 4,
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    boxShadow: (theme) => `0 4px 20px ${alpha(theme.palette.background.default, 0.2)}`,
-                  }}
-                >
-                  {/* Encabezado Sección */}
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: 'text.primary' }}>
-                      Mis datos
-                    </Typography>
-                    <Button variant="outlined" sx={{borderColor: 'primary.light', color: 'primary.light'}}>
-                      Editar
-                    </Button>
-                  </Box>
-
-                  {/* Campos Formulario */}
-                  <Grid container spacing={3}>
-                    <Grid item size={{ xs: 12, sm: 6 }}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                          Nombre
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          value="Juan"
-                          disabled
-                          variant="outlined"
-                          sx={disabledFieldSx}
-                        />
-                      </Box>
-                    </Grid>
-                    <Grid item size={{xs: 12, sm: 6}}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                          Apellido
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          value="Pérez"
-                          disabled
-                          variant="outlined"
-                          sx={disabledFieldSx}
-                        />
-                      </Box>
-                    </Grid>
-                    <Grid item size={{ xs: 12 }}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                          Email
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          value="juan.perez@padelpro.com"
-                          disabled
-                          variant="outlined"
-                          sx={disabledFieldSx}
-                        />
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
-
-              {/* Mis Puntos (Ancho: 1 columna en lg) */}
-              <Grid item size={{ xs: 12, lg: 4 }}>
-                <PointsBadge pointsValue={500} />
-              </Grid>
-            </Grid>
-
-            {/* Fichas de Beneficios de Bento */}
-            <Grid container spacing={3}>
-              <Grid item size={{ xs: 12, md: 4 }}>
-                <Card sx={benefitCardSx}>
-                  <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    <VerifiedIcon sx={{ color: 'success.main', fontSize: '32px' }} />
-                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: 'text.primary' }}>
-                      Miembro Elite
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.4 }}>
-                      Acceso prioritario a lanzamientos de nuevas colecciones.
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item size={{ xs: 12, md: 4 }}>
-                <Card sx={benefitCardSx}>
-                  <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    <LocalShippingIcon sx={{ color: 'success.main', fontSize: '32px' }} />
-                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: 'text.primary' }}>
-                      Envíos Gratis
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.4 }}>
-                      Por ser cliente recurrente, tenés envío bonificado en todo el país.
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item size={{ xs: 12, md: 4 }}>
-                <Card sx={benefitCardSx}>
-                  <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    <SupportAgentIcon sx={{ color: 'success.main', fontSize: '32px' }} />
-                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: 'text.primary' }}>
-                      Soporte VIP
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.4 }}>
-                      Chat directo con nuestros expertos en equipamiento técnico.
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+      <ProfileBenefitsGrid />
+    </ProfilePageLayout>
   );
 };

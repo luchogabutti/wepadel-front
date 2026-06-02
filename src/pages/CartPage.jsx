@@ -1,4 +1,6 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
+import { PageContainer } from '../components/layout/PageContainer';
+import { PageHeader } from '../components/layout/PageHeader';
 import { CartItem } from '../components/cart/CartItem/CartItem';
 import { CartSummary } from '../components/cart/CartSummary/CartSummary';
 import { CartEmptyState } from '../components/cart/CartEmptyState/CartEmptyState';
@@ -11,31 +13,15 @@ export const CartPage = () => {
   const total = CART_SUMMARY.total;
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Container maxWidth="lg" sx={{ flexGrow: 1, py: 4, px: { xs: 2, md: 6 } }}>
-        <Typography
-          variant="h1"
-          sx={{
-            fontWeight: 700,
-            color: 'text.emphasis',
-            mb: 4,
-            fontSize: { xs: 28, md: 32 },
-          }}
-        >
-          Mi carrito
-        </Typography>
+    <PageContainer>
+      <PageHeader title="Mi carrito" />
 
-        {items.length === 0 ? (
-          <CartEmptyState />
-        ) : (
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' },
-              gap: 4,
-            }}
-          >
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      {items.length === 0 ? (
+        <CartEmptyState />
+      ) : (
+        <Grid container spacing={4} alignItems="flex-start">
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <Stack spacing={2}>
               {items.map((item) => (
                 <CartItem
                   key={item.id}
@@ -44,11 +30,13 @@ export const CartPage = () => {
                   onRemove={removeItem}
                 />
               ))}
-            </Box>
+            </Stack>
+          </Grid>
+          <Grid size={{ xs: 12, lg: 4 }}>
             <CartSummary subtotal={subtotal} total={total} />
-          </Box>
-        )}
-      </Container>
-    </Box>
+          </Grid>
+        </Grid>
+      )}
+    </PageContainer>
   );
 };

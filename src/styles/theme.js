@@ -61,6 +61,32 @@ export const theme = createTheme({
       fontWeight: 500,
       fontSize: '12px',
     },
+    pageTitle: {
+      fontWeight: 700,
+      fontSize: '32px',
+      color: '#e5e1eb',
+      letterSpacing: '-0.02em',
+      lineHeight: 1.2,
+      '@media (max-width:899px)': {
+        fontSize: '28px',
+      },
+    },
+    pageTitleProfile: {
+      fontWeight: 800,
+      fontSize: '44px',
+      color: '#B3C5FF',
+      letterSpacing: '-0.02em',
+      lineHeight: 1.2,
+      '@media (max-width:899px)': {
+        fontSize: '32px',
+      },
+    },
+    pageSubtitle: {
+      fontWeight: 400,
+      fontSize: '16px',
+      color: '#A0AEC0',
+      lineHeight: 1.5,
+    },
   },
   shape: {
     borderRadius: 8,
@@ -111,6 +137,26 @@ export const theme = createTheme({
           color: theme.palette.text.label,
           '&.Mui-focused': {
             color: theme.palette.primary.light,
+          },
+        }),
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '& .MuiOutlinedInput-root.Mui-disabled': {
+            backgroundColor: alpha(theme.palette.background.default, 0.2),
+            borderRadius: 8,
+            border: `1px solid ${alpha(theme.palette.text.secondary, 0.1)}`,
+            '& fieldset': { border: 'none' },
+          },
+          '& .MuiInputBase-input.Mui-disabled': {
+            color: theme.palette.text.primary,
+            WebkitTextFillColor: theme.palette.text.primary,
+            paddingTop: '12px',
+            paddingBottom: '12px',
+            paddingLeft: '16px',
+            paddingRight: '16px',
           },
         }),
       },

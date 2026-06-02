@@ -31,18 +31,15 @@
   }
 
   .form-card {
-    background-color: var(--mui-palette-surface-main);
-    border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);
-    border-radius: 24px;
     padding: 32px;
-
-    @media (max-width: 480px) {
-      padding: 20px;
-      border-radius: 16px;
-    }
     display: flex;
     flex-direction: column;
     gap: 24px;
+
+    @media (max-width: 600px) {
+      padding: 20px;
+      border-radius: 16px;
+    }
 
     .card-header {
       text-align: center;

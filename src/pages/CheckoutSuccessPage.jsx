@@ -1,5 +1,6 @@
-import { Box, Container } from '@mui/material';
 import { useParams, useLocation } from 'react-router-dom';
+import { CenteredPage } from '../components/layout/CenteredPage';
+import { PageContainer } from '../components/layout/PageContainer';
 import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard/CheckoutSuccessCard';
 import { CHECKOUT_ITEMS } from '../data/cartData';
 
@@ -12,15 +13,15 @@ export const CheckoutSuccessPage = () => {
   const extraItemsCount = Math.max(CHECKOUT_ITEMS.length - 2, 0);
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Container maxWidth="lg" sx={{ flexGrow: 1, py: 6, px: { xs: 2, md: 6 } }}>
+    <CenteredPage>
+      <PageContainer maxWidth="lg" py={6}>
         <CheckoutSuccessCard
           orderId={orderId}
           pointsEarned={pointsEarned}
           productImages={productImages}
           extraItemsCount={extraItemsCount}
         />
-      </Container>
-    </Box>
+      </PageContainer>
+    </CenteredPage>
   );
 };

@@ -1,9 +1,4 @@
 .checkout-shipping-card {
-  background-color: var(--mui-palette-surface-main);
-  padding: 24px;
-  border-radius: 24px;
-  border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);
-
   .card-header {
     display: flex;
     align-items: center;
@@ -88,5 +83,11 @@
     margin-top: 8px;
     padding: 10px 24px;
     font-weight: 700;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+
+    &:hover {
+      background-color: var(--mui-palette-primary-main);
+    }
   }
 }

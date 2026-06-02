@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Container, Typography } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
+import { PageContainer } from '../components/layout/PageContainer';
+import { PageHeader } from '../components/layout/PageHeader';
 import { CheckoutProductSummary } from '../components/checkout/CheckoutProductSummary/CheckoutProductSummary';
 import { CheckoutShippingCard } from '../components/checkout/CheckoutShippingCard/CheckoutShippingCard';
 import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/CheckoutPaymentForm';
@@ -34,9 +36,7 @@ export const CheckoutPage = () => {
   const [manualPoints, setManualPoints] = useState('');
 
   const subtotal = CHECKOUT_SUMMARY.subtotal;
-
   const pointsDiscount = usePoints ? CHECKOUT_SUMMARY.pointsDiscount : 0;
-
   const total = usePoints ? CHECKOUT_SUMMARY.total : CHECKOUT_SUMMARY.subtotal;
 
   const handleShippingFieldChange = (field, value) => {
@@ -63,29 +63,15 @@ export const CheckoutPage = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Container maxWidth="lg" sx={{ flexGrow: 1, py: 4, px: { xs: 2, md: 6 } }}>
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="h1"
-            sx={{ fontWeight: 700, color: 'text.emphasis', fontSize: { xs: 28, md: 32 }, mb: 1 }}
-          >
-            Checkout
-          </Typography>
-          <Typography sx={{ color: 'text.label', fontSize: 16 }}>
-            Revisá tu pedido y completá tu envio antes de finalizar la compra.
-          </Typography>
-        </Box>
+    <PageContainer>
+      <PageHeader
+        title="Checkout"
+        subtitle="Revisá tu pedido y completá tu envio antes de finalizar la compra."
+      />
 
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', lg: '1.5fr 1fr' },
-            gap: 4,
-            alignItems: 'start',
-          }}
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Grid container spacing={4} alignItems="flex-start">
+        <Grid size={{ xs: 12, lg: 8 }}>
+          <Stack spacing={3}>
             <CheckoutProductSummary items={CHECKOUT_ITEMS} />
             <CheckoutShippingCard
               shippingData={shippingData}
@@ -97,9 +83,10 @@ export const CheckoutPage = () => {
             {shippingCompleted && (
               <CheckoutPaymentForm formData={formData} onFieldChange={handleFieldChange} />
             )}
-          </Box>
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          </Stack>
+        </Grid>
+        <Grid size={{ xs: 12, lg: 4 }}>
+          <Stack spacing={3}>
             <CheckoutPointsCard
               availablePoints={AVAILABLE_POINTS}
               usePoints={usePoints}
@@ -115,9 +102,9 @@ export const CheckoutPage = () => {
               total={total}
               onConfirm={handleConfirm}
             />
-          </Box>
-        </Box>
-      </Container>
-    </Box>
+          </Stack>
+        </Grid>
+      </Grid>
+    </PageContainer>
   );
 };

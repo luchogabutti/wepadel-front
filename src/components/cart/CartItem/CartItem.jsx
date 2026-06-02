@@ -35,7 +35,7 @@ export const CartItem = ({ item, onQuantityChange, onRemove }) => {
   };
 
   return (
-    <div className="cart-item">
+    <div className="surface-card surface-card--compact cart-item">
       <div className="item-image-wrapper">
         <img src={item.image} alt={item.name} className="item-image" />
       </div>
