@@ -134,15 +134,19 @@ export const AdminProductModal = ({
             <div className="admin-form-row">
               <label className="admin-form-field">
                 <span>Price ($)</span>
-                <input
-                  name="price"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0.00"
-                  defaultValue={productToEdit?.price ?? ''}
-                  required
-                />
+
+                <div className="admin-price-input-wrapper">
+                  <span>$</span>
+                  <input
+                    name="price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                    defaultValue={productToEdit?.price ?? ''}
+                    required
+                  />
+                </div>
               </label>
 
               <label className="admin-form-field">
@@ -161,8 +165,20 @@ export const AdminProductModal = ({
             <div className="admin-product-note">
               <InfoOutlinedIcon />
               <p>
-                <strong>Nota:</strong> Al guardar el producto, los cambios se
-                verán reflejados en la tabla del catálogo de forma mockeada.
+                {isEditing ? (
+                  <>
+                    <strong>Nota:</strong> Al guardar el producto, los cambios
+                    se verán reflejados en la tabla del catálogo de forma
+                    mockeada.
+                  </>
+                ) : (
+                  <>
+                    <strong>Nota:</strong> Al crear el producto, se notificará
+                    automáticamente a los usuarios que tengan este item en su
+                    "Lista de Deseos". Asegúrate de que las especificaciones
+                    sean precisas.
+                  </>
+                )}
               </p>
             </div>
           </div>

@@ -1,4 +1,3 @@
-import CloseIcon from '@mui/icons-material/Close'
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import './styles.scss'
 
@@ -15,24 +14,24 @@ export const AdminDeleteProductModal = ({
   return (
     <div className="admin-delete-modal-overlay">
       <div className="admin-delete-modal">
-        <button
-          type="button"
-          className="admin-delete-modal-close"
-          onClick={onClose}
-          aria-label="Cerrar modal"
-        >
-          <CloseIcon />
-        </button>
-
-        <div className="admin-delete-icon">
+        <div className="admin-delete-warning-icon">
           <WarningAmberOutlinedIcon />
         </div>
 
-        <h2>¿Estás seguro de que deseas eliminar este producto?</h2>
+        <h2>
+          ¿Estás seguro de que deseas
+          <br />
+          eliminar este producto?
+        </h2>
 
-        <p>
-          Se eliminará <strong>{product.name}</strong> del catálogo. Esta acción
-          no se puede deshacer.
+        <div className="admin-delete-selected-product">
+          <span>PRODUCTO SELECCIONADO</span>
+          <strong>{product.name}</strong>
+        </div>
+
+        <p className="admin-delete-description">
+          Esta acción es irreversible. Se eliminarán todos los registros de
+          stock y las estadísticas asociadas a este modelo del catálogo activo.
         </p>
 
         <div className="admin-delete-actions">
@@ -52,6 +51,8 @@ export const AdminDeleteProductModal = ({
             Eliminar
           </button>
         </div>
+
+        <div className="admin-delete-bottom-line" />
       </div>
     </div>
   )
