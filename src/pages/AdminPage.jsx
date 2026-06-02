@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Box, Typography, Button } from '@mui/material'
 import { AdminLayout } from '../components/admin/AdminLayout'
 import { AdminCatalogSection } from '../components/admin/AdminCatalogSection/AdminCatalogSection'
+import { AdminProductModal } from '../components/admin/AdminProductModal/AdminProductModal'
 
 const sectionContent = {
   profile: {
@@ -29,10 +30,12 @@ const sectionContent = {
 export const AdminPage = () => {
   const [activeSection, setActiveSection] = useState('catalog')
   const [searchTerm, setSearchTerm] = useState('')
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   const currentSection = sectionContent[activeSection]
 
   return (
+  <>
     <AdminLayout
       activeSection={activeSection}
       onSectionChange={setActiveSection}
@@ -76,6 +79,7 @@ export const AdminPage = () => {
           {activeSection === 'catalog' && (
             <Button
               variant="contained"
+              onClick={() => setIsCreateModalOpen(true)}
               sx={{
                 background: '#0d6efd',
                 borderRadius: '7px',
@@ -112,5 +116,11 @@ export const AdminPage = () => {
         )}
       </Box>
     </AdminLayout>
-  )
+
+    <AdminProductModal
+      open={isCreateModalOpen}
+      onClose={() => setIsCreateModalOpen(false)}
+    />
+  </>
+)
 }
