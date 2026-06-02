@@ -8,7 +8,7 @@ import './styles.scss';
 
 export const CheckoutPaymentDetail = ({ subtotal, pointsDiscount, total, onConfirm }) => {
   return (
-    <div className="checkout-payment-detail">
+    <div className="surface-card surface-card--dark checkout-payment-detail">
       <Typography variant="h6" className="detail-title">
         Detalle del Pago
       </Typography>
@@ -44,7 +44,6 @@ export const CheckoutPaymentDetail = ({ subtotal, pointsDiscount, total, onConfi
         startIcon={<LockOutlinedIcon />}
         onClick={onConfirm}
         className="confirm-btn"
-        sx={{ bgcolor: 'primary.main', color: '#f8f7ff', '&:hover': { bgcolor: 'primary.main' } }}
       >
         Confirmar compra
       </Button>

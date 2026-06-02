@@ -13,7 +13,7 @@ export const CheckoutShippingCard = ({
 
   if (isCompleted) {
     return (
-      <div className="checkout-shipping-card">
+      <div className="surface-card checkout-shipping-card">
         <div className="completed-row">
           <div className="completed-info">
             <div className="icon-wrapper">
@@ -33,7 +33,7 @@ export const CheckoutShippingCard = ({
   }
 
   return (
-    <div className="checkout-shipping-card">
+    <div className="surface-card checkout-shipping-card">
       <div className="card-header">
         <LocalShippingOutlinedIcon className="header-icon" />
         <Typography variant="h6" className="header-title">
@@ -70,7 +70,6 @@ export const CheckoutShippingCard = ({
           onClick={onSubmit}
           disabled={!shippingData.address.trim() || !shippingData.city.trim()}
           className="submit-btn"
-          sx={{ bgcolor: 'primary.main', color: '#f8f7ff', '&:hover': { bgcolor: 'primary.main' } }}
         >
           Confirmar envío
         </Button>

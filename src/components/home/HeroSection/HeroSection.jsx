@@ -1,4 +1,5 @@
 import { Typography, Button } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import './styles.scss';
 
@@ -59,7 +60,10 @@ export const HeroSection = () => {
               px: 4, py: 2, fontWeight: 'bold',
               color: 'primary.light',
               borderColor: 'primary.light',
-              '&:hover': { borderColor: 'primary.light', bgcolor: 'rgba(179, 197, 255, 0.08)' },
+              '&:hover': (theme) => ({
+                borderColor: 'primary.light',
+                bgcolor: alpha(theme.palette.primary.light, 0.08),
+              }),
             }}
           >
             Nuevos Ingresos

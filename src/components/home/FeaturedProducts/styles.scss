@@ -41,13 +41,13 @@
   .product-card {
     background-color: var(--mui-palette-background-paper);
     border-radius: 16px;
-    border: 1px solid rgba(160, 174, 192, 0.1);
+    border: 1px solid color-mix(in srgb, var(--mui-palette-text-secondary) 10%, transparent);
     overflow: hidden;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
 
     &:hover {
-      box-shadow: 0 8px 24px rgba(0, 102, 255, 0.15);
+      box-shadow: 0 8px 24px color-mix(in srgb, var(--mui-palette-primary-main) 15%, transparent);
 
       .product-image {
         transform: scale(1.07);
@@ -64,7 +64,7 @@
     position: relative;
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    background-color: #201f26;
+    background-color: var(--mui-palette-surface-light);
   }
 
   .product-image {

@@ -5,7 +5,7 @@ import './styles.scss';
 
 export const CheckoutPaymentForm = ({ formData, onFieldChange }) => {
   return (
-    <div className="checkout-payment-form">
+    <div className="surface-card checkout-payment-form">
       <div className="form-header">
         <CreditCardOutlinedIcon className="header-icon" />
         <Typography variant="h6" className="header-title">

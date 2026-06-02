@@ -5,17 +5,17 @@
     gap: 10px;
     padding: 12px 16px;
     border-radius: 12px;
-    background-color: #0d2a22;
-    border: 1px solid rgba(53, 223, 171, 0.4);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-    color: #e3fff0;
+    background-color: color-mix(in srgb, var(--mui-palette-success-main) 15%, var(--mui-palette-background-default));
+    border: 1px solid color-mix(in srgb, var(--mui-palette-success-main) 40%, transparent);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--mui-palette-background-default) 35%, transparent);
+    color: color-mix(in srgb, var(--mui-palette-success-main) 20%, var(--mui-palette-text-primary));
     font-size: 14px;
     font-weight: 500;
     max-width: 320px;
   }
 
   .notification-icon {
-    color: #35dfab;
+    color: var(--mui-palette-success-main);
     font-size: 22px;
     flex-shrink: 0;
   }

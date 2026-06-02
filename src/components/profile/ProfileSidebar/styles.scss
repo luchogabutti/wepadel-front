@@ -1,0 +1,111 @@
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  width: 256px;
+  background-color: var(--mui-palette-background-paper);
+  border-right: 1px solid var(--mui-palette-divider);
+  padding: 24px 16px;
+  position: sticky;
+  top: 64px;
+  align-self: flex-start;
+  flex-shrink: 0;
+  box-shadow: 4px 0 16px color-mix(in srgb, var(--mui-palette-background-default) 25%, transparent);
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+
+  .user-profile-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--mui-palette-divider);
+
+    .user-avatar {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 16px;
+      border: 2px solid var(--mui-palette-primary-main);
+      padding: 2px;
+    }
+
+    .user-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: var(--mui-palette-text-primary);
+      margin-bottom: 4px;
+    }
+
+    .user-email {
+      color: var(--mui-palette-text-secondary);
+      font-size: 13px;
+    }
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      background: none;
+      color: var(--mui-palette-text-secondary);
+      font: inherit;
+      text-align: left;
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+
+      &:hover {
+        background-color: color-mix(in srgb, var(--mui-palette-text-primary) 3%, transparent);
+        color: var(--mui-palette-text-primary);
+      }
+
+      &.active {
+        background-color: var(--mui-palette-primary-main);
+        color: var(--mui-palette-primary-contrastText);
+        font-weight: 700;
+
+        .nav-icon {
+          color: var(--mui-palette-primary-contrastText);
+        }
+
+        .nav-text {
+          font-weight: 700;
+        }
+      }
+
+      .nav-icon {
+        font-size: 22px;
+        color: inherit;
+      }
+
+      .nav-text {
+        font-size: 15px;
+        font-family: 'Outfit', sans-serif;
+      }
+
+      &.logout-item {
+        margin-top: auto;
+        margin-bottom: 16px;
+        color: color-mix(in srgb, var(--mui-palette-error-main) 85%, transparent);
+
+        &:hover {
+          background-color: color-mix(in srgb, var(--mui-palette-error-main) 10%, transparent);
+          color: var(--mui-palette-error-main);
+        }
+      }
+    }
+  }
+}

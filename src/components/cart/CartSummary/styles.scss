@@ -1,10 +1,4 @@
 .cart-summary {
-  background-color: #2a2931;
-  padding: 24px;
-  border-radius: 24px;
-  border: 1px solid rgba(66, 70, 86, 0.2);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-
   @media (min-width: 1200px) {
     position: sticky;
     top: 96px;
@@ -13,7 +7,7 @@
   .summary-title {
     font-weight: 600;
     margin-bottom: 24px;
-    color: #e5e1eb;
+    color: var(--mui-palette-text-emphasis);
   }
 
   .summary-rows {
@@ -30,24 +24,24 @@
   }
 
   .summary-label {
-    color: #c2c6d8;
+    color: var(--mui-palette-text-label);
     font-size: 16px;
   }
 
   .summary-value {
-    color: #e5e1eb;
+    color: var(--mui-palette-text-emphasis);
     font-size: 16px;
   }
 
   .summary-shipping {
-    color: #35dfab;
+    color: var(--mui-palette-success-main);
     font-size: 16px;
     font-weight: 500;
   }
 
   .summary-total-row {
     padding-top: 16px;
-    border-top: 1px solid rgba(66, 70, 86, 0.1);
+    border-top: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -55,7 +49,7 @@
 
   .summary-total-label {
     font-weight: 600;
-    color: #e5e1eb;
+    color: var(--mui-palette-text-emphasis);
   }
 
   .summary-total-value {
@@ -68,9 +62,11 @@
     padding: 12px 0;
     font-size: 16px;
     font-weight: 700;
-    box-shadow: 0 8px 24px rgba(0, 102, 255, 0.2);
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
 
     &:hover {
+      background-color: var(--mui-palette-primary-main);
       transform: scale(1.02);
     }
   }
@@ -86,7 +82,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #c2c6d8;
+    color: var(--mui-palette-text-label);
 
     .trust-icon {
       font-size: 20px;

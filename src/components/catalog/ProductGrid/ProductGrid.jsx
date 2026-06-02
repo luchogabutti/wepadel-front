@@ -8,6 +8,7 @@ import {
   FormControl,
   Button,
 } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ProductCard } from '../ProductCard/ProductCard';
 import './styles.scss';
@@ -84,7 +85,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
             color: 'primary.main',
             '& .MuiSlider-thumb': { bgcolor: 'primary.light' },
             '& .MuiSlider-track': { bgcolor: 'primary.main' },
-            '& .MuiSlider-rail': { color: 'rgba(255,255,255,0.1)' },
+            '& .MuiSlider-rail': { color: (theme) => alpha(theme.palette.text.primary, 0.1) },
           }}
         />
         <div className="price-labels">
@@ -151,7 +152,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
                 color: 'primary.main',
                 '& .MuiSlider-thumb': { bgcolor: 'primary.light' },
                 '& .MuiSlider-track': { bgcolor: 'primary.main' },
-                '& .MuiSlider-rail': { color: 'rgba(255,255,255,0.1)' },
+                '& .MuiSlider-rail': { color: (theme) => alpha(theme.palette.text.primary, 0.1) },
               }}
             />
           </div>
@@ -186,16 +187,19 @@ export const ProductGrid = ({ products, activeCategory }) => {
             <Button
               variant="outlined"
               onClick={() => setVisibleCount((prev) => prev + 3)}
-              sx={{
+              sx={(theme) => ({
                 color: 'primary.light',
-                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderColor: alpha(theme.palette.text.primary, 0.1),
                 px: 4,
                 py: 1.5,
                 fontWeight: 700,
                 fontSize: '14px',
                 borderRadius: 2,
-                '&:hover': { borderColor: 'primary.main', bgcolor: 'rgba(0, 102, 255, 0.05)' },
-              }}
+                '&:hover': {
+                  borderColor: 'primary.main',
+                  bgcolor: alpha(theme.palette.primary.main, 0.05),
+                },
+              })}
             >
               Cargar más productos
             </Button>

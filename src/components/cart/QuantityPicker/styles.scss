@@ -1,10 +1,10 @@
 .quantity-picker {
   display: flex;
   align-items: center;
-  background-color: #201f26;
+  background-color: var(--mui-palette-surface-light);
   border-radius: 9999px;
   padding: 2px 4px;
-  border: 1px solid rgba(66, 70, 86, 0.2);
+  border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 20%, transparent);
 
   .control-btn.MuiIconButton-root {
     color: var(--mui-palette-text-secondary);
