@@ -2,13 +2,13 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { adminCatalogStats, adminProducts } from '../../../data/adminProductsData'
+import { adminCatalogStats } from '../../../data/adminProductsData'
 import './styles.scss'
 
-export const AdminCatalogSection = ({ searchTerm = '' }) => {
+export const AdminCatalogSection = ({ searchTerm = '', products = [] }) => {
   const normalizedSearch = searchTerm.toLowerCase().trim()
 
-  const filteredProducts = adminProducts.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     return (
       product.name.toLowerCase().includes(normalizedSearch) ||
       product.sku.toLowerCase().includes(normalizedSearch) ||
@@ -68,7 +68,7 @@ export const AdminCatalogSection = ({ searchTerm = '' }) => {
                 </td>
 
                 <td className="admin-price">
-                  ${product.price.toFixed(2)}
+                  ${Number(product.price).toFixed(2)}
                 </td>
 
                 <td>
@@ -117,7 +117,7 @@ export const AdminCatalogSection = ({ searchTerm = '' }) => {
 
         <div className="admin-table-footer">
           <p>
-            Mostrando {filteredProducts.length} de 1,284 productos
+            Mostrando {filteredProducts.length} de {products.length} productos
           </p>
 
           <div className="admin-pagination">

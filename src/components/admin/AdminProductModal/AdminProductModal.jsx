@@ -5,14 +5,33 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import './styles.scss'
 
-export const AdminProductModal = ({ open, onClose }) => {
+const DEFAULT_PRODUCT_IMAGE =
+  'https://placehold.co/96x96/2a2b36/f4f4fb?text=WP'
+
+export const AdminProductModal = ({ open, onClose, onCreate }) => {
   if (!open) {
     return null
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log('Producto creado de forma mockeada')
+
+    const formData = new FormData(event.currentTarget)
+
+    const newProduct = {
+      id: Date.now(),
+      image: DEFAULT_PRODUCT_IMAGE,
+      name: formData.get('name'),
+      sku: formData.get('sku'),
+      category: formData.get('category'),
+      description: formData.get('description'),
+      price: Number(formData.get('price')),
+      stock: Number(formData.get('stock')),
+      enabled: true,
+    }
+
+    onCreate(newProduct)
+    event.currentTarget.reset()
   }
 
   return (
@@ -56,47 +75,76 @@ export const AdminProductModal = ({ open, onClose }) => {
           <div className="admin-product-form-column">
             <label className="admin-form-field full">
               <span>Product Name</span>
-              <input type="text" placeholder="Ej: Wilson Carbon Force Pro" />
+              <input
+                name="name"
+                type="text"
+                placeholder="Ej: Wilson Carbon Force Pro"
+                required
+              />
             </label>
 
             <div className="admin-form-row">
               <label className="admin-form-field">
                 <span>SKU</span>
-                <input type="text" placeholder="WP-CAN-001" />
+                <input
+                  name="sku"
+                  type="text"
+                  placeholder="WP-CAN-001"
+                  required
+                />
               </label>
 
               <label className="admin-form-field">
                 <span>Category</span>
-                <select defaultValue="Paletas">
-                  <option>Paletas</option>
-                  <option>Pelotas</option>
-                  <option>Accesorios</option>
-                  <option>Indumentaria</option>
+                <select name="category" defaultValue="PALETAS" required>
+                  <option value="PALETAS">Paletas</option>
+                  <option value="PELOTAS">Pelotas</option>
+                  <option value="ACCESORIOS">Accesorios</option>
+                  <option value="INDUMENTARIA">Indumentaria</option>
                 </select>
               </label>
             </div>
 
             <label className="admin-form-field full">
               <span>Description</span>
-              <textarea placeholder="Describe las características técnicas y materiales..." />
+              <textarea
+                name="description"
+                placeholder="Describe las características técnicas y materiales..."
+              />
             </label>
 
             <div className="admin-form-row">
               <label className="admin-form-field">
                 <span>Price ($)</span>
-                <input type="number" placeholder="0.00" />
+                <input
+                  name="price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  required
+                />
               </label>
 
               <label className="admin-form-field">
                 <span>Stock</span>
-                <input type="number" placeholder="Cant. disponible" />
+                <input
+                  name="stock"
+                  type="number"
+                  min="0"
+                  placeholder="Cant. disponible"
+                  required
+                />
               </label>
             </div>
 
             <div className="admin-product-note">
               <InfoOutlinedIcon />
               <p>
-                <strong>Nota:</strong> Al crear el producto, se notificará automáticamente a los usuarios que tengan este item en su "Lista de Deseos". Asegúrate de que las especificaciones sean precisas.
+                <strong>Nota:</strong> Al crear el producto, se notificará
+                automáticamente a los usuarios que tengan este item en su
+                "Lista de Deseos". Asegúrate de que las especificaciones sean
+                precisas.
               </p>
             </div>
           </div>
