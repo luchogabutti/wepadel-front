@@ -4,9 +4,7 @@ import { ConfirmationDialog } from '../../../general/confirmationDialog/Confirma
 import { OrderDetailDrawer } from '../OrderDetailDrawer/OrderDetailDrawer';
 import './styles.scss';
 
-export const OrderCard = ({
-  order,
-}) => {
+export const OrderCard = ({order}) => {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
 
@@ -79,19 +77,7 @@ export const OrderCard = ({
               variant="outlined"
               onClick={() => setCancelDialogOpen(true)}
               className="action-btn cancel-btn"
-              sx={{
-                borderColor: '#FF4444',
-                color: '#FF4444',
-                fontWeight: 600,
-                textTransform: 'none',
-                borderRadius: '8px',
-                px: 3,
-                py: 1,
-                '&:hover': {
-                  bgcolor: 'rgba(255, 68, 68, 0.08)',
-                  borderColor: '#FF4444',
-                },
-              }}
+              sx={{borderColor: 'error.main', color: 'error.main'}}
             >
               Cancelar orden
             </Button>
@@ -102,20 +88,7 @@ export const OrderCard = ({
               variant="outlined"
               onClick={handleReorder}
               className="action-btn reorder-btn"
-              sx={{
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                color: '#A0AEC0',
-                fontWeight: 600,
-                textTransform: 'none',
-                borderRadius: '8px',
-                px: 3,
-                py: 1,
-                '&:hover': {
-                  bgcolor: 'rgba(255, 255, 255, 0.03)',
-                  borderColor: 'rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                },
-              }}
+              sx={{borderColor: 'text.secondary', color: 'text.secondary'}}
             >
               Reordenar
             </Button>
@@ -126,19 +99,7 @@ export const OrderCard = ({
               variant="outlined"
               onClick={() => setDetailOpen(true)}
               className="action-btn details-btn"
-              sx={{
-                color: 'primary.light',
-                borderColor: 'primary.light',
-                fontWeight: 600,
-                textTransform: 'none',
-                borderRadius: '8px',
-                px: 3,
-                py: 1,
-                '&:hover': {
-                  borderColor: 'primary.light',
-                  bgcolor: 'rgba(179, 197, 255, 0.08)',
-                },
-              }}
+              sx={{color: 'primary.light', borderColor: 'primary.light'}}
             >
               Ver Detalle
             </Button>
