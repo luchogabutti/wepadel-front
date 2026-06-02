@@ -37,7 +37,7 @@ export const CartSummary = ({ subtotal, total }) => {
         fullWidth
         variant="contained"
         className="checkout-btn"
-        sx={{ bgcolor: 'primary.main', color: '#f8f7ff', '&:hover': { bgcolor: 'primary.main' } }}
+        sx={{ bgcolor: 'primary.main', color: 'primary.contrastText' }}
       >
         Ir al Checkout
       </Button>

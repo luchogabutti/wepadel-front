@@ -1,6 +1,6 @@
 .order-detail-drawer-paper {
-  background-color: #141c24;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--mui-palette-surface-main);
+  border-left: 1px solid color-mix(in srgb, var(--mui-palette-text-primary) 8%, transparent);
   display: flex;
   flex-direction: column;
 }
@@ -14,20 +14,20 @@
   .order-detail-drawer-title {
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--mui-palette-text-primary);
   }
 
   .order-detail-close-icon {
-    color: #a0aec0;
+    color: var(--mui-palette-text-secondary);
 
     &:hover {
-      color: #ffffff;
+      color: var(--mui-palette-text-primary);
     }
   }
 }
 
 .order-detail-divider {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: color-mix(in srgb, var(--mui-palette-text-primary) 8%, transparent);
 }
 
 .order-detail-drawer-body {
@@ -41,7 +41,7 @@
 
   .order-detail-label {
     display: block;
-    color: #a0aec0;
+    color: var(--mui-palette-text-secondary);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -49,13 +49,13 @@
   }
 
   .order-detail-value {
-    color: #ffffff;
+    color: var(--mui-palette-text-primary);
   }
 }
 
 .order-detail-section-label {
   display: block;
-  color: #a0aec0;
+  color: var(--mui-palette-text-secondary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -73,8 +73,8 @@
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: color-mix(in srgb, var(--mui-palette-background-default) 20%, transparent);
+  border: 1px solid var(--mui-palette-divider);
   border-radius: 8px;
 
   .order-detail-item-image {
@@ -86,24 +86,24 @@
   }
 
   .order-detail-item-name {
-    color: #e5e1eb;
+    color: var(--mui-palette-text-emphasis);
     line-height: 1.4;
   }
 }
 
 .order-detail-drawer-footer {
   padding: 16px 24px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid color-mix(in srgb, var(--mui-palette-text-primary) 8%, transparent);
 
   .order-detail-close-btn {
-    border-color: rgba(160, 174, 192, 0.35);
-    color: #a0aec0;
+    border-color: color-mix(in srgb, var(--mui-palette-text-secondary) 35%, transparent);
+    color: var(--mui-palette-text-secondary);
     font-weight: 600;
 
     &:hover {
-      border-color: rgba(179, 197, 255, 0.4);
-      color: #ffffff;
-      background-color: rgba(255, 255, 255, 0.04);
+      border-color: color-mix(in srgb, var(--mui-palette-primary-light) 40%, transparent);
+      color: var(--mui-palette-text-primary);
+      background-color: color-mix(in srgb, var(--mui-palette-text-primary) 4%, transparent);
     }
   }
 }

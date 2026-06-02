@@ -76,8 +76,7 @@ export const OrderCard = ({order}) => {
             <Button
               variant="outlined"
               onClick={() => setCancelDialogOpen(true)}
-              className="action-btn cancel-btn"
-              sx={{borderColor: 'error.main', color: 'error.main'}}
+              sx={{borderColor: 'error.dark', color: 'error.dark'}}
             >
               Cancelar orden
             </Button>
@@ -87,7 +86,6 @@ export const OrderCard = ({order}) => {
             <Button
               variant="outlined"
               onClick={handleReorder}
-              className="action-btn reorder-btn"
               sx={{borderColor: 'text.secondary', color: 'text.secondary'}}
             >
               Reordenar
@@ -98,7 +96,6 @@ export const OrderCard = ({order}) => {
             <Button
               variant="outlined"
               onClick={() => setDetailOpen(true)}
-              className="action-btn details-btn"
               sx={{color: 'primary.light', borderColor: 'primary.light'}}
             >
               Ver Detalle

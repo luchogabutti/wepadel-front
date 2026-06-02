@@ -43,24 +43,7 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
         fullWidth
         variant="contained"
         onClick={handleUsePoints}
-        className="redeem-btn"
-        sx={{
-          bgcolor: '#FFFFFF',
-          color: '#0066FF',
-          fontWeight: 800,
-          py: 1.5,
-          borderRadius: '8px',
-          fontFamily: 'Outfit, sans-serif',
-          textTransform: 'none',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-          '&:hover': {
-            bgcolor: 'rgba(255, 255, 255, 0.9)',
-          },
-          '&:active': {
-            transform: 'scale(0.98)',
-          },
-          transition: 'all 0.15s ease',
-        }}
+        sx={{bgcolor: 'primary.contrastText', color: 'primary.main', py: 1.5}}
       >
         USAR MIS PUNTOS
       </Button>

@@ -6,17 +6,25 @@
   justify-content: center;
   text-align: center;
   padding: 32px;
-  background: linear-gradient(135deg, #0066FF 0%, #003fa4 100%);
+  background: linear-gradient(
+    135deg,
+    var(--mui-palette-primary-main) 0%,
+    var(--mui-palette-primary-dark) 100%
+  );
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 102, 255, 0.25);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--mui-palette-primary-main) 25%, transparent);
   gap: 24px;
   width: 100%;
 
   .card-gradient-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(
+      to bottom right,
+      color-mix(in srgb, var(--mui-palette-text-primary) 10%, transparent),
+      transparent
+    );
     pointer-events: none;
   }
 
@@ -24,7 +32,7 @@
     z-index: 2;
 
     .points-label {
-      color: rgba(255, 255, 255, 0.7);
+      color: color-mix(in srgb, var(--mui-palette-text-primary) 70%, transparent);
       font-weight: 600;
       letter-spacing: 0.12em;
       margin-bottom: 8px;
@@ -42,13 +50,13 @@
         font-weight: 800;
         font-size: 64px;
         line-height: 1;
-        color: #FFFFFF;
+        color: var(--mui-palette-text-primary);
       }
 
       .points-unit {
         font-family: 'Outfit', sans-serif;
         font-weight: 700;
-        color: #FFFFFF;
+        color: var(--mui-palette-text-primary);
         font-size: 20px;
       }
     }
@@ -56,14 +64,14 @@
 
   .points-details-box {
     z-index: 2;
-    background: rgba(0, 0, 0, 0.2);
+    background: color-mix(in srgb, var(--mui-palette-background-default) 20%, transparent);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid color-mix(in srgb, var(--mui-palette-text-primary) 10%, transparent);
     border-radius: 8px;
     padding: 16px;
 
     .details-title {
-      color: #FFFFFF;
+      color: var(--mui-palette-text-primary);
       font-family: 'Outfit', sans-serif;
       font-weight: 700;
       font-size: 16px;
@@ -71,13 +79,9 @@
     }
 
     .details-text {
-      color: rgba(255, 255, 255, 0.8);
+      color: color-mix(in srgb, var(--mui-palette-text-primary) 80%, transparent);
       font-size: 13px;
       line-height: 1.4;
     }
-  }
-
-  .redeem-btn {
-    z-index: 2;
   }
 }

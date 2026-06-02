@@ -67,13 +67,12 @@ export const CheckoutPage = () => {
       <Container maxWidth="lg" sx={{ flexGrow: 1, py: 4, px: { xs: 2, md: 6 } }}>
         <Box sx={{ mb: 4 }}>
           <Typography
-            variant="h3"
-            component="h1"
-            sx={{ fontWeight: 700, color: '#e5e1eb', fontSize: { xs: 28, md: 32 }, mb: 1 }}
+            variant="h1"
+            sx={{ fontWeight: 700, color: 'text.emphasis', fontSize: { xs: 28, md: 32 }, mb: 1 }}
           >
             Checkout
           </Typography>
-          <Typography sx={{ color: '#c2c6d8', fontSize: 16 }}>
+          <Typography sx={{ color: 'text.label', fontSize: 16 }}>
             Revisá tu pedido y completá tu envio antes de finalizar la compra.
           </Typography>
         </Box>

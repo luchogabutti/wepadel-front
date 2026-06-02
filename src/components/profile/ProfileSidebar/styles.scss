@@ -3,17 +3,17 @@
   flex-direction: column;
   height: calc(100vh - 64px);
   width: 256px;
-  background-color: #141C24; // Gris Carbón — background.paper
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--mui-palette-background-paper);
+  border-right: 1px solid var(--mui-palette-divider);
   padding: 24px 16px;
   position: sticky;
   top: 64px;
   align-self: flex-start;
   flex-shrink: 0;
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 0 16px color-mix(in srgb, var(--mui-palette-background-default) 25%, transparent);
 
   @media (max-width: 900px) {
-    display: none; // Hide on tablet and mobile
+    display: none;
   }
 
   .user-profile-summary {
@@ -22,25 +22,25 @@
     align-items: center;
     padding-bottom: 24px;
     margin-bottom: 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--mui-palette-divider);
 
     .user-avatar {
       width: 80px;
       height: 80px;
       margin-bottom: 16px;
-      border: 2px solid #0066FF;
+      border: 2px solid var(--mui-palette-primary-main);
       padding: 2px;
     }
 
     .user-name {
       font-family: 'Outfit', sans-serif;
       font-weight: 700;
-      color: #FFFFFF;
+      color: var(--mui-palette-text-primary);
       margin-bottom: 4px;
     }
 
     .user-email {
-      color: #A0AEC0;
+      color: var(--mui-palette-text-secondary);
       font-size: 13px;
     }
   }
@@ -60,7 +60,7 @@
       border: none;
       border-radius: 8px;
       background: none;
-      color: #A0AEC0;
+      color: var(--mui-palette-text-secondary);
       font: inherit;
       text-align: left;
       text-decoration: none;
@@ -68,17 +68,17 @@
       cursor: pointer;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.03);
-        color: #FFFFFF;
+        background-color: color-mix(in srgb, var(--mui-palette-text-primary) 3%, transparent);
+        color: var(--mui-palette-text-primary);
       }
 
       &.active {
-        background-color: #0066FF;
-        color: #FFFFFF;
+        background-color: var(--mui-palette-primary-main);
+        color: var(--mui-palette-primary-contrastText);
         font-weight: 700;
 
         .nav-icon {
-          color: #FFFFFF;
+          color: var(--mui-palette-primary-contrastText);
         }
 
         .nav-text {
@@ -99,11 +99,11 @@
       &.logout-item {
         margin-top: auto;
         margin-bottom: 16px;
-        color: rgba(255, 68, 68, 0.85);
+        color: color-mix(in srgb, var(--mui-palette-error-main) 85%, transparent);
 
         &:hover {
-          background-color: rgba(255, 68, 68, 0.1);
-          color: #FF4444;
+          background-color: color-mix(in srgb, var(--mui-palette-error-main) 10%, transparent);
+          color: var(--mui-palette-error-main);
         }
       }
     }

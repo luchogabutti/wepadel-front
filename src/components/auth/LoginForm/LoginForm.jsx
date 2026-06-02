@@ -90,15 +90,16 @@ export const LoginForm = () => {
             checked={remember}
             onChange={(e) => setRemember(e.target.checked)}
             sx={{
-              color: 'rgba(160, 174, 192, 0.5)',
+              color: 'text.secondary',
+              opacity: 0.5,
               '&.Mui-checked': {
-                color: '#0066FF',
+                color: 'primary.main',
               },
             }}
           />
         }
         label={
-          <Typography variant="body2" sx={{ color: '#A0AEC0', userSelect: 'none' }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary', userSelect: 'none' }}>
             Mantener sesión iniciada
           </Typography>
         }

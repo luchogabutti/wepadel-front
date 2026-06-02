@@ -1,33 +1,44 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, alpha } from '@mui/material/styles';
 
 export const theme = createTheme({
   cssVariables: true,
   palette: {
     mode: 'dark',
     primary: {
-      main: '#0066FF',        // Azul Eléctrico — CTAs, botones, acentos, links destacados
-      light: '#B3C5FF',       // Azul suave — logos, labels, iconos, textos de acción secundarios
+      main: '#0066FF',
+      light: '#B3C5FF',
+      dark: '#003fa4',
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#141C24',        // Gris Carbón — fondos de tarjetas, paneles laterales
+      main: '#141C24',
       contrastText: '#FFFFFF',
     },
     success: {
-      main: '#00CC99',        // Turquesa/Teal — badges de descuento, stock disponible
+      main: '#00CC99',
       contrastText: '#0C0B12',
     },
     error: {
-      main: '#FF4444',        // Rojo — errores, órdenes canceladas, stock agotado
+      main: '#FF4444',
+      dark: '#CC0000',
     },
     background: {
-      default: '#0C0B12',     // Negro Profundo — fondo base de toda la aplicación
-      paper: '#141C24',       // Gris Carbón — tarjetas, modales, headers
+      default: '#0C0B12',
+      paper: '#141C24',
+    },
+    surface: {
+      main: '#1c1b22',
+      light: '#201f26',
+      dark: '#2a2931',
     },
     text: {
-      primary: '#FFFFFF',     // Blanco — texto principal sobre fondos oscuros
-      secondary: '#A0AEC0',   // Gris claro — textos secundarios, metadatos, placeholders
+      primary: '#FFFFFF',
+      secondary: '#A0AEC0',
+      emphasis: '#e5e1eb',
+      label: '#c2c6d8',
+      hint: '#8c90a1',
     },
+    divider: 'rgba(255, 255, 255, 0.05)',
   },
   typography: {
     fontFamily: '"Outfit", system-ui, sans-serif',
@@ -57,13 +68,13 @@ export const theme = createTheme({
   components: {
     MuiAppBar: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           backgroundImage: 'none',
-          backgroundColor: 'rgba(12, 11, 18, 0.8)',
+          backgroundColor: alpha(theme.palette.background.default, 0.8),
           backdropFilter: 'blur(12px)',
           boxShadow: 'none',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-        },
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        }),
       },
     },
     MuiButton: {
@@ -78,18 +89,18 @@ export const theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: ({ theme }) => ({
-          backgroundColor: '#201f26',
+          backgroundColor: theme.palette.surface.light,
           borderRadius: 8,
-          color: '#e5e1eb',
+          color: theme.palette.text.emphasis,
           '& fieldset': {
-            borderColor: 'rgba(66, 70, 86, 0.3)',
+            borderColor: alpha(theme.palette.text.hint, 0.3),
           },
           '&:hover fieldset': {
-            borderColor: 'rgba(179, 197, 255, 0.3)',
+            borderColor: alpha(theme.palette.primary.light, 0.3),
           },
           '&.Mui-focused fieldset': {
             borderColor: theme.palette.primary.main,
-            boxShadow: '0 0 0 1px rgba(0, 102, 255, 0.3)',
+            boxShadow: `0 0 0 1px ${alpha(theme.palette.primary.main, 0.3)}`,
           },
         }),
       },
@@ -97,7 +108,7 @@ export const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: ({ theme }) => ({
-          color: '#c2c6d8',
+          color: theme.palette.text.label,
           '&.Mui-focused': {
             color: theme.palette.primary.light,
           },

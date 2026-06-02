@@ -1,20 +1,20 @@
 .order-card-container {
-  background-color: #141C24; // background.paper
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--mui-palette-background-paper);
+  border: 1px solid var(--mui-palette-divider);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--mui-palette-background-default) 20%, transparent);
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: rgba(0, 102, 255, 0.3);
+    border-color: color-mix(in srgb, var(--mui-palette-primary-main) 30%, transparent);
   }
 
   &.cancelada {
     opacity: 0.85;
 
     &:hover {
-      border-color: rgba(255, 68, 68, 0.2);
+      border-color: color-mix(in srgb, var(--mui-palette-error-main) 20%, transparent);
     }
   }
 
@@ -23,8 +23,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--mui-palette-divider);
+    background-color: color-mix(in srgb, var(--mui-palette-background-default) 10%, transparent);
 
     @media (max-width: 600px) {
       flex-direction: column;
@@ -38,7 +38,7 @@
       gap: 4px;
 
       .order-id {
-        color: #A0AEC0;
+        color: var(--mui-palette-text-secondary);
         font-family: 'Outfit', sans-serif;
         font-weight: 700;
         text-transform: uppercase;
@@ -47,7 +47,7 @@
       }
 
       .order-date {
-        color: #A0AEC0;
+        color: var(--mui-palette-text-secondary);
         font-size: 13px;
       }
     }
@@ -72,33 +72,33 @@
         font-family: 'Outfit', sans-serif;
 
         &.confirmada {
-          background-color: rgba(0, 204, 153, 0.15);
-          color: #00CC99;
-          border: 1px solid rgba(0, 204, 153, 0.25);
+          background-color: color-mix(in srgb, var(--mui-palette-success-main) 15%, transparent);
+          color: var(--mui-palette-success-main);
+          border: 1px solid color-mix(in srgb, var(--mui-palette-success-main) 25%, transparent);
         }
 
         &.pendiente {
-          background-color: rgba(160, 174, 192, 0.15);
-          color: #A0AEC0;
-          border: 1px solid rgba(160, 174, 192, 0.25);
+          background-color: color-mix(in srgb, var(--mui-palette-text-secondary) 15%, transparent);
+          color: var(--mui-palette-text-secondary);
+          border: 1px solid color-mix(in srgb, var(--mui-palette-text-secondary) 25%, transparent);
         }
 
         &.cancelada {
-          background-color: rgba(255, 68, 68, 0.15);
-          color: #FF4444;
-          border: 1px solid rgba(255, 68, 68, 0.25);
+          background-color: color-mix(in srgb, var(--mui-palette-error-main) 15%, transparent);
+          color: var(--mui-palette-error-main);
+          border: 1px solid color-mix(in srgb, var(--mui-palette-error-main) 25%, transparent);
         }
       }
 
       .order-total {
         font-family: 'Outfit', sans-serif;
         font-weight: 700;
-        color: #FFFFFF;
+        color: var(--mui-palette-text-primary);
         font-size: 18px;
 
         &.line-through {
           text-decoration: line-through;
-          color: #A0AEC0;
+          color: var(--mui-palette-text-secondary);
         }
       }
     }
@@ -124,8 +124,8 @@
       .item-thumbnail-box {
         width: 80px;
         height: 96px;
-        background-color: #1c1b22;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background-color: var(--mui-palette-surface-main);
+        border: 1px solid var(--mui-palette-divider);
         border-radius: 8px;
         overflow: hidden;
 
@@ -139,15 +139,15 @@
       .remaining-indicator-box {
         width: 80px;
         height: 96px;
-        background-color: #1c1b22;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background-color: var(--mui-palette-surface-main);
+        border: 1px solid var(--mui-palette-divider);
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
 
         .remaining-text {
-          color: #0066FF;
+          color: var(--mui-palette-primary-main);
           font-weight: 700;
           font-family: 'Outfit', sans-serif;
         }

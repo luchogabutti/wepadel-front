@@ -32,7 +32,12 @@
     .bg-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to right, #0C0B12, rgba(12, 11, 18, 0.4), transparent);
+      background: linear-gradient(
+        to right,
+        var(--mui-palette-background-default),
+        color-mix(in srgb, var(--mui-palette-background-default) 40%, transparent),
+        transparent
+      );
     }
   }
 

@@ -1,9 +1,39 @@
 import { Box, Typography, Button, TextField, Grid, Card, CardContent } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import { ProfileSidebar } from '../components/profile/ProfileSidebar/ProfileSidebar';
 import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
+
+const profileCardSx = {
+  bgcolor: 'background.paper',
+  border: 1,
+  borderColor: 'divider',
+  borderRadius: '12px',
+};
+
+const disabledFieldSx = (theme) => ({
+  '& .MuiOutlinedInput-root': {
+    bgcolor: alpha(theme.palette.background.default, 0.2),
+    borderRadius: '8px',
+    border: 1,
+    borderColor: alpha(theme.palette.text.secondary, 0.1),
+    '& fieldset': { border: 'none' },
+  },
+  '& .MuiInputBase-input.Mui-disabled': {
+    color: 'text.primary',
+    WebkitTextFillColor: theme.palette.text.primary,
+    py: '12px',
+    px: '16px',
+  },
+});
+
+const benefitCardSx = {
+  ...profileCardSx,
+  boxShadow: (theme) => `0 4px 12px ${alpha(theme.palette.background.default, 0.15)}`,
+  height: '100%',
+};
 
 export const ProfilePage = () => {
   return (
@@ -46,38 +76,20 @@ export const ProfilePage = () => {
               <Grid item size={{ xs: 12, lg: 8 }}>
                 <Box
                   sx={{
-                    bgcolor: '#141C24',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                    borderRadius: '12px',
+                    ...profileCardSx,
                     p: 4,
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                    boxShadow: (theme) => `0 4px 20px ${alpha(theme.palette.background.default, 0.2)}`,
                   }}
                 >
                   {/* Encabezado Sección */}
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: '#FFFFFF' }}>
+                    <Typography variant="h5" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: 'text.primary' }}>
                       Mis datos
                     </Typography>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        borderColor: 'primary.light',
-                        color: 'primary.light',
-                        fontWeight: 700,
-                        textTransform: 'none',
-                        px: 3,
-                        py: 0.8,
-                        borderRadius: '8px',
-                        '&:hover': {
-                          bgcolor: 'rgba(179, 197, 255, 0.08)',
-                          borderColor: 'primary.light',
-                        },
-                      }}
-                    >
+                    <Button variant="outlined" sx={{borderColor: 'primary.light', color: 'primary.light'}}>
                       Editar
                     </Button>
                   </Box>
@@ -86,7 +98,7 @@ export const ProfilePage = () => {
                   <Grid container spacing={3}>
                     <Grid item size={{ xs: 12, sm: 6 }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Typography variant="caption" sx={{ color: '#A0AEC0', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                           Nombre
                         </Typography>
                         <TextField
@@ -94,26 +106,13 @@ export const ProfilePage = () => {
                           value="Juan"
                           disabled
                           variant="outlined"
-                          sx={{
-                            '& .MuiOutlinedInput-root': {
-                              bgcolor: 'rgba(0, 0, 0, 0.2)',
-                              borderRadius: '8px',
-                              border: '1px solid rgba(160, 174, 192, 0.1)',
-                              '& fieldset': { border: 'none' },
-                            },
-                            '& .MuiInputBase-input.Mui-disabled': {
-                              color: '#FFFFFF',
-                              WebkitTextFillColor: '#FFFFFF',
-                              py: '12px',
-                              px: '16px',
-                            },
-                          }}
+                          sx={disabledFieldSx}
                         />
                       </Box>
                     </Grid>
                     <Grid item size={{xs: 12, sm: 6}}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Typography variant="caption" sx={{ color: '#A0AEC0', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                           Apellido
                         </Typography>
                         <TextField
@@ -121,26 +120,13 @@ export const ProfilePage = () => {
                           value="Pérez"
                           disabled
                           variant="outlined"
-                          sx={{
-                            '& .MuiOutlinedInput-root': {
-                              bgcolor: 'rgba(0, 0, 0, 0.2)',
-                              borderRadius: '8px',
-                              border: '1px solid rgba(160, 174, 192, 0.1)',
-                              '& fieldset': { border: 'none' },
-                            },
-                            '& .MuiInputBase-input.Mui-disabled': {
-                              color: '#FFFFFF',
-                              WebkitTextFillColor: '#FFFFFF',
-                              py: '12px',
-                              px: '16px',
-                            },
-                          }}
+                          sx={disabledFieldSx}
                         />
                       </Box>
                     </Grid>
                     <Grid item size={{ xs: 12 }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Typography variant="caption" sx={{ color: '#A0AEC0', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                           Email
                         </Typography>
                         <TextField
@@ -148,20 +134,7 @@ export const ProfilePage = () => {
                           value="juan.perez@padelpro.com"
                           disabled
                           variant="outlined"
-                          sx={{
-                            '& .MuiOutlinedInput-root': {
-                              bgcolor: 'rgba(0, 0, 0, 0.2)',
-                              borderRadius: '8px',
-                              border: '1px solid rgba(160, 174, 192, 0.1)',
-                              '& fieldset': { border: 'none' },
-                            },
-                            '& .MuiInputBase-input.Mui-disabled': {
-                              color: '#FFFFFF',
-                              WebkitTextFillColor: '#FFFFFF',
-                              py: '12px',
-                              px: '16px',
-                            },
-                          }}
+                          sx={disabledFieldSx}
                         />
                       </Box>
                     </Grid>
@@ -178,63 +151,39 @@ export const ProfilePage = () => {
             {/* Fichas de Beneficios de Bento */}
             <Grid container spacing={3}>
               <Grid item size={{ xs: 12, md: 4 }}>
-                <Card
-                  sx={{
-                    bgcolor: '#141C24',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    height: '100%',
-                  }}
-                >
+                <Card sx={benefitCardSx}>
                   <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    <VerifiedIcon sx={{ color: '#00CC99', fontSize: '32px' }} />
-                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: '#FFFFFF' }}>
+                    <VerifiedIcon sx={{ color: 'success.main', fontSize: '32px' }} />
+                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: 'text.primary' }}>
                       Miembro Elite
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#A0AEC0', lineHeight: 1.4 }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.4 }}>
                       Acceso prioritario a lanzamientos de nuevas colecciones.
                     </Typography>
                   </CardContent>
                 </Card>
               </Grid>
               <Grid item size={{ xs: 12, md: 4 }}>
-                <Card
-                  sx={{
-                    bgcolor: '#141C24',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    height: '100%',
-                  }}
-                >
+                <Card sx={benefitCardSx}>
                   <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    <LocalShippingIcon sx={{ color: '#00CC99', fontSize: '32px' }} />
-                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: '#FFFFFF' }}>
+                    <LocalShippingIcon sx={{ color: 'success.main', fontSize: '32px' }} />
+                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: 'text.primary' }}>
                       Envíos Gratis
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#A0AEC0', lineHeight: 1.4 }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.4 }}>
                       Por ser cliente recurrente, tenés envío bonificado en todo el país.
                     </Typography>
                   </CardContent>
                 </Card>
               </Grid>
               <Grid item size={{ xs: 12, md: 4 }}>
-                <Card
-                  sx={{
-                    bgcolor: '#141C24',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    height: '100%',
-                  }}
-                >
+                <Card sx={benefitCardSx}>
                   <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                    <SupportAgentIcon sx={{ color: '#00CC99', fontSize: '32px' }} />
-                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: '#FFFFFF' }}>
+                    <SupportAgentIcon sx={{ color: 'success.main', fontSize: '32px' }} />
+                    <Typography variant="h6" sx={{ fontWeight: 700, fontFamily: 'Outfit', color: 'text.primary' }}>
                       Soporte VIP
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#A0AEC0', lineHeight: 1.4 }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.4 }}>
                       Chat directo con nuestros expertos en equipamiento técnico.
                     </Typography>
                   </CardContent>

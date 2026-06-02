@@ -44,7 +44,7 @@ export const CheckoutPaymentDetail = ({ subtotal, pointsDiscount, total, onConfi
         startIcon={<LockOutlinedIcon />}
         onClick={onConfirm}
         className="confirm-btn"
-        sx={{ bgcolor: 'primary.main', color: '#f8f7ff', '&:hover': { bgcolor: 'primary.main' } }}
+        sx={{ bgcolor: 'primary.main', color: 'primary.contrastText' }}
       >
         Confirmar compra
       </Button>

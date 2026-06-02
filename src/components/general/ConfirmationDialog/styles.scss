@@ -1,25 +1,25 @@
 .confirmation-dialog-root {
   .MuiBackdrop-root {
-    background-color: rgba(12, 11, 18, 0.75);
+    background-color: color-mix(in srgb, var(--mui-palette-background-default) 75%, transparent);
     backdrop-filter: blur(4px);
   }
 }
 
 .confirmation-dialog-paper {
-  background-color: #141c24;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--mui-palette-background-paper);
+  border: 1px solid color-mix(in srgb, var(--mui-palette-text-primary) 8%, transparent);
   border-radius: 16px;
   padding: 8px 8px 16px;
   max-width: 420px;
   width: calc(100% - 32px);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 24px 48px color-mix(in srgb, var(--mui-palette-background-default) 45%, transparent);
 }
 
 .confirmation-dialog-title {
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
   font-size: 20px;
-  color: #ffffff;
+  color: var(--mui-palette-text-primary);
   padding: 24px 24px 8px;
 }
 
@@ -27,7 +27,7 @@
   padding: 0 24px 8px;
 
   .confirmation-dialog-subtitle {
-    color: #a0aec0;
+    color: var(--mui-palette-text-secondary);
     line-height: 1.5;
     font-size: 15px;
   }
@@ -40,32 +40,27 @@
   gap: 8px;
   padding: 16px 24px 8px;
 
-  > .MuiButton-root {
-    margin: 0;
-    flex: 0 0 auto;
-  }
-
   .confirmation-dialog-cancel {
-    border-color: rgba(160, 174, 192, 0.35);
-    color: #a0aec0;
+    border-color: var(--mui-palette-text-secondary);
+    color: var(--mui-palette-text-secondary);
     font-weight: 600;
     padding-left: 20px;
     padding-right: 20px;
 
     &:hover {
-      border-color: rgba(179, 197, 255, 0.4);
-      color: #ffffff;
-      background-color: rgba(255, 255, 255, 0.04);
+      border-color: color-mix(in srgb, var(--mui-palette-primary-light) 40%, transparent);
+      color: var(--mui-palette-text-primary);
+      background-color: color-mix(in srgb, var(--mui-palette-text-primary) 4%, transparent);
     }
   }
 
   .confirmation-dialog-confirm {
     padding-left: 20px;
     padding-right: 20px;
-    box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--mui-palette-primary-main) 25%, transparent);
 
     &.MuiButton-containedError {
-      box-shadow: 0 4px 12px rgba(255, 68, 68, 0.25);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--mui-palette-error-main) 25%, transparent);
     }
   }
 }

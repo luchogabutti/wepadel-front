@@ -54,7 +54,7 @@ export const CheckoutSuccessCard = ({ orderId, pointsEarned, productImages, extr
           to="/perfil/ordenes"
           variant="contained"
           className="continue-btn"
-          sx={{ bgcolor: 'primary.light', color: '#002b75', '&:hover': { bgcolor: '#dae1ff' } }}
+          sx={{ bgcolor: 'primary.light', color: 'primary.dark', '&:hover': { bgcolor: 'primary.light' } }}
         >
           Seguir comprando
         </Button>

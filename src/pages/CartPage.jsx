@@ -14,11 +14,10 @@ export const CartPage = () => {
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Container maxWidth="lg" sx={{ flexGrow: 1, py: 4, px: { xs: 2, md: 6 } }}>
         <Typography
-          variant="h3"
-          component="h1"
+          variant="h1"
           sx={{
             fontWeight: 700,
-            color: '#e5e1eb',
+            color: 'text.emphasis',
             mb: 4,
             fontSize: { xs: 28, md: 32 },
           }}
