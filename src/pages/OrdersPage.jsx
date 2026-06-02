@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { ProfileSidebar } from '../components/profile/ProfileSidebar/ProfileSidebar';
-import { OrderCard } from '../components/profile/OrderCard/OrderCard';
+import { OrderCard } from '../components/profile/orders/OrderCard/OrderCard';
 import { orders } from '../data/orders';
 
 export const OrdersPage = () => {
@@ -41,14 +41,7 @@ export const OrdersPage = () => {
             {/* Listado de Tarjetas de Orden */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               {orders.map((order) => (
-                <OrderCard
-                  key={order.id}
-                  id={order.id}
-                  date={order.date}
-                  status={order.status}
-                  total={order.total}
-                  items={order.items}
-                />
+                <OrderCard key={order.id} order={order} />
               ))}
             </Box>
           </Box>

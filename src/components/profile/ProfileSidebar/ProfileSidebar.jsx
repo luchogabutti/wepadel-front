@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Typography, Avatar, Link } from '@mui/material';
-import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog';
+import { ConfirmationDialog } from '../../general/confirmationDialog/ConfirmationDialog';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import LogoutIcon from '@mui/icons-material/Logout';

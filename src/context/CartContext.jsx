@@ -32,7 +32,7 @@ export const CartProvider = ({ children }) => {
 
     setNotification({
       open: true,
-      message: `¡Listo! Agregaste "${product.title}" al carrito`,
+      message: `${product.title} agregado al carrito exitosamente.`,
     });
   };
 

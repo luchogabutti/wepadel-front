@@ -3,7 +3,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import { ProfileSidebar } from '../components/profile/ProfileSidebar/ProfileSidebar';
-import { PointsBadge } from '../components/profile/PointsBadge/PointsBadge';
+import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
 
 export const ProfilePage = () => {
   return (

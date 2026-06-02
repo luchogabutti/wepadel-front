@@ -1,19 +1,17 @@
 import { useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog';
+import { ConfirmationDialog } from '../../../general/confirmationDialog/ConfirmationDialog';
+import { OrderDetailDrawer } from '../OrderDetailDrawer/OrderDetailDrawer';
 import './styles.scss';
 
 export const OrderCard = ({
-  id,
-  date,
-  status, // 'confirmada', 'pendiente', 'cancelada'
-  total,
-  items = [], // array de { image, name }
+  order,
 }) => {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
 
   const getStatusLabel = () => {
-    switch (status) {
+    switch (order.status) {
       case 'confirmada':
         return 'Confirmada';
       case 'pendiente':
@@ -21,50 +19,44 @@ export const OrderCard = ({
       case 'cancelada':
         return 'Cancelada';
       default:
-        return status;
+        return order.status;
     }
   };
 
   const handleCancelOrder = () => {
-    console.log(`Order cancelled for ID: ${id}`);
-  };
-
-  const handleViewDetails = () => {
-    console.log(`View details clicked for ID: ${id}`);
+    console.log(`Order cancelled for ID: ${order.id}`);
   };
 
   const handleReorder = () => {
-    console.log(`Reorder clicked for ID: ${id}`);
+    console.log(`Reorder clicked for ID: ${order.id}`);
   };
 
-  // Renderizar las imágenes de los productos en miniatura (máximo 2 visibles, el resto agrupado en un indicador +N)
-  const visibleItems = items.slice(0, 2);
-  const remainingCount = items.length - 2;
+
+  const visibleItems = order.items.slice(0, 2);
+  const remainingCount = order.items.length - 2;
 
   return (
-    <Box className={`order-card-container ${status}`}>
-      {/* Cabecera del Pedido */}
+    <Box className={`order-card-container ${order.status}`}>
       <Box className="order-card-header">
         <Box className="order-meta-info">
           <Typography variant="caption" className="order-id">
-            Pedido #{id}
+            Pedido #{order.id}
           </Typography>
           <Typography variant="body2" className="order-date">
-            Realizado {date}
+            Realizado {order.date}
           </Typography>
         </Box>
 
         <Box className="order-summary-info">
-          <Box className={`order-status-badge ${status}`}>
+          <Box className={`order-status-badge ${order.status}`}>
             {getStatusLabel()}
           </Box>
-          <Typography variant="h6" className={`order-total ${status === 'cancelada' ? 'line-through' : ''}`}>
-            ${total.toFixed(2)}
+          <Typography variant="h6" className={`order-total ${order.status === 'cancelada' ? 'line-through' : ''}`}>
+            ${order.total.toFixed(2)}
           </Typography>
         </Box>
       </Box>
 
-      {/* Cuerpo del Pedido: Lista de Ítems */}
       <Box className="order-card-body">
         <Box className="items-previews-row">
           {visibleItems.map((item, idx) => (
@@ -81,9 +73,8 @@ export const OrderCard = ({
           )}
         </Box>
 
-        {/* Acciones del Pedido */}
         <Box className="order-actions-row">
-          {status === 'pendiente' && (
+          {order.status === 'pendiente' && (
             <Button
               variant="outlined"
               onClick={() => setCancelDialogOpen(true)}
@@ -106,7 +97,7 @@ export const OrderCard = ({
             </Button>
           )}
 
-          {status === 'cancelada' && (
+          {order.status === 'cancelada' && (
             <Button
               variant="outlined"
               onClick={handleReorder}
@@ -130,10 +121,10 @@ export const OrderCard = ({
             </Button>
           )}
 
-          {status !== 'cancelada' && (
+          {order.status !== 'cancelada' && (
             <Button
               variant="outlined"
-              onClick={handleViewDetails}
+              onClick={() => setDetailOpen(true)}
               className="action-btn details-btn"
               sx={{
                 color: 'primary.light',
@@ -149,7 +140,7 @@ export const OrderCard = ({
                 },
               }}
             >
-              Ver Detalles
+              Ver Detalle
             </Button>
           )}
         </Box>
@@ -164,6 +155,12 @@ export const OrderCard = ({
         confirmLabel="Sí, cancelar"
         cancelLabel="Volver"
         confirmColor="error"
+      />
+
+      <OrderDetailDrawer
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        order={order}
       />
     </Box>
   );

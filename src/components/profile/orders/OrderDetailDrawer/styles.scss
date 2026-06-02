@@ -1,0 +1,109 @@
+.order-detail-drawer-paper {
+  background-color: #141c24;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.order-detail-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 16px 20px 24px;
+
+  .order-detail-drawer-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .order-detail-close-icon {
+    color: #a0aec0;
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+}
+
+.order-detail-divider {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.order-detail-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.order-detail-field {
+  margin-bottom: 20px;
+
+  .order-detail-label {
+    display: block;
+    color: #a0aec0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .order-detail-value {
+    color: #ffffff;
+  }
+}
+
+.order-detail-section-label {
+  display: block;
+  color: #a0aec0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.order-detail-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+
+  .order-detail-item-image {
+    width: 48px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .order-detail-item-name {
+    color: #e5e1eb;
+    line-height: 1.4;
+  }
+}
+
+.order-detail-drawer-footer {
+  padding: 16px 24px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  .order-detail-close-btn {
+    border-color: rgba(160, 174, 192, 0.35);
+    color: #a0aec0;
+    font-weight: 600;
+
+    &:hover {
+      border-color: rgba(179, 197, 255, 0.4);
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+  }
+}

@@ -1,22 +1,21 @@
-import { Box, Typography, Button } from '@mui/material';
-import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Box, Typography, Button } from '@mui/material';
+import { ConfirmationDialog } from '../../../general/confirmationDialog/ConfirmationDialog';
 import './styles.scss';
 
 export const PointsBadge = ({ pointsValue = 500 }) => {
   const [usePointsDialogOpen, setUsePointsDialogOpen] = useState(false);
   const navigate = useNavigate();
+
   const handleUsePoints = () => {
     setUsePointsDialogOpen(true);
   };
 
   return (
     <Box component="section" className="points-badge-card">
-      {/* Overlay de gradiente */}
       <Box className="card-gradient-overlay" />
 
-      {/* Saldo de Puntos */}
       <Box className="points-header">
         <Typography variant="overline" className="points-label">
           Saldo Actual
@@ -31,7 +30,6 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
         </Box>
       </Box>
 
-      {/* Información / Caja de Detalles */}
       <Box className="points-details-box">
         <Typography variant="h6" className="details-title">
           Mis puntos
@@ -41,7 +39,6 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
         </Typography>
       </Box>
 
-      {/* Botón de Canjear */}
       <Button
         fullWidth
         variant="contained"
@@ -67,6 +64,7 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
       >
         USAR MIS PUNTOS
       </Button>
+
       <ConfirmationDialog
         open={usePointsDialogOpen}
         onClose={() => setUsePointsDialogOpen(false)}

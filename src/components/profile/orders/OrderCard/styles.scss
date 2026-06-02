@@ -154,7 +154,6 @@
       }
     }
 
-    // Se desaturan las fotos si la orden fue cancelada
     &.cancelada {
       .item-thumbnail-box {
         filter: grayscale(1);
@@ -167,7 +166,7 @@
 
       @media (max-width: 768px) {
         width: 100%;
-        
+
         .action-btn {
           flex: 1;
         }
