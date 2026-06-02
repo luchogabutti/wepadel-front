@@ -10,7 +10,13 @@ const adminSections = [
   { id: 'discounts', label: 'Descuentos' },
 ]
 
-export const AdminLayout = ({ activeSection, onSectionChange, children }) => {
+export const AdminLayout = ({
+  activeSection,
+  onSectionChange,
+  searchTerm,
+  onSearchChange,
+  children,
+}) => {
   return (
     <Box className="admin-layout">
       <aside className="admin-sidebar">
@@ -54,6 +60,8 @@ export const AdminLayout = ({ activeSection, onSectionChange, children }) => {
             <input
               type="text"
               placeholder="Buscar producto..."
+              value={searchTerm}
+              onChange={(event) => onSearchChange(event.target.value)}
             />
           </div>
 

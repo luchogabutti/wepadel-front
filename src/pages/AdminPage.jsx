@@ -28,6 +28,7 @@ const sectionContent = {
 
 export const AdminPage = () => {
   const [activeSection, setActiveSection] = useState('catalog')
+  const [searchTerm, setSearchTerm] = useState('')
 
   const currentSection = sectionContent[activeSection]
 
@@ -35,6 +36,8 @@ export const AdminPage = () => {
     <AdminLayout
       activeSection={activeSection}
       onSectionChange={setActiveSection}
+      searchTerm={searchTerm}
+      onSearchChange={setSearchTerm}
     >
       <Box>
         <Box
@@ -88,7 +91,7 @@ export const AdminPage = () => {
         </Box>
 
         {activeSection === 'catalog' ? (
-          <AdminCatalogSection />
+          <AdminCatalogSection searchTerm={searchTerm} />
         ) : (
           <Box
             sx={{

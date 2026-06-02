@@ -5,7 +5,17 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { adminCatalogStats, adminProducts } from '../../../data/adminProductsData'
 import './styles.scss'
 
-export const AdminCatalogSection = () => {
+export const AdminCatalogSection = ({ searchTerm = '' }) => {
+  const normalizedSearch = searchTerm.toLowerCase().trim()
+
+  const filteredProducts = adminProducts.filter((product) => {
+    return (
+      product.name.toLowerCase().includes(normalizedSearch) ||
+      product.sku.toLowerCase().includes(normalizedSearch) ||
+      product.category.toLowerCase().includes(normalizedSearch)
+    )
+  })
+
   return (
     <section className="admin-catalog-section">
       <div className="admin-stats-grid">
@@ -34,7 +44,7 @@ export const AdminCatalogSection = () => {
           </thead>
 
           <tbody>
-            {adminProducts.map((product) => (
+            {filteredProducts.map((product) => (
               <tr key={product.id}>
                 <td>
                   <img
@@ -94,11 +104,21 @@ export const AdminCatalogSection = () => {
                 </td>
               </tr>
             ))}
+
+            {filteredProducts.length === 0 && (
+              <tr>
+                <td colSpan="7" className="admin-empty-table">
+                  No se encontraron productos para esa búsqueda.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
 
         <div className="admin-table-footer">
-          <p>Mostrando 1-3 de 1,284 productos</p>
+          <p>
+            Mostrando {filteredProducts.length} de 1,284 productos
+          </p>
 
           <div className="admin-pagination">
             <button type="button">
