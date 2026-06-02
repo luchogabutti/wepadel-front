@@ -22,8 +22,21 @@ export const formatCardName = (value) =>
 
 export const isPostalCodeValid = (postalCode) => /^\d{4,8}$/.test(postalCode);
 
+const MIN_CITY_LENGTH = 3;
+const LETTER_PATTERN = /[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]/;
+const NUMBER_PATTERN = /\d/;
+
+export const isAddressValid = (address) => {
+  const trimmed = address.trim();
+  return (
+    trimmed.length > 0 && LETTER_PATTERN.test(trimmed) && NUMBER_PATTERN.test(trimmed)
+  );
+};
+
+export const isCityValid = (city) => city.trim().length >= MIN_CITY_LENGTH;
+
 export const isShippingValid = ({ address, city, postalCode }) =>
-  Boolean(address.trim() && city.trim() && isPostalCodeValid(postalCode));
+  isAddressValid(address) && isCityValid(city) && isPostalCodeValid(postalCode);
 
 export const isExpiryValid = (expiry) => {
   const match = expiry.match(/^(0[1-9]|1[0-2])\/(\d{2})$/);
@@ -82,6 +95,108 @@ export const isCheckoutReady = (
   shippingCompleted &&
   isPaymentFormValid(formData) &&
   isPointsSelectionValid(usePoints, pointsMode, manualPoints, availablePoints);
+
+const EXPIRY_FORMAT = /^(0[1-9]|1[0-2])\/\d{2}$/;
+
+export const getShippingFieldError = (field, shippingData, showErrors) => {
+  if (!showErrors) return '';
+
+  const { address, city, postalCode } = shippingData;
+
+  switch (field) {
+    case 'address':
+      if (!address.trim()) return 'Ingresá la dirección de envío';
+      if (!isAddressValid(address)) {
+        return 'Incluí calle con letras y número (ej: Av. Libertador 1234)';
+      }
+      return '';
+    case 'city':
+      if (!city.trim()) return 'Ingresá la ciudad';
+      if (!isCityValid(city)) {
+        return `La ciudad debe tener al menos ${MIN_CITY_LENGTH} caracteres`;
+      }
+      return '';
+    case 'postalCode':
+      if (!postalCode.trim()) return 'Ingresá el código postal';
+      if (!isPostalCodeValid(postalCode)) return 'Debe tener entre 4 y 8 números';
+      return '';
+    default:
+      return '';
+  }
+};
+
+const paymentFieldHasInput = (field, formData) => {
+  const { cardName, cardNumber, expiry, cvc } = formData;
+  const cardDigits = cardNumber.replace(/\D/g, '');
+
+  switch (field) {
+    case 'cardName':
+      return Boolean(cardName.trim());
+    case 'cardNumber':
+      return cardDigits.length > 0;
+    case 'expiry':
+      return Boolean(expiry);
+    case 'cvc':
+      return Boolean(cvc);
+    default:
+      return false;
+  }
+};
+
+const getPaymentFieldMessage = (field, formData) => {
+  const { cardName, cardNumber, expiry, cvc } = formData;
+  const cardDigits = cardNumber.replace(/\D/g, '');
+
+  switch (field) {
+    case 'cardName':
+      if (!cardName.trim()) return 'Ingresá el nombre como figura en la tarjeta';
+      if (cardName.trim().length < 3) return 'El nombre debe tener al menos 3 letras';
+      return '';
+    case 'cardNumber':
+      if (!cardDigits) return 'Ingresá el número de tarjeta';
+      if (cardDigits.length !== 16) return 'El número debe tener 16 dígitos';
+      return '';
+    case 'expiry':
+      if (!expiry) return 'Ingresá la fecha de vencimiento';
+      if (!EXPIRY_FORMAT.test(expiry)) return 'Usá el formato MM/AA (ej: 12/28)';
+      if (!isExpiryValid(expiry)) return 'La tarjeta está vencida. Ingresá una fecha futura';
+      return '';
+    case 'cvc':
+      if (!cvc) return 'Ingresá el código de seguridad';
+      if (!/^\d{3,4}$/.test(cvc)) return 'El CVC debe tener 3 o 4 dígitos';
+      return '';
+    default:
+      return '';
+  }
+};
+
+export const getPaymentFieldError = (field, formData, showErrors) => {
+  const message = getPaymentFieldMessage(field, formData);
+  if (!message) return '';
+  if (showErrors || paymentFieldHasInput(field, formData)) return message;
+
+  return '';
+};
+
+export const getCheckoutValidationMessage = (
+  shippingCompleted,
+  formData,
+  { usePoints, pointsMode, manualPoints, availablePoints }
+) => {
+  if (!shippingCompleted) {
+    return 'Confirmá los datos de envío para continuar.';
+  }
+
+  if (!isPaymentFormValid(formData)) {
+    return 'Completá o corregí los datos del formulario para continuar.';
+  }
+
+  if (!isPointsSelectionValid(usePoints, pointsMode, manualPoints, availablePoints)) {
+    return `Ingresá entre 1 y ${availablePoints} puntos para aplicar el descuento.`;
+  }
+
+  return '';
+};
 
 export const formatShippingField = (field, value) => {
   if (field === 'postalCode') return formatPostalCode(value);

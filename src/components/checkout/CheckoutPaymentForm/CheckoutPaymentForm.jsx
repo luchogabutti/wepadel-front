@@ -1,12 +1,20 @@
 import { Typography, TextField } from '@mui/material';
 import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
-import { formatPaymentField } from '../../../utils/checkoutValidation';
+import { formatPaymentField, getPaymentFieldError } from '../../../utils/checkoutValidation';
 import './styles.scss';
 
-export const CheckoutPaymentForm = ({ formData, onFieldChange }) => {
+export const CheckoutPaymentForm = ({ formData, onFieldChange, showValidation }) => {
   const handleChange = (field) => (e) => {
     onFieldChange(field, formatPaymentField(field, e.target.value));
+  };
+
+  const fieldProps = (field) => {
+    const errorMessage = getPaymentFieldError(field, formData, showValidation);
+    return {
+      error: Boolean(errorMessage),
+      helperText: errorMessage,
+    };
   };
 
   return (
@@ -33,6 +41,7 @@ export const CheckoutPaymentForm = ({ formData, onFieldChange }) => {
           placeholder="Como figura en la tarjeta"
           value={formData.cardName}
           onChange={handleChange('cardName')}
+          {...fieldProps('cardName')}
         />
         <TextField
           fullWidth
@@ -50,6 +59,7 @@ export const CheckoutPaymentForm = ({ formData, onFieldChange }) => {
               endAdornment: <CreditCardOutlinedIcon className="card-icon" />,
             },
           }}
+          {...fieldProps('cardNumber')}
         />
         <div className="form-row">
           <TextField
@@ -63,6 +73,7 @@ export const CheckoutPaymentForm = ({ formData, onFieldChange }) => {
               inputMode: 'numeric',
               maxLength: 5,
             }}
+            {...fieldProps('expiry')}
           />
           <TextField
             fullWidth
@@ -75,6 +86,7 @@ export const CheckoutPaymentForm = ({ formData, onFieldChange }) => {
               inputMode: 'numeric',
               maxLength: 4,
             }}
+            {...fieldProps('cvc')}
           />
         </div>
       </div>

@@ -12,7 +12,12 @@ import {
   CHECKOUT_SUMMARY,
   AVAILABLE_POINTS,
 } from '../data/cartData';
-import { isCheckoutReady, isShippingValid, getPointsDiscount } from '../utils/checkoutValidation';
+import {
+  isCheckoutReady,
+  isShippingValid,
+  getPointsDiscount,
+  getCheckoutValidationMessage,
+} from '../utils/checkoutValidation';
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -34,6 +39,14 @@ export const CheckoutPage = () => {
   const [usePoints, setUsePoints] = useState(true);
   const [pointsMode, setPointsMode] = useState('all');
   const [manualPoints, setManualPoints] = useState('');
+  const [showPaymentValidation, setShowPaymentValidation] = useState(false);
+
+  const pointsState = {
+    usePoints,
+    pointsMode,
+    manualPoints,
+    availablePoints: AVAILABLE_POINTS,
+  };
 
   const subtotal = CHECKOUT_SUMMARY.subtotal;
 
@@ -46,12 +59,15 @@ export const CheckoutPage = () => {
 
   const total = Math.max(subtotal - pointsDiscount, 0);
 
-  const canConfirm = isCheckoutReady(shippingCompleted, formData, {
-    usePoints,
-    pointsMode,
-    manualPoints,
-    availablePoints: AVAILABLE_POINTS,
-  });
+  const canConfirm = isCheckoutReady(shippingCompleted, formData, pointsState);
+
+  const validationMessage = getCheckoutValidationMessage(
+    shippingCompleted,
+    formData,
+    pointsState
+  );
+
+  const shouldShowPaymentValidation = showPaymentValidation;
 
   const handleManualPointsChange = (value) => {
     setManualPoints(value);
@@ -76,14 +92,8 @@ export const CheckoutPage = () => {
   };
 
   const handleConfirm = () => {
-    if (
-      !isCheckoutReady(shippingCompleted, formData, {
-        usePoints,
-        pointsMode,
-        manualPoints,
-        availablePoints: AVAILABLE_POINTS,
-      })
-    ) {
+    if (!canConfirm) {
+      setShowPaymentValidation(true);
       return;
     }
 
@@ -127,7 +137,11 @@ export const CheckoutPage = () => {
               onEdit={handleShippingEdit}
             />
             {shippingCompleted && (
-              <CheckoutPaymentForm formData={formData} onFieldChange={handleFieldChange} />
+              <CheckoutPaymentForm
+                formData={formData}
+                onFieldChange={handleFieldChange}
+                showValidation={shouldShowPaymentValidation}
+              />
             )}
           </Box>
 
@@ -146,6 +160,7 @@ export const CheckoutPage = () => {
               pointsDiscount={pointsDiscount}
               total={total}
               canConfirm={canConfirm}
+              validationMessage={validationMessage}
               onConfirm={handleConfirm}
             />
           </Box>
