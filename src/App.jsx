@@ -8,6 +8,7 @@ import { PlaceholderPage } from './pages/PlaceholderPage'
 import { CatalogPage } from './pages/CatalogPage'
 import { ProductDetailPage } from './pages/ProductDetailPage'
 import { AuthPage } from './pages/AuthPage'
+import { AdminPage } from './pages/AdminPage'
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="login" element={<AuthPage />} />
         <Route path="registro" element={<AuthPage />} />
         <Route path="mis-pedidos" element={<PlaceholderPage title="Mis pedidos" />} />
+        <Route path="admin" element={<AdminPage />} />
       </Route>
     </Routes>
   )
