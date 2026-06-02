@@ -13,6 +13,7 @@ import { AdminPage } from './pages/AdminPage'
 const App = () => {
   return (
     <Routes>
+      <Route path="admin" element={<AdminPage />} />
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="carrito" element={<CartPage />} />
@@ -24,7 +25,6 @@ const App = () => {
         <Route path="login" element={<AuthPage />} />
         <Route path="registro" element={<AuthPage />} />
         <Route path="mis-pedidos" element={<PlaceholderPage title="Mis pedidos" />} />
-        <Route path="admin" element={<AdminPage />} />
       </Route>
     </Routes>
   )
