@@ -10,6 +10,7 @@ export const AdminCatalogSection = ({
   products = [],
   onRequestEdit,
   onRequestDelete,
+  onToggleEnabled,
 }) => {
   const normalizedSearch = searchTerm.toLowerCase().trim()
 
@@ -91,6 +92,7 @@ export const AdminCatalogSection = ({
                     type="button"
                     className={`admin-switch ${product.enabled ? 'active' : ''}`}
                     aria-label="Cambiar estado del producto"
+                    onClick={() => onToggleEnabled(product.id)}
                   >
                     <span />
                   </button>

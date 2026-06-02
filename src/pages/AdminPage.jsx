@@ -64,6 +64,16 @@ export const AdminPage = () => {
     setProductToEdit(null)
   }
 
+  const handleToggleProductEnabled = (productId) => {
+    setProducts((currentProducts) =>
+      currentProducts.map((product) =>
+        product.id === productId
+          ? { ...product, enabled: !product.enabled }
+          : product
+      )
+    )
+  }
+
   const handleRequestEditProduct = (product) => {
     setProductToEdit(product)
     setIsProductModalOpen(true)
@@ -155,6 +165,7 @@ export const AdminPage = () => {
               products={products}
               onRequestEdit={handleRequestEditProduct}
               onRequestDelete={handleRequestDeleteProduct}
+              onToggleEnabled={handleToggleProductEnabled}
             />
           ) : (
             <Box
