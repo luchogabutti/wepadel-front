@@ -2,7 +2,6 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { adminCatalogStats } from '../../../data/adminProductsData'
 import './styles.scss'
 
 export const AdminCatalogSection = ({
@@ -22,10 +21,42 @@ export const AdminCatalogSection = ({
     )
   })
 
+  const totalProducts = products.length
+  const enabledProducts = products.filter((product) => product.enabled).length
+  const lowStockProducts = products.filter((product) => product.stock <= 10).length
+  const disabledProducts = products.filter((product) => !product.enabled).length
+
+  const catalogStats = [
+    {
+      id: 'total-products',
+      label: 'Total productos',
+      value: totalProducts,
+      variant: 'primary',
+    },
+    {
+      id: 'enabled-products',
+      label: 'Habilitados',
+      value: enabledProducts,
+      variant: 'success',
+    },
+    {
+      id: 'low-stock-products',
+      label: 'Stock bajo',
+      value: lowStockProducts,
+      variant: 'warning',
+    },
+    {
+      id: 'disabled-products',
+      label: 'Deshabilitados',
+      value: disabledProducts,
+      variant: 'danger',
+    },
+  ]
+
   return (
     <section className="admin-catalog-section">
       <div className="admin-stats-grid">
-        {adminCatalogStats.map((stat) => (
+        {catalogStats.map((stat) => (
           <article key={stat.id} className="admin-stat-card">
             <p className="admin-stat-label">{stat.label}</p>
             <strong className={`admin-stat-value ${stat.variant}`}>
