@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Box, Typography, Button } from '@mui/material'
 import { AdminLayout } from '../components/admin/AdminLayout'
 import { AdminCatalogSection } from '../components/admin/AdminCatalogSection/AdminCatalogSection'
+import { AdminEditProductSection } from '../components/admin/AdminEditProductSection/AdminEditProductSection'
 import { AdminProductModal } from '../components/admin/AdminProductModal/AdminProductModal'
 import { AdminDeleteProductModal } from '../components/admin/AdminDeleteProductModal/AdminDeleteProductModal'
 import { adminProducts } from '../data/adminProductsData'
@@ -39,6 +40,11 @@ export const AdminPage = () => {
 
   const currentSection = sectionContent[activeSection]
 
+  const handleSectionChange = (sectionId) => {
+    setProductToEdit(null)
+    setActiveSection(sectionId)
+  }
+
   const handleOpenCreateProduct = () => {
     setProductToEdit(null)
     setIsProductModalOpen(true)
@@ -46,22 +52,27 @@ export const AdminPage = () => {
 
   const handleCloseProductModal = () => {
     setIsProductModalOpen(false)
-    setProductToEdit(null)
   }
 
   const handleSaveProduct = (savedProduct) => {
-    if (productToEdit) {
-      setProducts((currentProducts) =>
-        currentProducts.map((product) =>
-          product.id === savedProduct.id ? savedProduct : product
-        )
-      )
-    } else {
-      setProducts((currentProducts) => [savedProduct, ...currentProducts])
-    }
-
+    setProducts((currentProducts) => [savedProduct, ...currentProducts])
     setIsProductModalOpen(false)
+  }
+
+  const handleSaveEditedProduct = (updatedProduct) => {
+    setProducts((currentProducts) =>
+      currentProducts.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
+      )
+    )
+
     setProductToEdit(null)
+    setActiveSection('catalog')
+  }
+
+  const handleCancelEditProduct = () => {
+    setProductToEdit(null)
+    setActiveSection('catalog')
   }
 
   const handleToggleProductEnabled = (productId) => {
@@ -75,8 +86,8 @@ export const AdminPage = () => {
   }
 
   const handleRequestEditProduct = (product) => {
+    setActiveSection('catalog')
     setProductToEdit(product)
-    setIsProductModalOpen(true)
   }
 
   const handleRequestDeleteProduct = (product) => {
@@ -99,21 +110,27 @@ export const AdminPage = () => {
     setProductToDelete(null)
   }
 
-  return (
-    <>
-      <AdminLayout
-        activeSection={activeSection}
-        onSectionChange={setActiveSection}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-      >
-        <Box>
+  const renderActiveSection = () => {
+    if (productToEdit) {
+      return (
+        <AdminEditProductSection
+          product={productToEdit}
+          onCancel={handleCancelEditProduct}
+          onSave={handleSaveEditedProduct}
+        />
+      )
+    }
+
+    if (activeSection === 'catalog') {
+      return (
+        <>
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               mb: 4,
+              gap: 2,
             }}
           >
             <Box>
@@ -141,56 +158,104 @@ export const AdminPage = () => {
               </Typography>
             </Box>
 
-            {activeSection === 'catalog' && (
-              <Button
-                variant="contained"
-                onClick={handleOpenCreateProduct}
-                sx={{
-                  background: '#0d6efd',
-                  borderRadius: '7px',
-                  px: 3,
-                  py: 1.3,
-                  fontWeight: 700,
-                  textTransform: 'none',
-                }}
-              >
-                + Nuevo producto
-              </Button>
-            )}
-          </Box>
-
-          {activeSection === 'catalog' ? (
-            <AdminCatalogSection
-              searchTerm={searchTerm}
-              products={products}
-              onRequestEdit={handleRequestEditProduct}
-              onRequestDelete={handleRequestDeleteProduct}
-              onToggleEnabled={handleToggleProductEnabled}
-            />
-          ) : (
-            <Box
+            <Button
+              variant="contained"
+              onClick={handleOpenCreateProduct}
               sx={{
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '10px',
-                background: '#111720',
-                p: 3,
+                background: '#0d6efd',
+                borderRadius: '7px',
+                px: 3,
+                py: 1.3,
+                fontWeight: 700,
+                textTransform: 'none',
               }}
             >
-              <Typography sx={{ color: '#c6c8d6' }}>
-                {currentSection.description}
-              </Typography>
+              + Nuevo producto
+            </Button>
+          </Box>
 
-              <Typography sx={{ color: '#7f8496', mt: 1 }}>
-                Esta sección todavía está mockeada.
-              </Typography>
-            </Box>
-          )}
+          <AdminCatalogSection
+            searchTerm={searchTerm}
+            products={products}
+            onRequestEdit={handleRequestEditProduct}
+            onRequestDelete={handleRequestDeleteProduct}
+            onToggleEnabled={handleToggleProductEnabled}
+          />
+        </>
+      )
+    }
+
+    return (
+      <>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 4,
+            gap: 2,
+          }}
+        >
+          <Box>
+            <Typography
+              sx={{
+                color: '#c6c8d6',
+                fontSize: '13px',
+                fontWeight: 700,
+                letterSpacing: '1.5px',
+                mb: 1,
+              }}
+            >
+              {currentSection.eyebrow}
+            </Typography>
+
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: '36px', md: '48px' },
+                fontWeight: 900,
+                color: '#f4f4fb',
+              }}
+            >
+              {currentSection.title}
+            </Typography>
+          </Box>
         </Box>
+
+        <Box
+          sx={{
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '10px',
+            background: '#111720',
+            p: 3,
+          }}
+        >
+          <Typography sx={{ color: '#c6c8d6' }}>
+            {currentSection.description}
+          </Typography>
+
+          <Typography sx={{ color: '#7f8496', mt: 1 }}>
+            Esta sección todavía está mockeada.
+          </Typography>
+        </Box>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <AdminLayout
+        activeSection={activeSection}
+        onSectionChange={handleSectionChange}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+      >
+        {renderActiveSection()}
       </AdminLayout>
 
       <AdminProductModal
         open={isProductModalOpen}
-        productToEdit={productToEdit}
+        productToEdit={null}
         onClose={handleCloseProductModal}
         onSave={handleSaveProduct}
       />
