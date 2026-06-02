@@ -98,6 +98,73 @@
   font-weight: 600 !important;
 }
 
+.admin-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.admin-topbar {
+  height: 64px;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: #0b0b12;
+}
+
+.admin-search {
+  width: min(520px, 55%);
+  height: 38px;
+  border-radius: 999px;
+  background: #22222c;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  color: #9ca3af;
+
+  svg {
+    font-size: 20px;
+  }
+
+  input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #f8f8ff;
+    font-size: 14px;
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
+}
+
+.admin-user-icon {
+  position: absolute;
+  right: 32px;
+  border: 0;
+  background: transparent;
+  color: #c6c8d6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    font-size: 24px;
+  }
+
+  &:hover {
+    color: #ffffff;
+  }
+}
+
 .admin-main {
   flex: 1;
   padding: 38px 32px;
