@@ -7,7 +7,6 @@ import { CART_SUMMARY } from '../data/cartData';
 
 export const CartPage = () => {
   const { items, updateQuantity, removeItem } = useCart();
-
   const subtotal = CART_SUMMARY.subtotal;
   const total = CART_SUMMARY.total;
 

@@ -3,8 +3,12 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { QuantityPicker } from '../QuantityPicker/QuantityPicker';
 import { formatCartPrice } from '../../../data/cartData';
 import './styles.scss';
+import { ConfirmationDialog } from '../../general/confirmationDialog/ConfirmationDialog';
+import { useState } from 'react';
 
 export const CartItem = ({ item, onQuantityChange, onRemove }) => {
+  const [open, setOpen] = useState(false);
+  const [id, setId] = useState(null);
   const lineTotal = item.unitPrice * item.quantity;
 
   const handleIncrease = () => onQuantityChange(item.id, item.quantity + 1);
@@ -12,6 +16,22 @@ export const CartItem = ({ item, onQuantityChange, onRemove }) => {
     if (item.quantity > 1) {
       onQuantityChange(item.id, item.quantity - 1);
     }
+  };
+
+  const handleRemove = () => {
+    setOpen(true);
+    setId(item.id);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setId(null);
+  };
+
+  const handleConfirm = () => {
+    onRemove(id);
+    setId(null);
+    handleClose();
   };
 
   return (
@@ -45,7 +65,7 @@ export const CartItem = ({ item, onQuantityChange, onRemove }) => {
               {formatCartPrice(lineTotal)}
             </Typography>
             <Button
-              onClick={() => onRemove(item.id)}
+              onClick={() => handleRemove(item.id)}
               startIcon={<DeleteOutlinedIcon className="remove-icon" />}
               className="remove-btn"
             >
@@ -54,6 +74,14 @@ export const CartItem = ({ item, onQuantityChange, onRemove }) => {
           </div>
         </div>
       </div>
+      <ConfirmationDialog
+        open={open}
+        onClose={handleClose}
+        onConfirm={handleConfirm}
+        title="¿Estás seguro que quieres quitar este producto del carrito?"
+        subtitle="Esta acción no se puede deshacer."
+        confirmColor="error"
+      />
     </div>
   );
 };

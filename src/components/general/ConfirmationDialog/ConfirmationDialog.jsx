@@ -15,7 +15,7 @@ export const ConfirmationDialog = ({
   title,
   subtitle,
   confirmLabel = 'Confirmar',
-  cancelLabel = 'Cancelar',
+  cancelLabel = 'Cerrar',
   confirmColor = 'primary',
 }) => {
   const handleConfirm = () => {
