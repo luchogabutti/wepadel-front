@@ -72,7 +72,6 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
         title="Usar mis puntos"
         subtitle="Seras redirigido al cátalogo de productos para poder utilizar tus puntos en la compra de un producto."
         confirmLabel="Ir al catálogo"
-        cancelLabel="Cerrar"
       />
     </Box>
   );

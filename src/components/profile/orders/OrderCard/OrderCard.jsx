@@ -152,8 +152,6 @@ export const OrderCard = ({
         onConfirm={handleCancelOrder}
         title="¿Cancelar esta orden?"
         subtitle="La orden pendiente se cancelará. Esta acción no se puede deshacer."
-        confirmLabel="Sí, cancelar"
-        cancelLabel="Volver"
         confirmColor="error"
       />
 

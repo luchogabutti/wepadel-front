@@ -75,7 +75,6 @@ export const ProfileSidebar = () => {
         title="¿Cerrar sesión?"
         subtitle="Vas a salir de tu cuenta en WePadel."
         confirmLabel="Cerrar sesión"
-        cancelLabel="Cancelar"
         confirmColor="primary"
       />
     </Box>
