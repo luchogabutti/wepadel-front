@@ -3,6 +3,7 @@ import { Box, Typography, Button } from '@mui/material'
 import { AdminLayout } from '../components/admin/AdminLayout'
 import { AdminCatalogSection } from '../components/admin/AdminCatalogSection/AdminCatalogSection'
 import { AdminProductModal } from '../components/admin/AdminProductModal/AdminProductModal'
+import { AdminDeleteProductModal } from '../components/admin/AdminDeleteProductModal/AdminDeleteProductModal'
 import { adminProducts } from '../data/adminProductsData'
 
 const sectionContent = {
@@ -33,12 +34,29 @@ export const AdminPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [products, setProducts] = useState(adminProducts)
+  const [productToDelete, setProductToDelete] = useState(null)
 
   const currentSection = sectionContent[activeSection]
 
   const handleCreateProduct = (newProduct) => {
     setProducts((currentProducts) => [newProduct, ...currentProducts])
     setIsCreateModalOpen(false)
+  }
+
+  const handleRequestDeleteProduct = (product) => {
+    setProductToDelete(product)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setProductToDelete(null)
+  }
+
+  const handleConfirmDeleteProduct = () => {
+    setProducts((currentProducts) =>
+      currentProducts.filter((product) => product.id !== productToDelete.id)
+    )
+
+    setProductToDelete(null)
   }
 
   return (
@@ -105,6 +123,7 @@ export const AdminPage = () => {
             <AdminCatalogSection
               searchTerm={searchTerm}
               products={products}
+              onRequestDelete={handleRequestDeleteProduct}
             />
           ) : (
             <Box
@@ -131,6 +150,13 @@ export const AdminPage = () => {
         open={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onCreate={handleCreateProduct}
+      />
+
+      <AdminDeleteProductModal
+        open={Boolean(productToDelete)}
+        product={productToDelete}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDeleteProduct}
       />
     </>
   )

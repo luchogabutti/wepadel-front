@@ -5,7 +5,11 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { adminCatalogStats } from '../../../data/adminProductsData'
 import './styles.scss'
 
-export const AdminCatalogSection = ({ searchTerm = '', products = [] }) => {
+export const AdminCatalogSection = ({
+  searchTerm = '',
+  products = [],
+  onRequestDelete,
+}) => {
   const normalizedSearch = searchTerm.toLowerCase().trim()
 
   const filteredProducts = products.filter((product) => {
@@ -97,7 +101,11 @@ export const AdminCatalogSection = ({ searchTerm = '', products = [] }) => {
                       <EditOutlinedIcon />
                     </button>
 
-                    <button type="button" aria-label="Eliminar producto">
+                    <button
+                      type="button"
+                      aria-label="Eliminar producto"
+                      onClick={() => onRequestDelete(product)}
+                    >
                       <DeleteOutlineOutlinedIcon />
                     </button>
                   </div>
