@@ -22,23 +22,10 @@ export const Sidebar = ({ user, items }) => {
     navigate('/login');
   };
 
-  const initials =
-    user.initials ??
-    user.name
-      .split(' ')
-      .map((part) => part[0])
-      .join('')
-      .slice(0, 2)
-      .toUpperCase();
-
   return (
     <Box component="aside" className="app-sidebar">
       <Box className="sidebar-user-summary">
-        {user.avatarSrc ? (
-          <Avatar alt={user.name} src={user.avatarSrc} className="sidebar-user-avatar" />
-        ) : (
-          <Avatar className="sidebar-user-initials">{initials}</Avatar>
-        )}
+        <Avatar alt={user.name} src={user.avatarSrc} className="sidebar-user-avatar" />
         <Typography variant="h6" className="sidebar-user-name">
           {user.name}
         </Typography>
