@@ -14,7 +14,7 @@ export const CheckoutPaymentDetail = ({
   onConfirm,
 }) => {
   return (
-    <div className="checkout-payment-detail">
+    <div className="surface-card surface-card--dark checkout-payment-detail">
       <Typography variant="h6" className="detail-title">
         Detalle del Pago
       </Typography>
@@ -51,7 +51,6 @@ export const CheckoutPaymentDetail = ({
         onClick={onConfirm}
         disabled={!canConfirm}
         className="confirm-btn"
-        sx={{ bgcolor: 'primary.main', color: '#f8f7ff', '&:hover': { bgcolor: 'primary.main' } }}
       >
         Confirmar compra
       </Button>

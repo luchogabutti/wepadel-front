@@ -6,7 +6,7 @@ export const UserLogin = () => {
   return (
     <IconButton 
       component={RouterLink} 
-      to="/login" 
+      to="/perfil" 
       aria-label="Perfil"
       sx={{
         color: 'primary.light',

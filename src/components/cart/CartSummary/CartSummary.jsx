@@ -7,7 +7,7 @@ import './styles.scss';
 
 export const CartSummary = ({ subtotal, total }) => {
   return (
-    <div className="cart-summary">
+    <div className="surface-card surface-card--dark cart-summary">
       <Typography variant="h6" className="summary-title">
         Resumen de compra
       </Typography>
@@ -37,7 +37,6 @@ export const CartSummary = ({ subtotal, total }) => {
         fullWidth
         variant="contained"
         className="checkout-btn"
-        sx={{ bgcolor: 'primary.main', color: '#f8f7ff', '&:hover': { bgcolor: 'primary.main' } }}
       >
         Ir al Checkout
       </Button>

@@ -6,7 +6,7 @@
   gap: 24px;
   padding: 16px 0;
   background-color: var(--mui-palette-background-paper);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--mui-palette-divider);
 
   @media (min-width: 900px) {
     gap: 48px;

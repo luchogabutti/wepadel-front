@@ -25,13 +25,14 @@ export const ShoppingCart = () => {
         sx={{
           '& .MuiBadge-badge': {
             bgcolor: 'primary.main',
-            color: '#f8f7ff',
+            color: 'primary.contrastText',
             fontSize: 10,
             fontWeight: 700,
             minWidth: 18,
             height: 18,
             padding: '0 4px',
-            border: '2px solid #0C0B12',
+            border: '2px solid',
+            borderColor: 'background.default',
           },
         }}
       >

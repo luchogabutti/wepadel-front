@@ -10,7 +10,7 @@
     flex-shrink: 0;
     background-color: var(--mui-palette-background-paper);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--mui-palette-divider);
     padding: 24px;
     height: fit-content;
     position: sticky;
@@ -30,7 +30,7 @@
 
   .filter-section {
     padding: 20px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--mui-palette-divider);
   }
 
   .filter-label {
@@ -55,7 +55,7 @@
     align-items: stretch;
     background-color: var(--mui-palette-background-paper);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--mui-palette-divider);
     padding: 16px 24px;
     gap: 32px;
     width: 100%;

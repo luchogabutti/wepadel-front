@@ -18,7 +18,7 @@ export const Form = ({
       <Box className="ambient-light-top" />
       <Box className="ambient-light-bottom" />
 
-      <Box className="form-card">
+      <Box className="surface-card form-card">
         {/* Cabecera del Formulario */}
         <Box className="card-header">
           {title && (

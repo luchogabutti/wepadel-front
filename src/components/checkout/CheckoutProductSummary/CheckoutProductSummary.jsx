@@ -5,7 +5,7 @@ import './styles.scss';
 
 export const CheckoutProductSummary = ({ items }) => {
   return (
-    <div className="checkout-product-summary">
+    <div className="surface-card checkout-product-summary">
       <div className="summary-header">
         <ShoppingBagOutlinedIcon className="header-icon" />
         <Typography variant="h6" className="header-title">
