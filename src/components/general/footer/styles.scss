@@ -1,8 +1,8 @@
 .app-footer {
   width: 100%;
   padding: 48px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  background-color: #0e0d14;
+  border-top: 1px solid var(--mui-palette-divider);
+  background-color: var(--mui-palette-background-default);
 
   .footer-content {
     display: flex;

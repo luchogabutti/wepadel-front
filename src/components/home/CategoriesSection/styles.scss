@@ -60,7 +60,11 @@
   .cat-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, #0C0B12 10%, transparent 60%);
+    background: linear-gradient(
+      to top,
+      var(--mui-palette-background-default) 10%,
+      transparent 60%
+    );
   }
 
   .cat-content {
@@ -82,7 +86,7 @@
 
     .cat-title {
       font-weight: 700;
-      color: #ffffff;
+      color: var(--mui-palette-text-primary);
       letter-spacing: 0.05em;
     }
 

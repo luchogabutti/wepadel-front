@@ -1,0 +1,36 @@
+.profile-data-card {
+  padding: 32px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    font-weight: 700;
+    color: var(--mui-palette-text-primary);
+  }
+
+  &__edit-btn {
+    border-color: var(--mui-palette-primary-light);
+    color: var(--mui-palette-primary-light);
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__label {
+    color: var(--mui-palette-text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+}

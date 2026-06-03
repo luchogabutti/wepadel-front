@@ -4,7 +4,7 @@
   gap: 6px;
 
   .field-label {
-    color: #A0AEC0;
+    color: var(--mui-palette-text-secondary);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -18,7 +18,7 @@
 
     .forgot-password-link {
       font-size: 12px;
-      color: #0066FF;
+      color: var(--mui-palette-primary-main);
       text-decoration: none;
       font-weight: 500;
 
@@ -29,7 +29,7 @@
   }
 
   .field-icon {
-    color: #8c90a1;
+    color: var(--mui-palette-text-hint);
     font-size: 20px;
   }
 }

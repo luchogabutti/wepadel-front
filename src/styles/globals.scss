@@ -1,0 +1,35 @@
+/*
+ * Clases globales reutilizables — consumen tokens del theme MUI (var(--mui-palette-*)).
+ * Breakpoints estándar: sm=600px, md=900px, lg=1200px
+ */
+
+.surface-card {
+  background-color: var(--mui-palette-surface-main);
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);
+}
+
+.surface-card--dark {
+  background-color: var(--mui-palette-surface-dark);
+  border-color: color-mix(in srgb, var(--mui-palette-text-hint) 20%, transparent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--mui-palette-background-default) 20%, transparent);
+}
+
+.surface-card--paper {
+  background-color: var(--mui-palette-background-paper);
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 12px;
+}
+
+.surface-card--compact {
+  padding: 16px;
+}
+
+.surface-card--elevated {
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--mui-palette-background-default) 20%, transparent);
+}
+
+.profile-section {
+  margin-bottom: 32px;
+}

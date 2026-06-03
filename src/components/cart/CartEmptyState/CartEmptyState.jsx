@@ -18,7 +18,7 @@ export const CartEmptyState = () => {
         to="/"
         variant="contained"
         className="catalog-btn"
-        sx={{ bgcolor: 'primary.main', color: '#f8f7ff' }}
+        sx={{ bgcolor: 'primary.main', color: 'primary.contrastText' }}
       >
         Ver catálogo
       </Button>

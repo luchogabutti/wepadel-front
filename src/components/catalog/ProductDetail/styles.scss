@@ -55,14 +55,14 @@
   .main-image-wrapper {
     position: relative;
     aspect-ratio: 1 / 1;
-    background-color: #201f26;
+    background-color: var(--mui-palette-surface-light);
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--mui-palette-divider);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 12px 48px color-mix(in srgb, var(--mui-palette-background-default) 50%, transparent);
 
     .main-image {
       width: 100%;
@@ -86,7 +86,7 @@
       font-size: 12px;
       font-weight: 800;
       letter-spacing: 0.05em;
-      box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--mui-palette-primary-main) 30%, transparent);
     }
   }
 
@@ -98,8 +98,8 @@
       flex: 1;
       aspect-ratio: 1 / 1;
       border-radius: 12px;
-      border: 2px solid rgba(255, 255, 255, 0.05);
-      background-color: #201f26;
+      border: 2px solid var(--mui-palette-divider);
+      background-color: var(--mui-palette-surface-light);
       cursor: pointer;
       overflow: hidden;
       display: flex;
@@ -109,12 +109,12 @@
       transition: all 0.2s ease;
 
       &:hover {
-        border-color: rgba(0, 102, 255, 0.4);
+        border-color: color-mix(in srgb, var(--mui-palette-primary-main) 40%, transparent);
       }
 
       &.active {
         border-color: var(--mui-palette-primary-main);
-        box-shadow: 0 0 12px rgba(0, 102, 255, 0.2);
+        box-shadow: 0 0 12px color-mix(in srgb, var(--mui-palette-primary-main) 20%, transparent);
       }
 
       img {
@@ -200,12 +200,12 @@
       font-weight: 700;
 
       &.in-stock {
-        background-color: rgba(0, 204, 153, 0.1);
+        background-color: color-mix(in srgb, var(--mui-palette-success-main) 10%, transparent);
         color: var(--mui-palette-success-main);
       }
 
       &.out-of-stock {
-        background-color: rgba(255, 68, 68, 0.1);
+        background-color: color-mix(in srgb, var(--mui-palette-error-main) 10%, transparent);
         color: var(--mui-palette-error-main);
       }
     }
@@ -220,7 +220,7 @@
 
   // Specifications
   .specs-section {
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--mui-palette-divider);
     padding-top: 24px;
     margin-bottom: 32px;
 
@@ -245,7 +245,7 @@
       justify-content: space-between;
       padding: 10px 16px;
       background-color: var(--mui-palette-background-paper);
-      border: 1px solid rgba(255, 255, 255, 0.03);
+      border: 1px solid color-mix(in srgb, var(--mui-palette-divider) 60%, transparent);
       border-radius: 8px;
       font-size: 14px;
 
@@ -272,7 +272,7 @@
     display: flex;
     align-items: center;
     background-color: var(--mui-palette-background-paper);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--mui-palette-divider);
     border-radius: 12px;
     padding: 4px;
 
@@ -280,7 +280,7 @@
       color: var(--mui-palette-text-primary);
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: color-mix(in srgb, var(--mui-palette-text-primary) 5%, transparent);
       }
     }
 
@@ -297,16 +297,16 @@
     border-radius: 12px !important;
     padding: 12px 28px !important;
     font-size: 16px !important;
-    box-shadow: 0 4px 20px rgba(0, 102, 255, 0.25) !important;
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--mui-palette-primary-main) 25%, transparent) !important;
 
     &:hover {
-      box-shadow: 0 6px 24px rgba(0, 102, 255, 0.35) !important;
+      box-shadow: 0 6px 24px color-mix(in srgb, var(--mui-palette-primary-main) 35%, transparent) !important;
     }
   }
 
   // Guarantee highlights
   .highlights-section {
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--mui-palette-divider);
     padding-top: 24px;
     display: flex;
     flex-direction: column;

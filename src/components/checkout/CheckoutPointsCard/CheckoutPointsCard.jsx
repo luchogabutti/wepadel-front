@@ -1,5 +1,6 @@
 import { Typography, Switch, Radio, RadioGroup, FormControlLabel, TextField } from '@mui/material';
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
+import { formatManualPoints } from '../../../utils/checkoutValidation';
 import './styles.scss';
 
 export const CheckoutPointsCard = ({
@@ -11,8 +12,18 @@ export const CheckoutPointsCard = ({
   manualPoints,
   onManualPointsChange,
 }) => {
+  const handleManualChange = (e) => {
+    onManualPointsChange(formatManualPoints(e.target.value, availablePoints));
+  };
+
+  const showManualError =
+    usePoints &&
+    pointsMode === 'manual' &&
+    manualPoints !== '' &&
+    parseInt(manualPoints, 10) < 1;
+
   return (
-    <div className="checkout-points-card">
+    <div className="surface-card checkout-points-card">
       <div className="points-header">
         <div className="points-title-row">
           <StarOutlinedIcon className="points-icon" />
@@ -51,14 +62,22 @@ export const CheckoutPointsCard = ({
       )}
 
       {usePoints && pointsMode === 'manual' && (
-        <TextField
-          fullWidth
-          type="number"
-          placeholder="Cantidad de puntos"
-          value={manualPoints}
-          onChange={(e) => onManualPointsChange(e.target.value)}
-          className="manual-points-field"
-        />
+        <>
+          <TextField
+            fullWidth
+            placeholder="Cantidad de puntos"
+            value={manualPoints}
+            onChange={handleManualChange}
+            className="manual-points-field"
+            error={showManualError}
+            inputProps={{
+              inputMode: 'numeric',
+              min: 1,
+              max: availablePoints,
+            }}
+            helperText={`Máximo ${availablePoints} puntos disponibles`}
+          />
+        </>
       )}
     </div>
   );

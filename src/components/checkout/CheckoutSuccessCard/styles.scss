@@ -3,9 +3,13 @@
   margin: 0 auto;
   padding: 24px;
   border-radius: 32px;
-  background: linear-gradient(180deg, #1c1b22 0%, #14121a 100%);
-  border: 1px solid rgba(66, 70, 86, 0.2);
-  box-shadow: 0 0 40px rgba(53, 223, 171, 0.08);
+  background: linear-gradient(
+    180deg,
+    var(--mui-palette-surface-main) 0%,
+    var(--mui-palette-background-default) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 20%, transparent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--mui-palette-success-main) 8%, transparent);
   text-align: center;
 
   @media (min-width: 900px) {
@@ -17,26 +21,26 @@
     height: 80px;
     margin: 0 auto 24px;
     border-radius: 50%;
-    background-color: #35dfab;
+    background-color: var(--mui-palette-success-main);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 24px rgba(53, 223, 171, 0.4);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--mui-palette-success-main) 40%, transparent);
   }
 
   .success-icon {
     font-size: 48px;
-    color: #0e0d14;
+    color: var(--mui-palette-success-contrastText);
   }
 
   .success-title {
     font-weight: 700;
-    color: #e5e1eb;
+    color: var(--mui-palette-text-emphasis);
     margin-bottom: 8px;
   }
 
   .success-description {
-    color: #c2c6d8;
+    color: var(--mui-palette-text-label);
     font-size: 16px;
     margin-bottom: 32px;
   }
@@ -53,18 +57,18 @@
   }
 
   .info-box {
-    background-color: #201f26;
+    background-color: var(--mui-palette-surface-light);
     padding: 16px;
     border-radius: 16px;
-    border: 1px solid rgba(66, 70, 86, 0.2);
+    border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 20%, transparent);
 
     &.points-box {
-      border-color: rgba(53, 223, 171, 0.2);
+      border-color: color-mix(in srgb, var(--mui-palette-success-main) 20%, transparent);
     }
   }
 
   .info-label {
-    color: #8c90a1;
+    color: var(--mui-palette-text-hint);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.04em;
@@ -73,7 +77,7 @@
 
   .info-value {
     font-weight: 700;
-    color: #e5e1eb;
+    color: var(--mui-palette-text-emphasis);
     font-size: 18px;
   }
 
@@ -86,12 +90,12 @@
   }
 
   .points-label-icon {
-    color: #35dfab;
+    color: var(--mui-palette-success-main);
     font-size: 14px;
   }
 
   .points-label {
-    color: #35dfab;
+    color: var(--mui-palette-success-main);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.04em;
@@ -99,7 +103,7 @@
 
   .points-value {
     font-weight: 700;
-    color: #35dfab;
+    color: var(--mui-palette-success-main);
     font-size: 18px;
   }
 
@@ -115,7 +119,7 @@
     height: 72px;
     border-radius: 16px;
     overflow: hidden;
-    background-color: #201f26;
+    background-color: var(--mui-palette-surface-light);
   }
 
   .product-thumb-image {
@@ -128,15 +132,15 @@
     width: 72px;
     height: 72px;
     border-radius: 16px;
-    background-color: #201f26;
+    background-color: var(--mui-palette-surface-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(66, 70, 86, 0.2);
+    border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 20%, transparent);
   }
 
   .extra-items-text {
-    color: #e5e1eb;
+    color: var(--mui-palette-text-emphasis);
     font-size: 13px;
     font-weight: 600;
   }
@@ -155,12 +159,12 @@
   .orders-btn {
     padding: 12px 24px;
     font-weight: 600;
-    border-color: rgba(229, 225, 235, 0.3);
-    color: #e5e1eb;
+    border-color: color-mix(in srgb, var(--mui-palette-text-emphasis) 30%, transparent);
+    color: var(--mui-palette-text-emphasis);
 
     &:hover {
-      border-color: #e5e1eb;
-      background-color: rgba(229, 225, 235, 0.05);
+      border-color: var(--mui-palette-text-emphasis);
+      background-color: color-mix(in srgb, var(--mui-palette-text-emphasis) 5%, transparent);
     }
   }
 
@@ -170,7 +174,7 @@
   }
 
   .support-text {
-    color: #8c90a1;
+    color: var(--mui-palette-text-hint);
     font-size: 13px;
     margin-top: 32px;
   }
