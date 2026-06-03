@@ -13,6 +13,12 @@ import {
   CHECKOUT_SUMMARY,
   AVAILABLE_POINTS,
 } from '../data/cartData';
+import {
+  isCheckoutReady,
+  isShippingValid,
+  getPointsDiscount,
+  getCheckoutValidationMessage,
+} from '../utils/checkoutValidation';
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -34,16 +40,47 @@ export const CheckoutPage = () => {
   const [usePoints, setUsePoints] = useState(true);
   const [pointsMode, setPointsMode] = useState('all');
   const [manualPoints, setManualPoints] = useState('');
+  const [showPaymentValidation, setShowPaymentValidation] = useState(false);
+
+  const pointsState = {
+    usePoints,
+    pointsMode,
+    manualPoints,
+    availablePoints: AVAILABLE_POINTS,
+  };
 
   const subtotal = CHECKOUT_SUMMARY.subtotal;
-  const pointsDiscount = usePoints ? CHECKOUT_SUMMARY.pointsDiscount : 0;
-  const total = usePoints ? CHECKOUT_SUMMARY.total : CHECKOUT_SUMMARY.subtotal;
+
+  const pointsDiscount = getPointsDiscount(
+    usePoints,
+    pointsMode,
+    manualPoints,
+    AVAILABLE_POINTS
+  );
+
+  const total = Math.max(subtotal - pointsDiscount, 0);
+
+  const canConfirm = isCheckoutReady(shippingCompleted, formData, pointsState);
+
+  const validationMessage = getCheckoutValidationMessage(
+    shippingCompleted,
+    formData,
+    pointsState
+  );
+
+  const shouldShowPaymentValidation = showPaymentValidation;
+
+  const handleManualPointsChange = (value) => {
+    setManualPoints(value);
+  };
 
   const handleShippingFieldChange = (field, value) => {
     setShippingData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleShippingSubmit = () => {
+    if (!isShippingValid(shippingData)) return;
+
     setShippingCompleted(true);
   };
 
@@ -56,6 +93,11 @@ export const CheckoutPage = () => {
   };
 
   const handleConfirm = () => {
+    if (!canConfirm) {
+      setShowPaymentValidation(true);
+      return;
+    }
+
     const orderId = `WP-${Math.floor(10000 + Math.random() * 90000)}`;
     navigate(`/checkout/confirmacion/${orderId}`, {
       state: { pointsEarned: 120 },
@@ -81,7 +123,11 @@ export const CheckoutPage = () => {
               onEdit={handleShippingEdit}
             />
             {shippingCompleted && (
-              <CheckoutPaymentForm formData={formData} onFieldChange={handleFieldChange} />
+              <CheckoutPaymentForm
+                formData={formData}
+                onFieldChange={handleFieldChange}
+                showValidation={shouldShowPaymentValidation}
+              />
             )}
           </Stack>
         </Grid>
@@ -94,12 +140,14 @@ export const CheckoutPage = () => {
               pointsMode={pointsMode}
               onPointsModeChange={setPointsMode}
               manualPoints={manualPoints}
-              onManualPointsChange={setManualPoints}
+              onManualPointsChange={handleManualPointsChange}
             />
             <CheckoutPaymentDetail
               subtotal={subtotal}
               pointsDiscount={pointsDiscount}
               total={total}
+              canConfirm={canConfirm}
+              validationMessage={validationMessage}
               onConfirm={handleConfirm}
             />
           </Stack>

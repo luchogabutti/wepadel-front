@@ -6,7 +6,14 @@ import ContactlessOutlinedIcon from '@mui/icons-material/ContactlessOutlined';
 import { formatCheckoutPrice } from '../../../data/cartData';
 import './styles.scss';
 
-export const CheckoutPaymentDetail = ({ subtotal, pointsDiscount, total, onConfirm }) => {
+export const CheckoutPaymentDetail = ({
+  subtotal,
+  pointsDiscount,
+  total,
+  canConfirm,
+  validationMessage,
+  onConfirm,
+}) => {
   return (
     <div className="surface-card surface-card--dark checkout-payment-detail">
       <Typography variant="h6" className="detail-title">
@@ -43,10 +50,17 @@ export const CheckoutPaymentDetail = ({ subtotal, pointsDiscount, total, onConfi
         variant="contained"
         startIcon={<LockOutlinedIcon />}
         onClick={onConfirm}
+        disabled={!canConfirm}
         className="confirm-btn"
       >
         Confirmar compra
       </Button>
+
+      {!canConfirm && validationMessage && (
+        <Typography className="validation-hint" role="alert">
+          {validationMessage}
+        </Typography>
+      )}
 
       <div className="secure-notice">
         <LockOutlinedIcon className="secure-icon" />

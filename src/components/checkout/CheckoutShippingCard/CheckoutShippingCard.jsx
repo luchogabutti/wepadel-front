@@ -1,5 +1,11 @@
+import { useState } from 'react';
 import { Typography, Button, TextField } from '@mui/material';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import {
+  formatShippingField,
+  isShippingValid,
+  getShippingFieldError,
+} from '../../../utils/checkoutValidation';
 import './styles.scss';
 
 export const CheckoutShippingCard = ({
@@ -9,7 +15,32 @@ export const CheckoutShippingCard = ({
   onSubmit,
   onEdit,
 }) => {
+  const [showErrors, setShowErrors] = useState(false);
   const formattedAddress = `${shippingData.address}, ${shippingData.city}`;
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    if (!isShippingValid(shippingData)) {
+      setShowErrors(true);
+      return;
+    }
+
+    setShowErrors(false);
+    onSubmit();
+  };
+
+  const handleChange = (field) => (e) => {
+    onFieldChange(field, formatShippingField(field, e.target.value));
+  };
+
+  const fieldProps = (field) => {
+    const errorMessage = getShippingFieldError(field, shippingData, showErrors);
+    return {
+      error: Boolean(errorMessage),
+      helperText: errorMessage,
+    };
+  };
 
   if (isCompleted) {
     return (
@@ -41,39 +72,48 @@ export const CheckoutShippingCard = ({
         </Typography>
       </div>
 
-      <div className="form-fields">
+      <form noValidate onSubmit={handleFormSubmit} className="form-fields">
         <TextField
           fullWidth
+          required
           label="Dirección"
           placeholder="Av. Libertador 1234"
           value={shippingData.address}
-          onChange={(e) => onFieldChange('address', e.target.value)}
+          onChange={handleChange('address')}
+          {...fieldProps('address')}
         />
         <div className="form-row">
           <TextField
             fullWidth
+            required
             label="Ciudad"
             placeholder="CABA"
             value={shippingData.city}
-            onChange={(e) => onFieldChange('city', e.target.value)}
+            onChange={handleChange('city')}
+            {...fieldProps('city')}
           />
           <TextField
             fullWidth
+            required
             label="Código postal"
             placeholder="1425"
             value={shippingData.postalCode}
-            onChange={(e) => onFieldChange('postalCode', e.target.value)}
+            onChange={handleChange('postalCode')}
+            inputProps={{
+              inputMode: 'numeric',
+              maxLength: 8,
+            }}
+            {...fieldProps('postalCode')}
           />
         </div>
         <Button
+          type="submit"
           variant="contained"
-          onClick={onSubmit}
-          disabled={!shippingData.address.trim() || !shippingData.city.trim()}
           className="submit-btn"
         >
           Confirmar envío
         </Button>
-      </div>
+      </form>
     </div>
   );
 };

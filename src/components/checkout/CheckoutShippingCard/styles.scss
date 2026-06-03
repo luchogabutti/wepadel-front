@@ -68,6 +68,10 @@
     gap: 16px;
   }
 
+  .MuiFormHelperText-root {
+    margin-left: 0;
+  }
+
   .form-row {
     display: grid;
     grid-template-columns: 1fr;

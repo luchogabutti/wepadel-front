@@ -59,10 +59,23 @@
     background-color: var(--mui-palette-primary-main);
     color: var(--mui-palette-primary-contrastText);
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: var(--mui-palette-primary-main);
       transform: scale(1.02);
     }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  }
+
+  .validation-hint {
+    margin-top: 12px;
+    text-align: center;
+    color: #f5a623;
+    font-size: 13px;
   }
 
   .secure-notice {
