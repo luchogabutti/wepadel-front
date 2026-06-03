@@ -13,12 +13,10 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  FormHelperText,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import '../styles.scss'
 import './styles.scss'
@@ -196,13 +194,6 @@ export const AdminProductModal = ({
                   variant="outlined"
                   slotProps={{ htmlInput: { min: 0 } }}
                 />
-              </Box>
-
-              <Box className="admin-product-note-box">
-                <InfoOutlinedIcon />
-                <Typography variant="body2">
-                  <strong>Nota:</strong> Al guardar el producto, los cambios se verán reflejados en la vista del administrador localmente.
-                </Typography>
               </Box>
             </Box>
           </Box>

@@ -18,11 +18,9 @@ import {
 } from '@mui/material'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import AddIcon from '@mui/icons-material/Add'
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import PercentIcon from '@mui/icons-material/Percent'
 import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog'
-import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import { PageHeader } from '../../layout/PageHeader'
 import '../styles.scss'
 import './styles.scss'
@@ -81,9 +79,6 @@ export const AdminDiscountsSection = ({
 
   // Calculate Stats
   const activeDiscounts = discounts.filter((d) => d.status === 'Confirmada').length
-  const avgDiscount = discounts.length > 0
-    ? Math.round(discounts.reduce((sum, d) => sum + d.percentage, 0) / discounts.length)
-    : 0
   const pendingDiscounts = discounts.filter((d) => d.status === 'Pendiente').length
 
   const stats = [
@@ -92,12 +87,6 @@ export const AdminDiscountsSection = ({
       label: 'PROMOCIONES ACTIVAS',
       value: activeDiscounts,
       variant: 'success',
-    },
-    {
-      id: 'avg-saving',
-      label: 'AHORRO PROMEDIO',
-      value: `${avgDiscount}%`,
-      variant: 'default',
     },
     {
       id: 'pending-promos',
@@ -329,12 +318,6 @@ export const AdminDiscountsSection = ({
         cancelLabel="Cancelar"
         confirmColor="error"
         center
-        bottomLineColor="var(--mui-palette-error-main)"
-        icon={
-          <Box className="confirmation-dialog-icon-container">
-            <WarningAmberOutlinedIcon />
-          </Box>
-        }
       >
         {discountToDelete && (
           <Box className="admin-delete-selected-product">

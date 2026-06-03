@@ -82,7 +82,6 @@ export const AdminCatalogPage = () => {
         cancelLabel="Cancelar"
         confirmColor="error"
         center
-        bottomLineColor="var(--mui-palette-error-main)"
         icon={
           <Box className="confirmation-dialog-icon-container">
             <WarningAmberOutlinedIcon />

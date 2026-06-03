@@ -109,10 +109,9 @@ export const AdminStockSection = ({
             {hasChanges && (
               <Button
                 variant="outlined"
-                color="inherit"
+                sx={{color: 'primary.light', borderColor: 'primary.light'}}
                 onClick={handleReset}
                 startIcon={<SettingsBackupRestoreIcon />}
-                className="admin-btn-bold"
               >
                 Deshacer
               </Button>
