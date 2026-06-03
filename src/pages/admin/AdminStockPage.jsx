@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { AdminStockSection } from '../../components/admin/AdminStockSection/AdminStockSection';
+import { AdminStockSection } from '../../components/admin/stock/AdminStockSection/AdminStockSection';
 import { adminProducts, adminSectionContent } from '../../data/adminProductsData';
 
 export const AdminStockPage = () => {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Snackbar, Alert } from '@mui/material';
-import { AdminDiscountsSection } from '../../components/admin/AdminDiscountsSection/AdminDiscountsSection';
+import { AdminDiscountsSection } from '../../components/admin/discount/AdminDiscountsSection/AdminDiscountsSection';
 import { adminProducts, adminSectionContent, initialDiscounts } from '../../data/adminProductsData';
 
 export const AdminDiscountsPage = () => {

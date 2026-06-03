@@ -1,5 +1,5 @@
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { AdminEditProductSection } from '../../components/admin/AdminEditProductSection/AdminEditProductSection';
+import { AdminEditProductSection } from '../../components/admin/catalog/AdminEditProductSection/AdminEditProductSection';
 import { adminProducts } from '../../data/adminProductsData';
 
 export const AdminEditProductPage = () => {

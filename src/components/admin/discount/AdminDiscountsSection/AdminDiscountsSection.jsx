@@ -20,9 +20,9 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import AddIcon from '@mui/icons-material/Add'
 import CloseIcon from '@mui/icons-material/Close'
 import PercentIcon from '@mui/icons-material/Percent'
-import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog'
-import { PageHeader } from '../../layout/PageHeader'
-import '../styles.scss'
+import { ConfirmationDialog } from '../../../general/ConfirmationDialog/ConfirmationDialog'
+import { PageHeader } from '../../../layout/PageHeader'
+import '../../styles.scss'
 import './styles.scss'
 
 export const AdminDiscountsSection = ({

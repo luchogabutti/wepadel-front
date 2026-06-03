@@ -18,7 +18,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
-import '../styles.scss'
+import '../../styles.scss'
 import './styles.scss'
 
 const DEFAULT_PRODUCT_IMAGE =

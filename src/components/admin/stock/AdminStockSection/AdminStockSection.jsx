@@ -11,8 +11,8 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
-import { PageHeader } from '../../layout/PageHeader'
-import '../styles.scss'
+import { PageHeader } from '../../../layout/PageHeader'
+import '../../styles.scss'
 import './styles.scss'
 
 export const AdminStockSection = ({

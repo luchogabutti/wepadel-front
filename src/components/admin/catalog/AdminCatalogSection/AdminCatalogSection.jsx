@@ -1,5 +1,5 @@
 import { Box, Typography, IconButton, Switch } from '@mui/material'
-import '../styles.scss'
+import '../../styles.scss'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'

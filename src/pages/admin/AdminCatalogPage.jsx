@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Snackbar, Alert } from '@mui/material';
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
-import { AdminCatalogToolbar } from '../../components/admin/AdminCatalogToolbar/AdminCatalogToolbar';
-import { AdminCatalogSection } from '../../components/admin/AdminCatalogSection/AdminCatalogSection';
-import { AdminProductModal } from '../../components/admin/AdminProductModal/AdminProductModal';
+import { AdminCatalogToolbar } from '../../components/admin/catalog/AdminCatalogToolbar/AdminCatalogToolbar';
+import { AdminCatalogSection } from '../../components/admin/catalog/AdminCatalogSection/AdminCatalogSection';
+import { AdminProductModal } from '../../components/admin/catalog/AdminProductModal/AdminProductModal';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
 import { adminProducts, adminSectionContent } from '../../data/adminProductsData';
 

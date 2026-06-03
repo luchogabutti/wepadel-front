@@ -1,6 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
-import { PageHeader } from '../../layout/PageHeader';
-import '../styles.scss';
+import { PageHeader } from '../../../layout/PageHeader';
+import '../../styles.scss';
 
 export const AdminProfileSection = ({ title, subtitle }) => {
   return (
