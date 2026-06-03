@@ -1,13 +1,12 @@
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { AdminEditProductSection } from '../../components/admin/AdminEditProductSection/AdminEditProductSection';
-import { useAdmin } from '../../context/AdminContext';
+import { adminProducts } from '../../data/adminProductsData';
 
 export const AdminEditProductPage = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
-  const { products, handleSaveEditedProduct } = useAdmin();
 
-  const product = products.find((item) => String(item.id) === String(productId));
+  const product = adminProducts.find((item) => String(item.id) === String(productId));
 
   if (!product) {
     return <Navigate to="/admin/catalogo" replace />;
@@ -17,8 +16,7 @@ export const AdminEditProductPage = () => {
     navigate('/admin/catalogo');
   };
 
-  const handleSave = (updatedProduct) => {
-    handleSaveEditedProduct(updatedProduct);
+  const handleSave = () => {
     navigate('/admin/catalogo');
   };
 

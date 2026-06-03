@@ -1,13 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { AdminStockSection } from '../../components/admin/AdminStockSection/AdminStockSection';
-import { adminSectionContent, useAdmin } from '../../context/AdminContext';
+import { adminProducts, adminSectionContent } from '../../data/adminProductsData';
 
 export const AdminStockPage = () => {
   const navigate = useNavigate();
-  const { products, handleSaveStock } = useAdmin();
 
-  const onSaveStock = (updatedProducts) => {
-    handleSaveStock(updatedProducts);
+  const onSaveStock = () => {
     navigate('/admin/catalogo');
   };
 
@@ -15,7 +13,7 @@ export const AdminStockPage = () => {
     <AdminStockSection
       title={adminSectionContent.stock.title}
       subtitle={adminSectionContent.stock.subtitle}
-      products={products}
+      products={adminProducts}
       onSaveStock={onSaveStock}
     />
   );

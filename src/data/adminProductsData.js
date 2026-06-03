@@ -1,3 +1,49 @@
+export const adminSectionContent = {
+  catalog: {
+    title: 'Catálogo',
+    subtitle: 'Administra productos, precios y visibilidad en la tienda.',
+  },
+  stock: {
+    title: 'Control de Inventario',
+    subtitle: 'Gestiona de forma masiva los niveles de disponibilidad de la tienda.',
+  },
+  discounts: {
+    title: 'Gestión de Descuentos',
+    subtitle: 'Configura promociones temporales para tus productos de alto rendimiento.',
+  },
+  profile: {
+    title: 'Perfil Administrador',
+    subtitle: 'Datos de la cuenta con acceso al panel de administración.',
+  },
+};
+
+export const initialDiscounts = [
+  {
+    id: 1,
+    productId: 1,
+    productTitle: 'Pro Carbon Elite v2',
+    productImg:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBXKAgpP53VaYUIYhiPLYu0myrXae465GDTDUpNqtkVLF_ipW1Baj_Lv7BGfRPbI_uEIUcD5aHT4_U5n3TPpcua5PA164OHuVI0ZMOQa932eOUkrjL4iLHplXZezbWFs9iU39dIMa0WMjQE_aSvjUZIgKlXAnDpTp6hYmI5JryLvMVs7D5b6mK3JRRqCBLFeDd4GAoIb3VW0Ev5jkDV_zm1-kZa7TQf7hKNmpSZGj6cjeUENXBj8i0E4biiXhPFMeKNX9-6SHsMzfVR',
+    productCategory: 'PALETAS',
+    percentage: 15,
+    startDate: '2026-06-01',
+    endDate: '2026-06-30',
+    status: 'Confirmada',
+  },
+  {
+    id: 2,
+    productId: 2,
+    productTitle: 'Gold Series ball (3-pack)',
+    productImg:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCwhFL8X7mj_JWYy12l9tfBKQzs5PLliUkicLnkHqNf5_3skuYd9TXlqI9spd7vjxhPthvOnxwDawnbGR3vL0iEb6_vbhdX9XiUZVfLm0llgi6Kjd8jElAbtannG6R9PJBsTGtkj8lgZEFYAhQ7HQTkOfXPybdKW_A5c1dNmQPFXLSn5-9UkLyGPussTcwj_cCcBvkIxexi-eJhe4s7Fw4MHZvIvHMxESdbF8fiVK4N0wSep5FdsJiIRs5ypytjO7Gq8c5WE48Wnz-ep',
+    productCategory: 'PELOTAS',
+    percentage: 20,
+    startDate: '2026-05-15',
+    endDate: '2026-06-15',
+    status: 'Confirmada',
+  },
+];
+
 export const adminCatalogStats = [
   {
     id: 1,
