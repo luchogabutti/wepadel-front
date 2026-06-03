@@ -11,6 +11,7 @@ export const CheckoutPaymentDetail = ({
   pointsDiscount,
   total,
   canConfirm,
+  validationMessage,
   onConfirm,
 }) => {
   return (
@@ -55,9 +56,9 @@ export const CheckoutPaymentDetail = ({
         Confirmar compra
       </Button>
 
-      {!canConfirm && (
-        <Typography className="validation-hint">
-          Completá el envío y los datos de pago para continuar.
+      {!canConfirm && validationMessage && (
+        <Typography className="validation-hint" role="alert">
+          {validationMessage}
         </Typography>
       )}
 

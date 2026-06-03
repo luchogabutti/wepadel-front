@@ -1,6 +1,11 @@
+import { useState } from 'react';
 import { Typography, Button, TextField } from '@mui/material';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
-import { formatShippingField, isShippingValid } from '../../../utils/checkoutValidation';
+import {
+  formatShippingField,
+  isShippingValid,
+  getShippingFieldError,
+} from '../../../utils/checkoutValidation';
 import './styles.scss';
 
 export const CheckoutShippingCard = ({
@@ -10,18 +15,31 @@ export const CheckoutShippingCard = ({
   onSubmit,
   onEdit,
 }) => {
+  const [showErrors, setShowErrors] = useState(false);
   const formattedAddress = `${shippingData.address}, ${shippingData.city}`;
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    if (!isShippingValid(shippingData)) return;
+    if (!isShippingValid(shippingData)) {
+      setShowErrors(true);
+      return;
+    }
 
+    setShowErrors(false);
     onSubmit();
   };
 
   const handleChange = (field) => (e) => {
     onFieldChange(field, formatShippingField(field, e.target.value));
+  };
+
+  const fieldProps = (field) => {
+    const errorMessage = getShippingFieldError(field, shippingData, showErrors);
+    return {
+      error: Boolean(errorMessage),
+      helperText: errorMessage,
+    };
   };
 
   if (isCompleted) {
@@ -54,7 +72,7 @@ export const CheckoutShippingCard = ({
         </Typography>
       </div>
 
-      <form onSubmit={handleFormSubmit} className="form-fields">
+      <form noValidate onSubmit={handleFormSubmit} className="form-fields">
         <TextField
           fullWidth
           required
@@ -62,6 +80,7 @@ export const CheckoutShippingCard = ({
           placeholder="Av. Libertador 1234"
           value={shippingData.address}
           onChange={handleChange('address')}
+          {...fieldProps('address')}
         />
         <div className="form-row">
           <TextField
@@ -71,6 +90,7 @@ export const CheckoutShippingCard = ({
             placeholder="CABA"
             value={shippingData.city}
             onChange={handleChange('city')}
+            {...fieldProps('city')}
           />
           <TextField
             fullWidth
@@ -81,10 +101,9 @@ export const CheckoutShippingCard = ({
             onChange={handleChange('postalCode')}
             inputProps={{
               inputMode: 'numeric',
-              pattern: '[0-9]{4,8}',
               maxLength: 8,
-              title: 'Ingresá entre 4 y 8 números',
             }}
+            {...fieldProps('postalCode')}
           />
         </div>
         <Button
