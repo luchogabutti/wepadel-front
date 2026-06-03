@@ -1,12 +1,11 @@
 import { Stack } from '@mui/material';
-import { ProfilePageLayout } from '../components/layout/ProfilePageLayout';
 import { PageHeader } from '../components/layout/PageHeader';
 import { OrderCard } from '../components/profile/orders/OrderCard/OrderCard';
 import { orders } from '../data/orders';
 
 export const OrdersPage = () => {
   return (
-    <ProfilePageLayout>
+    <>
       <PageHeader
         variant="profile"
         title="Historial de Órdenes"
@@ -18,6 +17,6 @@ export const OrdersPage = () => {
           <OrderCard key={order.id} order={order} />
         ))}
       </Stack>
-    </ProfilePageLayout>
+    </>
   );
 };
