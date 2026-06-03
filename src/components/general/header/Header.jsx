@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, InputBase } from '@mui/material';
+import { AppBar, Toolbar, Typography, InputBase, Box } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { UserLogin } from './components/UserLogin';
 import { ShoppingCart } from './components/ShoppingCart';
@@ -10,20 +10,26 @@ const AUTH_ROUTES = ['/login', '/registro'];
 export const Header = () => {
   const { pathname } = useLocation();
   const isAuthPage = AUTH_ROUTES.includes(pathname);
+  const isAdminPage = pathname.startsWith('/admin');
 
   return (
     <AppBar position="fixed" elevation={0} className="app-header-bar">
       <Toolbar className="header-toolbar">
-        <Typography
-          variant="h5"
-          component={RouterLink}
-          to="/"
-          className="header-logo"
-        >
-          WePadel
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography
+            variant="h5"
+            component={RouterLink}
+            to="/"
+            className="header-logo"
+          >
+            WePadel
+          </Typography>
+          {isAdminPage && (
+            <span className="admin-header-badge">ADMIN</span>
+          )}
+        </Box>
 
-        {!isAuthPage && (
+        {!isAuthPage && !isAdminPage && (
           <>
             <div className="search-container">
               <div className="search-box">
@@ -41,8 +47,15 @@ export const Header = () => {
             </div>
           </>
         )}
+
+        {isAdminPage && (
+          <div className="header-actions">
+            <UserLogin />
+          </div>
+        )}
       </Toolbar>
     </AppBar>
   );
 };
+
 

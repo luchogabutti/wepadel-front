@@ -8,19 +8,27 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
+  
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .admin-stat-card {
   min-height: 82px;
-  background: #111720;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 9px;
-  padding: 17px 20px;
+  background-color: var(--mui-palette-surface-main);
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 8px;
+  padding: 18px 20px;
 }
 
 .admin-stat-label {
   margin: 0 0 9px;
-  color: #b7bac8;
+  color: var(--mui-palette-text-secondary);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 2px;
@@ -30,57 +38,70 @@
   font-size: 26px;
   line-height: 1;
   font-weight: 900;
-  color: #e8ebf7;
+  color: var(--mui-palette-text-primary);
 
   &.danger {
-    color: #f0a4a4;
+    color: var(--mui-palette-error-main);
+  }
+
+  &.warning {
+    color: #ff9800;
   }
 
   &.success {
-    color: #39e6b4;
+    color: var(--mui-palette-success-main);
   }
 }
 
 .admin-products-table-card {
   overflow: hidden;
-  background: #111720;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  background-color: var(--mui-palette-surface-main);
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 8px;
+  
+  @media (max-width: 1100px) {
+    overflow-x: auto;
+  }
 }
 
 .admin-products-table {
   width: 100%;
   border-collapse: collapse;
+  
+  @media (max-width: 1100px) {
+    min-width: 900px;
+  }
 
   th {
     padding: 18px 22px;
     text-align: left;
-    color: #c3c6d5;
+    color: var(--mui-palette-text-secondary);
     font-size: 12px;
     font-weight: 800;
     letter-spacing: 2px;
-    background: #171821;
+    background-color: var(--mui-palette-surface-dark);
   }
 
   td {
     padding: 17px 22px;
-    color: #e8ebf7;
+    color: var(--mui-palette-text-emphasis);
     font-size: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid var(--mui-palette-divider);
   }
 
   tr:hover {
-    background: rgba(255, 255, 255, 0.025);
+    background-color: color-mix(in srgb, var(--mui-palette-text-primary) 2%, transparent);
   }
 }
 
 .admin-product-image {
   width: 46px;
   height: 46px;
-  border-radius: 7px;
+  border-radius: 6px;
   object-fit: cover;
   display: block;
-  background: #242630;
+  background-color: var(--mui-palette-background-default);
+  border: 1px solid var(--mui-palette-divider);
 }
 
 .admin-product-info {
@@ -89,14 +110,14 @@
   gap: 4px;
 
   strong {
-    color: #f4f4fb;
+    color: var(--mui-palette-text-primary);
     font-size: 15px;
-    font-weight: 900;
+    font-weight: 800;
     line-height: 1.25;
   }
 
   span {
-    color: #b7bac8;
+    color: var(--mui-palette-text-secondary);
     font-size: 12px;
     font-weight: 700;
   }
@@ -106,28 +127,29 @@
   display: inline-flex;
   align-items: center;
   padding: 6px 9px;
-  border-radius: 5px;
-  background: #4b5563;
-  color: #e5e7eb;
+  border-radius: 4px;
+  background-color: var(--mui-palette-surface-dark);
+  border: 1px solid var(--mui-palette-divider);
+  color: var(--mui-palette-text-emphasis);
   font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.3px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
 }
 
 .admin-price {
-  font-weight: 900;
-  color: #f4f4fb;
+  font-weight: 800;
+  color: var(--mui-palette-text-primary);
 }
 
 .stock-low {
-  color: #f0a4a4;
-  font-weight: 900;
+  color: var(--mui-palette-error-main);
+  font-weight: 800;
 }
 
 .stock-low-text {
-  color: #f0a4a4;
+  color: var(--mui-palette-error-main);
   font-size: 11px;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 1.4px;
 }
 
@@ -138,7 +160,7 @@
   border-radius: 999px;
   padding: 3px;
   cursor: pointer;
-  background: #6b7280;
+  background-color: var(--mui-palette-text-hint);
   transition: 0.2s ease;
 
   span {
@@ -146,12 +168,12 @@
     width: 16px;
     height: 16px;
     border-radius: 999px;
-    background: #ffffff;
+    background-color: #ffffff;
     transition: 0.2s ease;
   }
 
   &.active {
-    background: #39e6b4;
+    background-color: var(--mui-palette-success-main);
 
     span {
       transform: translateX(20px);
@@ -171,7 +193,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: #cfd3e4;
+    color: var(--mui-palette-text-secondary);
     cursor: pointer;
 
     svg {
@@ -179,7 +201,7 @@
     }
 
     &:hover {
-      color: #ffffff;
+      color: var(--mui-palette-text-primary);
     }
   }
 }
@@ -187,7 +209,7 @@
 .admin-empty-table {
   text-align: center !important;
   padding: 36px 20px !important;
-  color: #a5a9b9 !important;
+  color: var(--mui-palette-text-secondary) !important;
   font-weight: 600;
 }
 
@@ -197,11 +219,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 22px;
-  background: #1a1b25;
+  background-color: var(--mui-palette-surface-main);
+  border-top: 1px solid var(--mui-palette-divider);
 
   p {
     margin: 0;
-    color: #f4f4fb;
+    color: var(--mui-palette-text-primary);
     font-size: 14px;
   }
 }
@@ -215,10 +238,10 @@
     min-width: 36px;
     height: 36px;
     border: 0;
-    border-radius: 9px;
+    border-radius: 6px;
     background: transparent;
-    color: #e8ebf7;
-    font-weight: 900;
+    color: var(--mui-palette-text-primary);
+    font-weight: 800;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -230,32 +253,12 @@
     }
 
     &:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background-color: color-mix(in srgb, var(--mui-palette-text-primary) 6%, transparent);
     }
 
     &.active {
-      background: #b8c7ff;
-      color: #111827;
+      background-color: var(--mui-palette-primary-light);
+      color: var(--mui-palette-background-default);
     }
-  }
-}
-
-@media (max-width: 1100px) {
-  .admin-stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .admin-products-table-card {
-    overflow-x: auto;
-  }
-
-  .admin-products-table {
-    min-width: 900px;
-  }
-}
-
-@media (max-width: 700px) {
-  .admin-stats-grid {
-    grid-template-columns: 1fr;
   }
 }

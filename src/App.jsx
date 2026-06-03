@@ -15,7 +15,6 @@ import { OrdersPage } from './pages/OrdersPage'
 const App = () => {
   return (
     <Routes>
-      <Route path="admin" element={<AdminPage />} />
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="carrito" element={<CartPage />} />
@@ -29,6 +28,7 @@ const App = () => {
         <Route path="mis-pedidos" element={<PlaceholderPage title="Mis pedidos" />} />
         <Route path="perfil" element={<ProfilePage />} />
         <Route path="perfil/ordenes" element={<OrdersPage />} />
+        <Route path="admin" element={<AdminPage />} />
       </Route>
     </Routes>
   )

@@ -1,11 +1,12 @@
+import { useState } from 'react'
 import { Box, Button, Typography } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search'
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined'
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined'
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
+import { useNavigate } from 'react-router-dom'
+import { ConfirmationDialog } from '../general/ConfirmationDialog/ConfirmationDialog'
 import './styles.scss'
 
 const adminSections = [
@@ -34,27 +35,23 @@ const adminSections = [
 export const AdminLayout = ({
   activeSection,
   onSectionChange,
-  searchTerm,
-  onSearchChange,
   children,
 }) => {
+  const navigate = useNavigate()
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
+
   return (
     <Box className="admin-layout">
       <aside className="admin-sidebar">
-        <Box className="admin-logo-row">
-          <Typography className="admin-logo">WePadel</Typography>
-          <span className="admin-badge">ADMIN</span>
-        </Box>
-
         <Box className="admin-user-box">
           <Box className="admin-avatar">
-            <span>AU</span>
+            <span>JP</span>
           </Box>
 
-          <Typography className="admin-user-name">Admin User</Typography>
+          <Typography className="admin-user-name">Juan Pérez</Typography>
 
           <Typography className="admin-user-email">
-            admin@padelpro.com
+            juan.perez@padelpro.com
           </Typography>
         </Box>
 
@@ -77,32 +74,27 @@ export const AdminLayout = ({
         <Button
           className="admin-logout-button"
           startIcon={<LogoutOutlinedIcon />}
+          onClick={() => setLogoutDialogOpen(true)}
         >
           Cerrar sesión
         </Button>
       </aside>
 
       <section className="admin-panel">
-        <header className="admin-topbar">
-          <div className="admin-search">
-            <SearchIcon />
-            <input
-              type="text"
-              placeholder="Buscar producto..."
-              value={searchTerm}
-              onChange={(event) => onSearchChange(event.target.value)}
-            />
-          </div>
-
-          <button className="admin-user-icon" type="button">
-            <AccountCircleOutlinedIcon />
-          </button>
-        </header>
-
         <main className="admin-main">
-          <div className="admin-main-inner">{children}</div>
+          <Box className="admin-main-inner">{children}</Box>
         </main>
       </section>
+
+      <ConfirmationDialog
+        open={logoutDialogOpen}
+        onClose={() => setLogoutDialogOpen(false)}
+        onConfirm={() => navigate('/login')}
+        title="¿Cerrar sesión?"
+        subtitle="Vas a salir de tu cuenta en WePadel."
+        confirmLabel="Cerrar sesión"
+        confirmColor="primary"
+      />
     </Box>
   )
 }

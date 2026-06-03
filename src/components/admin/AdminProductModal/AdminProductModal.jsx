@@ -1,3 +1,20 @@
+import { useState } from 'react'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Typography,
+  Button,
+  Box,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+} from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined'
@@ -6,7 +23,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import './styles.scss'
 
 const DEFAULT_PRODUCT_IMAGE =
-  'https://placehold.co/96x96/2a2b36/f4f4fb?text=WP'
+  'https://placehold.co/240x240/2a2b36/f4f4fb?text=WP'
 
 export const AdminProductModal = ({
   open,
@@ -14,11 +31,8 @@ export const AdminProductModal = ({
   onClose,
   onSave,
 }) => {
-  if (!open) {
-    return null
-  }
-
   const isEditing = Boolean(productToEdit)
+  const [categoryId, setCategoryId] = useState('paletas')
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -27,10 +41,13 @@ export const AdminProductModal = ({
 
     const savedProduct = {
       id: productToEdit?.id ?? Date.now(),
-      image: productToEdit?.image ?? DEFAULT_PRODUCT_IMAGE,
-      name: formData.get('name'),
+      img: productToEdit?.img ?? DEFAULT_PRODUCT_IMAGE,
+      image: productToEdit?.img ?? DEFAULT_PRODUCT_IMAGE,
+      title: formData.get('title'),
+      name: formData.get('title'),
       sku: formData.get('sku'),
-      category: formData.get('category'),
+      categoryId: formData.get('categoryId'),
+      category: formData.get('categoryId').toUpperCase(),
       description: formData.get('description'),
       price: Number(formData.get('price')),
       stock: Number(formData.get('stock')),
@@ -38,167 +55,172 @@ export const AdminProductModal = ({
     }
 
     onSave(savedProduct)
-    event.currentTarget.reset()
   }
 
   return (
-    <div className="admin-product-modal-overlay">
-      <form className="admin-product-modal" onSubmit={handleSubmit}>
-        <header className="admin-product-modal-header">
-          <div>
-            <h2>{isEditing ? 'Editar Producto' : 'Crear Nuevo Producto'}</h2>
-            <p>
-              {isEditing
-                ? 'Modifica los detalles técnicos del producto seleccionado.'
-                : 'Introduce los detalles técnicos del nuevo equipo de padel.'}
-            </p>
-          </div>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      className="admin-product-dialog-root"
+      PaperProps={{
+        className: 'admin-product-dialog-paper',
+        sx: {
+          bgcolor: 'background.paper',
+          border: '1px solid var(--mui-palette-divider)',
+          borderRadius: 3,
+        }
+      }}
+      maxWidth="md"
+      fullWidth
+    >
+      <form onSubmit={handleSubmit}>
+        <DialogTitle className="admin-product-dialog-header">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 800, color: 'text.primary', fontFamily: 'Outfit' }}>
+                {isEditing ? 'Editar Producto' : 'Crear Nuevo Producto'}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
+                {isEditing
+                  ? 'Modifica los detalles técnicos del producto seleccionado.'
+                  : 'Introduce los detalles técnicos del nuevo equipo de padel.'}
+              </Typography>
+            </Box>
+            <IconButton onClick={onClose} aria-label="Cerrar modal" sx={{ color: 'text.secondary' }}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
 
-          <button
-            type="button"
-            className="admin-product-modal-close"
-            onClick={onClose}
-            aria-label="Cerrar modal"
-          >
-            <CloseIcon />
-          </button>
-        </header>
+        <DialogContent className="admin-product-dialog-body" dividers sx={{ borderColor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Box className="admin-product-dialog-grid">
+            {/* Columna de Imagen */}
+            <Box className="admin-product-images-column">
+              <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', letterSpacing: 1.5, display: 'block', mb: 2 }}>
+                IMAGEN DEL PRODUCTO
+              </Typography>
 
-        <section className="admin-product-modal-body">
-          <div className="admin-product-images-column">
-            <h3>IMAGEN DEL PRODUCTO</h3>
+              <Box className="admin-product-upload-box">
+                <CloudUploadOutlinedIcon />
+                <Typography variant="body2" sx={{ fontWeight: 700, color: 'text.primary', mt: 1 }}>
+                  Arrastra o sube una imagen
+                </Typography>
+                <Typography variant="caption" sx={{ color: 'text.secondary', mt: 0.5 }}>
+                  Formatos: JPG, PNG, WEBP (Máx 5MB)
+                </Typography>
+              </Box>
 
-            <div className="admin-product-upload-box">
-              <CloudUploadOutlinedIcon />
-              <strong>Arrastra o sube una imagen</strong>
-              <span>Formatos: JPG, PNG, WEBP (Máx 5MB)</span>
-            </div>
+              <Box className="admin-product-thumbnails">
+                <Button variant="outlined" className="thumbnail-btn" sx={{ height: 80, borderStyle: 'dashed' }}>
+                  <PhotoCameraOutlinedIcon />
+                </Button>
+                <Box className="thumbnail-placeholder" />
+                <Box className="thumbnail-placeholder" />
+              </Box>
+            </Box>
 
-            <div className="admin-product-thumbnails">
-              <button type="button">
-                <PhotoCameraOutlinedIcon />
-              </button>
-              <button type="button" />
-              <button type="button" />
-            </div>
-          </div>
-
-          <div className="admin-product-form-column">
-            <label className="admin-form-field full">
-              <span>Product Name</span>
-              <input
-                name="name"
-                type="text"
+            {/* Columna de Formulario */}
+            <Box className="admin-product-form-column">
+              <TextField
+                name="title"
+                label="Nombre del Producto"
                 placeholder="Ej: Wilson Carbon Force Pro"
-                defaultValue={productToEdit?.name ?? ''}
+                defaultValue={productToEdit?.title ?? ''}
+                fullWidth
                 required
+                variant="outlined"
+                margin="normal"
               />
-            </label>
 
-            <div className="admin-form-row">
-              <label className="admin-form-field">
-                <span>SKU</span>
-                <input
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mt: 1, mb: 1 }}>
+                <TextField
                   name="sku"
-                  type="text"
+                  label="SKU"
                   placeholder="WP-CAN-001"
                   defaultValue={productToEdit?.sku ?? ''}
                   required
+                  variant="outlined"
                 />
-              </label>
 
-              <label className="admin-form-field">
-                <span>Category</span>
-                <select
-                  name="category"
-                  defaultValue={productToEdit?.category ?? 'PALETAS'}
-                  required
-                >
-                  <option value="PALETAS">Paletas</option>
-                  <option value="PELOTAS">Pelotas</option>
-                  <option value="ACCESORIOS">Accesorios</option>
-                  <option value="INDUMENTARIA">Indumentaria</option>
-                </select>
-              </label>
-            </div>
+                <FormControl fullWidth>
+                  <InputLabel id="category-select-label">Categoría</InputLabel>
+                  <Select
+                    labelId="category-select-label"
+                    name="categoryId"
+                    defaultValue={productToEdit?.categoryId ?? 'paletas'}
+                    label="Categoría"
+                    onChange={(e) => setCategoryId(e.target.value)}
+                  >
+                    <MenuItem value="paletas">Paletas</MenuItem>
+                    <MenuItem value="pelotas">Pelotas</MenuItem>
+                    <MenuItem value="accesorios">Accesorios</MenuItem>
+                    <MenuItem value="indumentaria">Indumentaria</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
 
-            <label className="admin-form-field full">
-              <span>Description</span>
-              <textarea
+              <TextField
                 name="description"
+                label="Descripción"
                 placeholder="Describe las características técnicas y materiales..."
                 defaultValue={productToEdit?.description ?? ''}
+                multiline
+                rows={3}
+                fullWidth
+                variant="outlined"
+                margin="normal"
               />
-            </label>
 
-            <div className="admin-form-row">
-              <label className="admin-form-field">
-                <span>Price ($)</span>
-
-                <div className="admin-price-input-wrapper">
-                  <span>$</span>
-                  <input
-                    name="price"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="0.00"
-                    defaultValue={productToEdit?.price ?? ''}
-                    required
-                  />
-                </div>
-              </label>
-
-              <label className="admin-form-field">
-                <span>Stock</span>
-                <input
-                  name="stock"
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mt: 1 }}>
+                <TextField
+                  name="price"
+                  label="Precio ($)"
                   type="number"
-                  min="0"
+                  placeholder="0.00"
+                  defaultValue={productToEdit?.price ?? ''}
+                  required
+                  variant="outlined"
+                  slotProps={{ htmlInput: { min: 0, step: 0.01 } }}
+                />
+
+                <TextField
+                  name="stock"
+                  label="Stock Disponible"
+                  type="number"
                   placeholder="Cant. disponible"
                   defaultValue={productToEdit?.stock ?? ''}
                   required
+                  variant="outlined"
+                  slotProps={{ htmlInput: { min: 0 } }}
                 />
-              </label>
-            </div>
+              </Box>
 
-            <div className="admin-product-note">
-              <InfoOutlinedIcon />
-              <p>
-                {isEditing ? (
-                  <>
-                    <strong>Nota:</strong> Al guardar el producto, los cambios
-                    se verán reflejados en la tabla del catálogo de forma
-                    mockeada.
-                  </>
-                ) : (
-                  <>
-                    <strong>Nota:</strong> Al crear el producto, se notificará
-                    automáticamente a los usuarios que tengan este item en su
-                    "Lista de Deseos". Asegúrate de que las especificaciones
-                    sean precisas.
-                  </>
-                )}
-              </p>
-            </div>
-          </div>
-        </section>
+              <Box className="admin-product-note-box">
+                <InfoOutlinedIcon />
+                <Typography variant="body2">
+                  <strong>Nota:</strong> Al guardar el producto, los cambios se verán reflejados en la vista del administrador localmente.
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </DialogContent>
 
-        <footer className="admin-product-modal-footer">
-          <button
-            type="button"
-            className="admin-modal-cancel-button"
-            onClick={onClose}
-          >
+        <DialogActions className="admin-product-dialog-footer" sx={{ bgcolor: 'surface.main', padding: 2, px: 3 }}>
+          <Button onClick={onClose} variant="text" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
             Cancelar
-          </button>
+          </Button>
 
-          <button type="submit" className="admin-modal-submit-button">
-            <SaveOutlinedIcon />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            startIcon={<SaveOutlinedIcon />}
+            sx={{ px: 3, fontWeight: 'bold' }}
+          >
             {isEditing ? 'Guardar cambios' : 'Crear Producto'}
-          </button>
-        </footer>
+          </Button>
+        </DialogActions>
       </form>
-    </div>
+    </Dialog>
   )
 }

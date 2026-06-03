@@ -1,44 +1,71 @@
 import { useState } from 'react'
-import { Box, Typography, Button } from '@mui/material'
+import { Box, Snackbar, Alert } from '@mui/material'
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
 import { AdminLayout } from '../components/admin/AdminLayout'
+import { AdminCatalogToolbar } from '../components/admin/AdminCatalogToolbar/AdminCatalogToolbar'
 import { AdminCatalogSection } from '../components/admin/AdminCatalogSection/AdminCatalogSection'
 import { AdminEditProductSection } from '../components/admin/AdminEditProductSection/AdminEditProductSection'
 import { AdminProductModal } from '../components/admin/AdminProductModal/AdminProductModal'
-import { AdminDeleteProductModal } from '../components/admin/AdminDeleteProductModal/AdminDeleteProductModal'
+import { AdminStockSection } from '../components/admin/AdminStockSection/AdminStockSection'
+import { AdminDiscountsSection } from '../components/admin/AdminDiscountsSection/AdminDiscountsSection'
+import { AdminProfileSection } from '../components/admin/AdminProfileSection/AdminProfileSection'
+import { ConfirmationDialog } from '../components/general/ConfirmationDialog/ConfirmationDialog'
 import { adminProducts } from '../data/adminProductsData'
 
 const sectionContent = {
-  profile: {
-    eyebrow: 'ADMIN › PERFIL',
-    title: 'Perfil',
-    description: 'Información del usuario administrador.',
-  },
   catalog: {
     eyebrow: 'ADMIN › CATALOGO',
     title: 'Catálogo',
-    description: 'Gestión de productos publicados en la tienda.',
-  },
-  stock: {
-    eyebrow: 'ADMIN › STOCK',
-    title: 'Stock',
-    description: 'Control de stock disponible por producto.',
-  },
-  discounts: {
-    eyebrow: 'ADMIN › DESCUENTOS',
-    title: 'Descuentos',
-    description: 'Administración de promociones y cupones.',
   },
 }
+
+const initialDiscounts = [
+  {
+    id: 1,
+    productId: 1,
+    productTitle: 'Pro Carbon Elite v2',
+    productImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXKAgpP53VaYUIYhiPLYu0myrXae465GDTDUpNqtkVLF_ipW1Baj_Lv7BGfRPbI_uEIUcD5aHT4_U5n3TPpcua5PA164OHuVI0ZMOQa932eOUkrjL4iLHplXZezbWFs9iU39dIMa0WMjQE_aSvjUZIgKlXAnDpTp6hYmI5JryLvMVs7D5b6mK3JRRqCBLFeDd4GAoIb3VW0Ev5jkDV_zm1-kZa7TQf7hKNmpSZGj6cjeUENXBj8i0E4biiXhPFMeKNX9-6SHsMzfVR',
+    productCategory: 'PALETAS',
+    percentage: 15,
+    startDate: '2026-06-01',
+    endDate: '2026-06-30',
+    status: 'Confirmada',
+  },
+  {
+    id: 2,
+    productId: 2,
+    productTitle: 'Gold Series ball (3-pack)',
+    productImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwhFL8X7mj_JWYy12l9tfBKQzs5PLliUkicLnkHqNf5_3skuYd9TXlqI9spd7vjxhPthvOnxwDawnbGR3vL0iEb6_vbhdX9XiUZVfLm0llgi6Kjd8jElAbtannG6R9PJBsTGtkj8lgZEFYAhQ7HQTkOfXPybdKW_A5c1dNmQPFXLSn5-9UkLyGPussTcwj_cCcBvkIxexi-eJhe4s7Fw4MHZvIvHMxESdbF8fiVK4N0wSep5FdsJiIRs5ypytjO7Gq8c5WE48Wnz-ep',
+    productCategory: 'PELOTAS',
+    percentage: 20,
+    startDate: '2026-05-15',
+    endDate: '2026-06-15',
+    status: 'Confirmada',
+  },
+]
 
 export const AdminPage = () => {
   const [activeSection, setActiveSection] = useState('catalog')
   const [searchTerm, setSearchTerm] = useState('')
   const [isProductModalOpen, setIsProductModalOpen] = useState(false)
   const [products, setProducts] = useState(adminProducts)
+  const [discounts, setDiscounts] = useState(initialDiscounts)
   const [productToDelete, setProductToDelete] = useState(null)
   const [productToEdit, setProductToEdit] = useState(null)
 
-  const currentSection = sectionContent[activeSection]
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+  })
+
+  const triggerAlert = (message, severity = 'success') => {
+    setSnackbar({ open: true, message, severity })
+  }
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }))
+  }
 
   const handleSectionChange = (sectionId) => {
     setProductToEdit(null)
@@ -57,6 +84,7 @@ export const AdminPage = () => {
   const handleSaveProduct = (savedProduct) => {
     setProducts((currentProducts) => [savedProduct, ...currentProducts])
     setIsProductModalOpen(false)
+    triggerAlert('¡Producto creado con éxito!')
   }
 
   const handleSaveEditedProduct = (updatedProduct) => {
@@ -68,6 +96,7 @@ export const AdminPage = () => {
 
     setProductToEdit(null)
     setActiveSection('catalog')
+    triggerAlert('¡Producto modificado con éxito!')
   }
 
   const handleCancelEditProduct = () => {
@@ -83,10 +112,10 @@ export const AdminPage = () => {
           : product
       )
     )
+    triggerAlert('Estado del producto actualizado.')
   }
 
   const handleRequestEditProduct = (product) => {
-    setActiveSection('catalog')
     setProductToEdit(product)
   }
 
@@ -99,15 +128,29 @@ export const AdminPage = () => {
   }
 
   const handleConfirmDeleteProduct = () => {
-    if (!productToDelete) {
-      return
-    }
+    if (!productToDelete) return
 
     setProducts((currentProducts) =>
       currentProducts.filter((product) => product.id !== productToDelete.id)
     )
-
     setProductToDelete(null)
+    triggerAlert('¡Producto eliminado con éxito!')
+  }
+
+  const handleSaveStock = (updatedProducts) => {
+    setProducts(updatedProducts)
+    setActiveSection('catalog')
+    triggerAlert('¡Stock actualizado con éxito!')
+  }
+
+  const handleAddDiscount = (newDiscount) => {
+    setDiscounts((prev) => [newDiscount, ...prev])
+    triggerAlert('¡Descuento aplicado con éxito!')
+  }
+
+  const handleDeleteDiscount = (discountId) => {
+    setDiscounts((prev) => prev.filter((d) => d.id !== discountId))
+    triggerAlert('¡Descuento eliminado con éxito!')
   }
 
   const renderActiveSection = () => {
@@ -121,135 +164,53 @@ export const AdminPage = () => {
       )
     }
 
-    if (activeSection === 'catalog') {
-      return (
-        <>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 4,
-              gap: 2,
-            }}
-          >
-            <Box>
-              <Typography
-                sx={{
-                  color: '#c6c8d6',
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  letterSpacing: '1.5px',
-                  mb: 1,
-                }}
-              >
-                {currentSection.eyebrow}
-              </Typography>
+    switch (activeSection) {
+      case 'catalog':
+        return (
+          <>
+            <AdminCatalogToolbar
+              eyebrow={sectionContent.catalog.eyebrow}
+              title={sectionContent.catalog.title}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              onCreateProduct={handleOpenCreateProduct}
+            />
+            <AdminCatalogSection
+              searchTerm={searchTerm}
+              products={products}
+              onRequestEdit={handleRequestEditProduct}
+              onRequestDelete={handleRequestDeleteProduct}
+              onToggleEnabled={handleToggleProductEnabled}
+            />
+          </>
+        )
 
-              <Typography
-                variant="h1"
-                sx={{
-                  fontSize: { xs: '36px', md: '48px' },
-                  fontWeight: 900,
-                  color: '#f4f4fb',
-                }}
-              >
-                {currentSection.title}
-              </Typography>
-            </Box>
+      case 'stock':
+        return (
+          <AdminStockSection products={products} onSaveStock={handleSaveStock} />
+        )
 
-            <Button
-              variant="contained"
-              onClick={handleOpenCreateProduct}
-              sx={{
-                background: '#0d6efd',
-                borderRadius: '7px',
-                px: 3,
-                py: 1.3,
-                fontWeight: 700,
-                textTransform: 'none',
-              }}
-            >
-              + Nuevo producto
-            </Button>
-          </Box>
-
-          <AdminCatalogSection
-            searchTerm={searchTerm}
+      case 'discounts':
+        return (
+          <AdminDiscountsSection
             products={products}
-            onRequestEdit={handleRequestEditProduct}
-            onRequestDelete={handleRequestDeleteProduct}
-            onToggleEnabled={handleToggleProductEnabled}
+            discounts={discounts}
+            onAddDiscount={handleAddDiscount}
+            onDeleteDiscount={handleDeleteDiscount}
           />
-        </>
-      )
+        )
+
+      case 'profile':
+        return <AdminProfileSection />
+
+      default:
+        return null
     }
-
-    return (
-      <>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mb: 4,
-            gap: 2,
-          }}
-        >
-          <Box>
-            <Typography
-              sx={{
-                color: '#c6c8d6',
-                fontSize: '13px',
-                fontWeight: 700,
-                letterSpacing: '1.5px',
-                mb: 1,
-              }}
-            >
-              {currentSection.eyebrow}
-            </Typography>
-
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: { xs: '36px', md: '48px' },
-                fontWeight: 900,
-                color: '#f4f4fb',
-              }}
-            >
-              {currentSection.title}
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '10px',
-            background: '#111720',
-            p: 3,
-          }}
-        >
-          <Typography sx={{ color: '#c6c8d6' }}>
-            {currentSection.description}
-          </Typography>
-
-          <Typography sx={{ color: '#7f8496', mt: 1 }}>
-            Esta sección todavía está mockeada.
-          </Typography>
-        </Box>
-      </>
-    )
   }
 
   return (
     <>
-      <AdminLayout
-        activeSection={activeSection}
-        onSectionChange={handleSectionChange}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-      >
+      <AdminLayout activeSection={activeSection} onSectionChange={handleSectionChange}>
         {renderActiveSection()}
       </AdminLayout>
 
@@ -260,12 +221,46 @@ export const AdminPage = () => {
         onSave={handleSaveProduct}
       />
 
-      <AdminDeleteProductModal
+      <ConfirmationDialog
         open={Boolean(productToDelete)}
-        product={productToDelete}
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDeleteProduct}
-      />
+        title="¿Estás seguro de que deseas eliminar este producto?"
+        subtitle="Esta acción es irreversible. Se eliminarán todos los registros de stock y las estadísticas asociadas a este modelo del catálogo activo."
+        confirmLabel="Eliminar"
+        cancelLabel="Cancelar"
+        confirmColor="error"
+        center
+        bottomLineColor="var(--mui-palette-error-main)"
+        icon={
+          <Box className="confirmation-dialog-icon-container">
+            <WarningAmberOutlinedIcon />
+          </Box>
+        }
+      >
+        {productToDelete && (
+          <Box className="admin-delete-selected-product">
+            <span>PRODUCTO SELECCIONADO</span>
+            <strong>{productToDelete.title}</strong>
+          </Box>
+        )}
+      </ConfirmationDialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          variant="filled"
+          className="admin-snackbar-alert"
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </>
   )
 }

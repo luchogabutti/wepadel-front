@@ -67,4 +67,18 @@
     align-items: center;
     gap: 8px;
   }
+
+  .admin-header-badge {
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-weight: 800;
+    color: var(--mui-palette-primary-light);
+    border: 1px solid color-mix(in srgb, var(--mui-palette-primary-light) 20%, transparent);
+    background-color: color-mix(in srgb, var(--mui-palette-primary-light) 8%, transparent);
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
 }
+

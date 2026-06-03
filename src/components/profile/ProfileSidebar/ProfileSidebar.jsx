@@ -5,6 +5,7 @@ import { ConfirmationDialog } from '../../general/confirmationDialog/Confirmatio
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import './styles.scss';
 
 export const ProfileSidebar = () => {
@@ -54,6 +55,16 @@ export const ProfileSidebar = () => {
         >
           <ShoppingBagIcon className="nav-icon" />
           <Typography className="nav-text">Mis órdenes</Typography>
+        </Link>
+
+        <Link
+          component={RouterLink}
+          to="/admin"
+          className="nav-item"
+          underline="none"
+        >
+          <AdminPanelSettingsIcon className="nav-icon" />
+          <Typography className="nav-text">Panel Admin</Typography>
         </Link>
 
         <Link

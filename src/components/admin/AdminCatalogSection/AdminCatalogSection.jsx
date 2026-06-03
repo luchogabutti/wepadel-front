@@ -1,3 +1,10 @@
+import {
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Switch,
+} from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
@@ -15,9 +22,9 @@ export const AdminCatalogSection = ({
 
   const filteredProducts = products.filter((product) => {
     return (
-      product.name.toLowerCase().includes(normalizedSearch) ||
+      product.title.toLowerCase().includes(normalizedSearch) ||
       product.sku.toLowerCase().includes(normalizedSearch) ||
-      product.category.toLowerCase().includes(normalizedSearch)
+      product.categoryId.toLowerCase().includes(normalizedSearch)
     )
   })
 
@@ -59,19 +66,19 @@ export const AdminCatalogSection = ({
       : `Mostrando 0 de ${products.length} productos`
 
   return (
-    <section className="admin-catalog-section">
-      <div className="admin-stats-grid">
+    <Box className="admin-catalog-section">
+      <Box className="admin-stats-grid">
         {catalogStats.map((stat) => (
-          <article key={stat.id} className="admin-stat-card">
-            <p className="admin-stat-label">{stat.label}</p>
-            <strong className={`admin-stat-value ${stat.variant}`}>
+          <Box key={stat.id} className="admin-stat-card">
+            <Typography className="admin-stat-label">{stat.label}</Typography>
+            <Typography variant="h4" component="strong" className={`admin-stat-value ${stat.variant}`}>
               {stat.value}
-            </strong>
-          </article>
+            </Typography>
+          </Box>
         ))}
-      </div>
+      </Box>
 
-      <div className="admin-products-table-card">
+      <Box className="admin-products-table-card">
         <table className="admin-products-table">
           <thead>
             <tr>
@@ -80,8 +87,8 @@ export const AdminCatalogSection = ({
               <th>CATEGORÍA</th>
               <th>PRECIO</th>
               <th>STOCK</th>
-              <th>HABILITADO</th>
-              <th>ACCIONES</th>
+              <th style={{ textAlign: 'center' }}>HABILITADO</th>
+              <th style={{ textAlign: 'right' }}>ACCIONES</th>
             </tr>
           </thead>
 
@@ -91,16 +98,20 @@ export const AdminCatalogSection = ({
                 <td>
                   <img
                     className="admin-product-image"
-                    src={product.image}
-                    alt={product.name}
+                    src={product.img}
+                    alt={product.title}
                   />
                 </td>
 
                 <td>
-                  <div className="admin-product-info">
-                    <strong>{product.name}</strong>
-                    <span>SKU: {product.sku}</span>
-                  </div>
+                  <Box className="admin-product-info">
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: 'text.primary' }}>
+                      {product.title}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
+                      SKU: {product.sku}
+                    </Typography>
+                  </Box>
                 </td>
 
                 <td>
@@ -114,44 +125,51 @@ export const AdminCatalogSection = ({
                 </td>
 
                 <td>
-                  <span className={product.stock <= 10 ? 'stock-low' : ''}>
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    className={product.stock <= 10 ? 'stock-low' : ''}
+                    sx={{ fontWeight: 'bold' }}
+                  >
                     {product.stock}
-                  </span>
+                  </Typography>
 
                   {product.stock <= 10 && (
-                    <span className="stock-low-text"> BAJO</span>
+                    <Typography component="span" variant="caption" className="stock-low-text" sx={{ fontWeight: 800, ml: 0.5 }}>
+                      BAJO
+                    </Typography>
                   )}
                 </td>
 
-                <td>
-                  <button
-                    type="button"
-                    className={`admin-switch ${product.enabled ? 'active' : ''}`}
-                    aria-label="Cambiar estado del producto"
-                    onClick={() => onToggleEnabled(product.id)}
-                  >
-                    <span />
-                  </button>
+                <td style={{ textAlign: 'center' }}>
+                  <Switch
+                    checked={product.enabled}
+                    onChange={() => onToggleEnabled(product.id)}
+                    color="success"
+                    size="small"
+                  />
                 </td>
 
                 <td>
-                  <div className="admin-actions">
-                    <button
-                      type="button"
+                  <Box className="admin-actions" sx={{ justifyContent: 'flex-end' }}>
+                    <IconButton
                       aria-label="Editar producto"
                       onClick={() => onRequestEdit(product)}
+                      size="small"
+                      sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
                     >
-                      <EditOutlinedIcon />
-                    </button>
+                      <EditOutlinedIcon fontSize="small" />
+                    </IconButton>
 
-                    <button
-                      type="button"
+                    <IconButton
                       aria-label="Eliminar producto"
                       onClick={() => onRequestDelete(product)}
+                      size="small"
+                      sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}
                     >
-                      <DeleteOutlineOutlinedIcon />
-                    </button>
-                  </div>
+                      <DeleteOutlineOutlinedIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </td>
               </tr>
             ))}
@@ -159,34 +177,72 @@ export const AdminCatalogSection = ({
             {filteredProducts.length === 0 && (
               <tr>
                 <td colSpan="7" className="admin-empty-table">
-                  No se encontraron productos para esa búsqueda.
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    No se encontraron productos para esa búsqueda.
+                  </Typography>
                 </td>
               </tr>
             )}
           </tbody>
         </table>
 
-        <div className="admin-table-footer">
-          <p>{showingText}</p>
+        <Box className="admin-table-footer">
+          <Typography variant="body2">{showingText}</Typography>
 
-          <div className="admin-pagination">
-            <button type="button">
+          <Box className="admin-pagination">
+            <IconButton size="small" sx={{ color: 'text.secondary' }}>
               <KeyboardArrowLeftIcon />
-            </button>
+            </IconButton>
 
-            <button type="button" className="active">
+            <Button
+              size="small"
+              variant="contained"
+              sx={{
+                minWidth: '32px',
+                width: '32px',
+                height: '32px',
+                p: 0,
+                borderRadius: '6px',
+                bgcolor: 'primary.light',
+                color: 'background.default',
+                fontWeight: 'bold',
+              }}
+            >
               1
-            </button>
+            </Button>
 
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <Button
+              size="small"
+              sx={{
+                minWidth: '32px',
+                width: '32px',
+                height: '32px',
+                p: 0,
+                color: 'text.primary',
+              }}
+            >
+              2
+            </Button>
 
-            <button type="button">
+            <Button
+              size="small"
+              sx={{
+                minWidth: '32px',
+                width: '32px',
+                height: '32px',
+                p: 0,
+                color: 'text.primary',
+              }}
+            >
+              3
+            </Button>
+
+            <IconButton size="small" sx={{ color: 'text.secondary' }}>
               <KeyboardArrowRightIcon />
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
+            </IconButton>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   )
 }

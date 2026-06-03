@@ -3,6 +3,18 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
+import {
+  Box,
+  Typography,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Switch,
+  FormControlLabel,
+} from '@mui/material'
 import './styles.scss'
 
 export const AdminEditProductSection = ({
@@ -19,10 +31,12 @@ export const AdminEditProductSection = ({
 
     const updatedProduct = {
       ...product,
-      name: formData.get('name'),
+      title: formData.get('title'),
+      name: formData.get('title'), // compatibility
       description: formData.get('description'),
       sku: formData.get('sku'),
-      category: formData.get('category'),
+      categoryId: formData.get('categoryId'),
+      category: formData.get('categoryId').toUpperCase(), // compatibility
       price: Number(formData.get('price')),
       stock: Number(formData.get('stock')),
       enabled,
@@ -34,165 +48,173 @@ export const AdminEditProductSection = ({
   return (
     <form className="admin-edit-product-section" onSubmit={handleSubmit}>
       <header className="admin-edit-product-header">
-        <div>
-          <p>Catálogo &gt; Editar Producto</p>
+        <Box>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold', letterSpacing: 1.2 }}>
+            CATÁLOGO &gt; EDITAR PRODUCTO
+          </Typography>
 
-          <h1>Editar Producto</h1>
+          <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', mt: 0.5, fontFamily: 'Outfit' }}>
+            Editar Producto
+          </Typography>
 
-          <span>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
             Actualiza los detalles técnicos y disponibilidad de{' '}
-            <strong>{product.name}</strong>.
-          </span>
-        </div>
+            <strong>{product.title}</strong>.
+          </Typography>
+        </Box>
 
-        <div className="admin-edit-product-header-actions">
-          <button
-            type="button"
-            className="admin-edit-cancel-button"
+        <Box className="admin-edit-product-header-actions">
+          <Button
+            variant="outlined"
             onClick={onCancel}
+            sx={{ fontWeight: 'bold', color: 'text.secondary', borderColor: 'rgba(255,255,255,0.15)' }}
           >
             Cancelar
-          </button>
+          </Button>
 
-          <button type="submit" className="admin-edit-save-button">
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ fontWeight: 'bold' }}
+          >
             Guardar Cambios
-          </button>
-        </div>
+          </Button>
+        </Box>
       </header>
 
-      <div className="admin-edit-product-grid">
-        <div className="admin-edit-product-left">
-          <section className="admin-edit-card">
-            <h2>
+      <Box className="admin-edit-product-grid">
+        <Box className="admin-edit-product-left">
+          <Box className="admin-edit-card surface-card">
+            <Typography variant="h6" className="admin-card-title">
               <InfoOutlinedIcon />
               Información General
-            </h2>
+            </Typography>
 
-            <label className="admin-edit-field">
-              <span>Nombre del Producto</span>
-              <input
-                name="name"
-                type="text"
-                defaultValue={product.name}
+            <Box className="admin-form-fields-stack">
+              <TextField
+                name="title"
+                label="Nombre del Producto"
+                defaultValue={product.title}
+                fullWidth
                 required
+                variant="outlined"
               />
-            </label>
 
-            <label className="admin-edit-field">
-              <span>Descripción</span>
-              <textarea
+              <TextField
                 name="description"
+                label="Descripción"
+                multiline
+                rows={4}
                 defaultValue={
                   product.description ||
-                  'Diseñada para jugadores avanzados que buscan potencia máxima sin perder el control. El marco de fibra de carbono ofrece una respuesta eléctrica en cada smash.'
+                  'Diseñada para jugadores avanzados que buscan potencia máxima sin perder el control.'
                 }
+                fullWidth
+                variant="outlined"
               />
-            </label>
 
-            <div className="admin-edit-row">
-              <label className="admin-edit-field">
-                <span>SKU</span>
-                <input
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                <TextField
                   name="sku"
-                  type="text"
+                  label="SKU"
                   defaultValue={product.sku}
                   required
+                  variant="outlined"
                 />
-              </label>
 
-              <label className="admin-edit-field">
-                <span>Categoría</span>
-                <select
-                  name="category"
-                  defaultValue={product.category}
-                  required
-                >
-                  <option value="PALETAS">Paletas</option>
-                  <option value="PELOTAS">Pelotas</option>
-                  <option value="ACCESORIOS">Accesorios</option>
-                  <option value="INDUMENTARIA">Indumentaria</option>
-                </select>
-              </label>
-            </div>
-          </section>
+                <FormControl fullWidth>
+                  <InputLabel id="edit-category-label">Categoría</InputLabel>
+                  <Select
+                    labelId="edit-category-label"
+                    name="categoryId"
+                    defaultValue={product.categoryId ?? 'paletas'}
+                    label="Categoría"
+                  >
+                    <MenuItem value="paletas">Paletas</MenuItem>
+                    <MenuItem value="pelotas">Pelotas</MenuItem>
+                    <MenuItem value="accesorios">Accesorios</MenuItem>
+                    <MenuItem value="indumentaria">Indumentaria</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Box>
+          </Box>
 
-          <section className="admin-edit-card">
-            <h2 className="price-title">
+          <Box className="admin-edit-card surface-card" sx={{ mt: 3 }}>
+            <Typography variant="h6" className="admin-card-title">
               <LocalOfferOutlinedIcon />
               Precio y Disponibilidad
-            </h2>
+            </Typography>
 
-            <div className="admin-edit-row">
-              <label className="admin-edit-field">
-                <span>Precio (EUR)</span>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mt: 2 }}>
+              <TextField
+                name="price"
+                label="Precio ($)"
+                type="number"
+                defaultValue={product.price}
+                required
+                variant="outlined"
+                slotProps={{ htmlInput: { min: 0, step: 0.01 } }}
+              />
 
-                <div className="admin-edit-price-wrapper">
-                  <span>€</span>
-                  <input
-                    name="price"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    defaultValue={product.price}
-                    required
-                  />
-                </div>
-              </label>
+              <TextField
+                name="stock"
+                label="Stock Actual"
+                type="number"
+                defaultValue={product.stock}
+                required
+                variant="outlined"
+                slotProps={{ htmlInput: { min: 0 } }}
+              />
+            </Box>
+          </Box>
+        </Box>
 
-              <label className="admin-edit-field">
-                <span>Stock Actual</span>
-                <input
-                  name="stock"
-                  type="number"
-                  min="0"
-                  defaultValue={product.stock}
-                  required
-                />
-              </label>
-            </div>
-          </section>
-        </div>
-
-        <aside className="admin-edit-product-right">
-          <section className="admin-edit-image-card">
-            <h2>
+        <Box component="aside" className="admin-edit-product-right">
+          <Box className="admin-edit-image-card surface-card">
+            <Typography variant="h6" className="admin-card-title">
               <ImageOutlinedIcon />
               Imagen del Producto
-            </h2>
+            </Typography>
 
-            <img
-              className="admin-edit-product-image"
-              src={product.image}
-              alt={product.name}
-            />
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, my: 2 }}>
+              <img
+                className="admin-edit-product-image"
+                src={product.img}
+                alt={product.title}
+              />
 
-            <button type="button" className="admin-edit-upload-box">
-              <CloudUploadOutlinedIcon />
-              <strong>Reemplazar Imagen</strong>
-              <span>JPG, PNG o WEBP (Máx. 5MB)</span>
-            </button>
+              <Button
+                variant="outlined"
+                fullWidth
+                startIcon={<CloudUploadOutlinedIcon />}
+                className="admin-edit-upload-btn"
+                sx={{ borderStyle: 'dashed', color: 'text.secondary', py: 1.2 }}
+              >
+                Reemplazar Imagen
+              </Button>
+            </Box>
 
-            <div className="admin-edit-publication-box">
-              <p>ESTADO DE PUBLICACIÓN</p>
+            <Box className="admin-edit-publication-box">
+              <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', letterSpacing: 1.2, display: 'block', mb: 1.5 }}>
+                ESTADO DE PUBLICACIÓN
+              </Typography>
 
-              <div className="admin-edit-visible-row">
-                <div>
-                  <span className="admin-edit-visible-dot" />
-                  <strong>Visible en Tienda</strong>
-                </div>
-
-                <button
-                  type="button"
-                  className={`admin-edit-switch ${enabled ? 'active' : ''}`}
-                  onClick={() => setEnabled((current) => !current)}
-                >
-                  <span />
-                </button>
-              </div>
-            </div>
-          </section>
-        </aside>
-      </div>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Visible en Tienda
+                </Typography>
+                <Switch
+                  checked={enabled}
+                  onChange={(e) => setEnabled(e.target.checked)}
+                  color="success"
+                />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </form>
   )
 }

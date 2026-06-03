@@ -5,8 +5,10 @@ import {
   DialogActions,
   Typography,
   Button,
+  Box,
 } from '@mui/material';
 import './styles.scss';
+
 
 export const ConfirmationDialog = ({
   open,
@@ -17,6 +19,10 @@ export const ConfirmationDialog = ({
   confirmLabel = 'Confirmar',
   cancelLabel = 'Cerrar',
   confirmColor = 'primary',
+  children,
+  icon,
+  center = false,
+  bottomLineColor,
 }) => {
   const handleConfirm = () => {
     onConfirm?.();
@@ -27,24 +33,37 @@ export const ConfirmationDialog = ({
     <Dialog
       open={open}
       onClose={onClose}
-      className="confirmation-dialog-root"
+      className={`confirmation-dialog-root ${center ? 'confirmation-dialog--centered' : ''}`}
       PaperProps={{ className: 'confirmation-dialog-paper' }}
       aria-labelledby="confirmation-dialog-title"
       aria-describedby={subtitle ? 'confirmation-dialog-description' : undefined}
     >
+      {icon && (
+        <Box className="confirmation-dialog-icon-container">
+          {icon}
+        </Box>
+      )}
+
       <DialogTitle id="confirmation-dialog-title" className="confirmation-dialog-title">
         {title}
       </DialogTitle>
 
-      {subtitle && (
+      {(subtitle || children) && (
         <DialogContent className="confirmation-dialog-content">
-          <Typography
-            id="confirmation-dialog-description"
-            variant="body2"
-            className="confirmation-dialog-subtitle"
-          >
-            {subtitle}
-          </Typography>
+          {subtitle && (
+            <Typography
+              id="confirmation-dialog-description"
+              variant="body2"
+              className="confirmation-dialog-subtitle"
+            >
+              {subtitle}
+            </Typography>
+          )}
+          {children && (
+            <Box className="confirmation-dialog-custom-content">
+              {children}
+            </Box>
+          )}
         </DialogContent>
       )}
 
@@ -61,6 +80,14 @@ export const ConfirmationDialog = ({
           {confirmLabel}
         </Button>
       </DialogActions>
+
+      {bottomLineColor && (
+        <Box
+          className="confirmation-dialog-bottom-line"
+          sx={{ backgroundColor: bottomLineColor }}
+        />
+      )}
     </Dialog>
   );
 };
+
