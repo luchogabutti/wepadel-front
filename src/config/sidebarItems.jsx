@@ -8,7 +8,7 @@ import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 export const profileSidebarItems = [
   { to: '/perfil', label: 'Perfil', icon: <PersonIcon />, end: true },
   { to: '/perfil/ordenes', label: 'Mis órdenes', icon: <ShoppingBagIcon />, end: true },
-  { to: '/admin/catalogo', label: 'Panel Admin', icon: <AdminPanelSettingsIcon /> },
+  { to: '/admin/perfil', label: 'Panel Admin', icon: <AdminPanelSettingsIcon /> },
 ];
 
 export const adminSidebarItems = [
