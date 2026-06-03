@@ -20,6 +20,7 @@ import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
+import '../styles.scss'
 import './styles.scss'
 
 const DEFAULT_PRODUCT_IMAGE =
@@ -64,54 +65,56 @@ export const AdminProductModal = ({
       className="admin-product-dialog-root"
       PaperProps={{
         className: 'admin-product-dialog-paper',
-        sx: {
-          bgcolor: 'background.paper',
-          border: '1px solid var(--mui-palette-divider)',
-          borderRadius: 3,
-        }
       }}
       maxWidth="md"
       fullWidth
     >
       <form onSubmit={handleSubmit}>
         <DialogTitle className="admin-product-dialog-header">
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <Box className="admin-product-dialog-header-row">
             <Box>
-              <Typography variant="h5" sx={{ fontWeight: 800, color: 'text.primary', fontFamily: 'Outfit' }}>
+              <Typography variant="h5" className="admin-product-dialog-title">
                 {isEditing ? 'Editar Producto' : 'Crear Nuevo Producto'}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
+              <Typography variant="body2" className="admin-product-dialog-subtitle">
                 {isEditing
                   ? 'Modifica los detalles técnicos del producto seleccionado.'
                   : 'Introduce los detalles técnicos del nuevo equipo de padel.'}
               </Typography>
             </Box>
-            <IconButton onClick={onClose} aria-label="Cerrar modal" sx={{ color: 'text.secondary' }}>
+            <IconButton
+              onClick={onClose}
+              aria-label="Cerrar modal"
+              className="admin-icon-btn"
+            >
               <CloseIcon />
             </IconButton>
           </Box>
         </DialogTitle>
 
-        <DialogContent className="admin-product-dialog-body" dividers sx={{ borderColor: 'rgba(255, 255, 255, 0.05)' }}>
+        <DialogContent
+          className="admin-product-dialog-body admin-product-dialog-body--dividers"
+          dividers
+        >
           <Box className="admin-product-dialog-grid">
             {/* Columna de Imagen */}
             <Box className="admin-product-images-column">
-              <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', letterSpacing: 1.5, display: 'block', mb: 2 }}>
+              <Typography variant="caption" className="admin-product-images-caption">
                 IMAGEN DEL PRODUCTO
               </Typography>
 
               <Box className="admin-product-upload-box">
                 <CloudUploadOutlinedIcon />
-                <Typography variant="body2" sx={{ fontWeight: 700, color: 'text.primary', mt: 1 }}>
+                <Typography variant="body2" className="admin-product-upload-title">
                   Arrastra o sube una imagen
                 </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary', mt: 0.5 }}>
+                <Typography variant="caption" className="admin-product-upload-hint">
                   Formatos: JPG, PNG, WEBP (Máx 5MB)
                 </Typography>
               </Box>
 
               <Box className="admin-product-thumbnails">
-                <Button variant="outlined" className="thumbnail-btn" sx={{ height: 80, borderStyle: 'dashed' }}>
+                <Button variant="outlined" className="thumbnail-btn thumbnail-btn--dashed">
                   <PhotoCameraOutlinedIcon />
                 </Button>
                 <Box className="thumbnail-placeholder" />
@@ -132,7 +135,7 @@ export const AdminProductModal = ({
                 margin="normal"
               />
 
-              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mt: 1, mb: 1 }}>
+              <Box className="admin-form-grid-2 admin-form-grid-2--spaced-y">
                 <TextField
                   name="sku"
                   label="SKU"
@@ -171,7 +174,7 @@ export const AdminProductModal = ({
                 margin="normal"
               />
 
-              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mt: 1 }}>
+              <Box className="admin-form-grid-2 admin-form-grid-2--spaced-top-sm">
                 <TextField
                   name="price"
                   label="Precio ($)"
@@ -205,8 +208,8 @@ export const AdminProductModal = ({
           </Box>
         </DialogContent>
 
-        <DialogActions className="admin-product-dialog-footer" sx={{ bgcolor: 'surface.main', padding: 2, px: 3 }}>
-          <Button onClick={onClose} variant="text" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
+        <DialogActions className="admin-product-dialog-footer">
+          <Button onClick={onClose} variant="text" className="admin-btn-ghost">
             Cancelar
           </Button>
 
@@ -215,7 +218,7 @@ export const AdminProductModal = ({
             variant="contained"
             color="primary"
             startIcon={<SaveOutlinedIcon />}
-            sx={{ px: 3, fontWeight: 'bold' }}
+            className="admin-btn-bold admin-btn-primary"
           >
             {isEditing ? 'Guardar cambios' : 'Crear Producto'}
           </Button>

@@ -15,6 +15,8 @@ import {
   Switch,
   FormControlLabel,
 } from '@mui/material'
+import { PageHeader } from '../../layout/PageHeader'
+import '../styles.scss'
 import './styles.scss'
 
 export const AdminEditProductSection = ({
@@ -47,41 +49,32 @@ export const AdminEditProductSection = ({
 
   return (
     <form className="admin-edit-product-section" onSubmit={handleSubmit}>
-      <header className="admin-edit-product-header">
-        <Box>
-          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold', letterSpacing: 1.2 }}>
-            CATÁLOGO &gt; EDITAR PRODUCTO
-          </Typography>
-
-          <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', mt: 0.5, fontFamily: 'Outfit' }}>
-            Editar Producto
-          </Typography>
-
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
+      <PageHeader
+        variant="profile"
+        title="Editar Producto"
+        subtitle={
+          <>
             Actualiza los detalles técnicos y disponibilidad de{' '}
             <strong>{product.title}</strong>.
-          </Typography>
-        </Box>
-
-        <Box className="admin-edit-product-header-actions">
-          <Button
-            variant="outlined"
-            onClick={onCancel}
-            sx={{ fontWeight: 'bold', color: 'text.secondary', borderColor: 'rgba(255,255,255,0.15)' }}
-          >
-            Cancelar
-          </Button>
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ fontWeight: 'bold' }}
-          >
-            Guardar Cambios
-          </Button>
-        </Box>
-      </header>
+          </>
+        }
+        alignActions="center"
+        actions={
+          <>
+            <Button variant="outlined" onClick={onCancel} className="admin-btn-outlined-muted">
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              className="admin-btn-bold admin-btn-primary"
+            >
+              Guardar Cambios
+            </Button>
+          </>
+        }
+      />
 
       <Box className="admin-edit-product-grid">
         <Box className="admin-edit-product-left">
@@ -114,7 +107,7 @@ export const AdminEditProductSection = ({
                 variant="outlined"
               />
 
-              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+              <Box className="admin-form-grid-2--responsive">
                 <TextField
                   name="sku"
                   label="SKU"
@@ -141,13 +134,13 @@ export const AdminEditProductSection = ({
             </Box>
           </Box>
 
-          <Box className="admin-edit-card surface-card" sx={{ mt: 3 }}>
+          <Box className="admin-edit-card surface-card admin-edit-card--spaced">
             <Typography variant="h6" className="admin-card-title">
               <LocalOfferOutlinedIcon />
               Precio y Disponibilidad
             </Typography>
 
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mt: 2 }}>
+            <Box className="admin-form-grid-2--responsive admin-form-grid-2--responsive--spaced-top">
               <TextField
                 name="price"
                 label="Precio ($)"
@@ -178,7 +171,7 @@ export const AdminEditProductSection = ({
               Imagen del Producto
             </Typography>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, my: 2 }}>
+            <Box className="admin-edit-image-stack">
               <img
                 className="admin-edit-product-image"
                 src={product.img}
@@ -189,20 +182,19 @@ export const AdminEditProductSection = ({
                 variant="outlined"
                 fullWidth
                 startIcon={<CloudUploadOutlinedIcon />}
-                className="admin-edit-upload-btn"
-                sx={{ borderStyle: 'dashed', color: 'text.secondary', py: 1.2 }}
+                className="admin-edit-upload-btn admin-btn-upload-dashed"
               >
                 Reemplazar Imagen
               </Button>
             </Box>
 
             <Box className="admin-edit-publication-box">
-              <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', letterSpacing: 1.2, display: 'block', mb: 1.5 }}>
+              <Typography variant="caption" className="admin-edit-publication-label">
                 ESTADO DE PUBLICACIÓN
               </Typography>
 
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+              <Box className="admin-edit-publication-row">
+                <Typography variant="body2" className="admin-edit-visible-label">
                   Visible en Tienda
                 </Typography>
                 <Switch

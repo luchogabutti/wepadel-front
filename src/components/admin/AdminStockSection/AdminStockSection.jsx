@@ -5,17 +5,19 @@ import {
   Button,
   IconButton,
   TextField,
-  Tooltip,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
-import { AdminSectionHeader } from '../AdminSectionHeader/AdminSectionHeader'
+import { PageHeader } from '../../layout/PageHeader'
+import '../styles.scss'
 import './styles.scss'
 
 export const AdminStockSection = ({
+  title,
+  subtitle,
   products = [],
   onSaveStock,
 }) => {
@@ -97,10 +99,10 @@ export const AdminStockSection = ({
 
   return (
     <Box className="admin-stock-section">
-      <AdminSectionHeader
-        eyebrow="ADMIN › STOCK"
-        title="Control de Inventario"
-        description="Gestiona de forma masiva los niveles de disponibilidad de la tienda."
+      <PageHeader
+        variant="profile"
+        title={title}
+        subtitle={subtitle}
         alignActions="center"
         actions={
           <>
@@ -182,11 +184,12 @@ export const AdminStockSection = ({
                     ${product.price.toFixed(2)}
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                    <Box className="admin-stock-stepper">
                       <IconButton
                         size="small"
                         onClick={() => handleDecrement(product.id)}
-                        sx={{ bgcolor: 'rgba(255,255,255,0.03)', '&:hover': { bgcolor: 'rgba(255,255,255,0.08)' } }}
+                        className="admin-stock-stepper-btn"
+                        aria-label="Reducir stock"
                       >
                         <RemoveIcon fontSize="small" />
                       </IconButton>
@@ -197,19 +200,15 @@ export const AdminStockSection = ({
                         onChange={(e) => handleStockChange(product.id, e.target.value)}
                         variant="outlined"
                         size="small"
-                        slotProps={{ htmlInput: { style: { textAlign: 'center', width: '60px' }, min: 0 } }}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            height: '34px',
-                            borderRadius: '6px',
-                          }
-                        }}
+                        className="admin-stock-stepper-input"
+                        slotProps={{ htmlInput: { min: 0 } }}
                       />
 
                       <IconButton
                         size="small"
                         onClick={() => handleIncrement(product.id)}
-                        sx={{ bgcolor: 'rgba(255,255,255,0.03)', '&:hover': { bgcolor: 'rgba(255,255,255,0.08)' } }}
+                        className="admin-stock-stepper-btn"
+                        aria-label="Aumentar stock"
                       >
                         <AddIcon fontSize="small" />
                       </IconButton>
@@ -222,7 +221,7 @@ export const AdminStockSection = ({
                       </span>
                     ) : isLow ? (
                       <span className="stock-badge low">
-                        <WarningAmberIcon fontSize="inherit" sx={{ mr: 0.5, verticalAlign: 'middle' }} />
+                        <WarningAmberIcon fontSize="inherit" className="stock-badge__icon" />
                         BAJO STOCK ({currentStock})
                       </span>
                     ) : (

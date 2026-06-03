@@ -14,8 +14,20 @@ import { adminProducts } from '../data/adminProductsData'
 
 const sectionContent = {
   catalog: {
-    eyebrow: 'ADMIN › CATALOGO',
     title: 'Catálogo',
+    subtitle: 'Administra productos, precios y visibilidad en la tienda.',
+  },
+  stock: {
+    title: 'Control de Inventario',
+    subtitle: 'Gestiona de forma masiva los niveles de disponibilidad de la tienda.',
+  },
+  discounts: {
+    title: 'Gestión de Descuentos',
+    subtitle: 'Configura promociones temporales para tus productos de alto rendimiento.',
+  },
+  profile: {
+    title: 'Perfil Administrador',
+    subtitle: 'Datos de la cuenta con acceso al panel de administración.',
   },
 }
 
@@ -169,8 +181,8 @@ export const AdminPage = () => {
         return (
           <>
             <AdminCatalogToolbar
-              eyebrow={sectionContent.catalog.eyebrow}
               title={sectionContent.catalog.title}
+              subtitle={sectionContent.catalog.subtitle}
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
               onCreateProduct={handleOpenCreateProduct}
@@ -187,12 +199,19 @@ export const AdminPage = () => {
 
       case 'stock':
         return (
-          <AdminStockSection products={products} onSaveStock={handleSaveStock} />
+          <AdminStockSection
+            title={sectionContent.stock.title}
+            subtitle={sectionContent.stock.subtitle}
+            products={products}
+            onSaveStock={handleSaveStock}
+          />
         )
 
       case 'discounts':
         return (
           <AdminDiscountsSection
+            title={sectionContent.discounts.title}
+            subtitle={sectionContent.discounts.subtitle}
             products={products}
             discounts={discounts}
             onAddDiscount={handleAddDiscount}
@@ -201,7 +220,12 @@ export const AdminPage = () => {
         )
 
       case 'profile':
-        return <AdminProfileSection />
+        return (
+          <AdminProfileSection
+            title={sectionContent.profile.title}
+            subtitle={sectionContent.profile.subtitle}
+          />
+        )
 
       default:
         return null

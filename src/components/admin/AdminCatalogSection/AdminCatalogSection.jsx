@@ -1,10 +1,5 @@
-import {
-  Box,
-  Typography,
-  Button,
-  IconButton,
-  Switch,
-} from '@mui/material'
+import { Box, Typography, IconButton, Switch } from '@mui/material'
+import '../styles.scss'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
@@ -105,10 +100,10 @@ export const AdminCatalogSection = ({
 
                 <td>
                   <Box className="admin-product-info">
-                    <Typography variant="body2" sx={{ fontWeight: 800, color: 'text.primary' }}>
+                    <Typography variant="body2" className="admin-product-info__title">
                       {product.title}
                     </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
+                    <Typography variant="caption" className="admin-product-info__sku">
                       SKU: {product.sku}
                     </Typography>
                   </Box>
@@ -128,14 +123,13 @@ export const AdminCatalogSection = ({
                   <Typography
                     component="span"
                     variant="body2"
-                    className={product.stock <= 10 ? 'stock-low' : ''}
-                    sx={{ fontWeight: 'bold' }}
+                    className={`admin-stock-cell__value ${product.stock <= 10 ? 'stock-low' : ''}`}
                   >
                     {product.stock}
                   </Typography>
 
                   {product.stock <= 10 && (
-                    <Typography component="span" variant="caption" className="stock-low-text" sx={{ fontWeight: 800, ml: 0.5 }}>
+                    <Typography component="span" variant="caption" className="stock-low-text">
                       BAJO
                     </Typography>
                   )}
@@ -151,12 +145,12 @@ export const AdminCatalogSection = ({
                 </td>
 
                 <td>
-                  <Box className="admin-actions" sx={{ justifyContent: 'flex-end' }}>
+                  <Box className="admin-actions admin-actions--end">
                     <IconButton
                       aria-label="Editar producto"
                       onClick={() => onRequestEdit(product)}
                       size="small"
-                      sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+                      className="admin-icon-btn admin-icon-btn--edit"
                     >
                       <EditOutlinedIcon fontSize="small" />
                     </IconButton>
@@ -165,7 +159,7 @@ export const AdminCatalogSection = ({
                       aria-label="Eliminar producto"
                       onClick={() => onRequestDelete(product)}
                       size="small"
-                      sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}
+                      className="admin-icon-btn admin-icon-btn--danger"
                     >
                       <DeleteOutlineOutlinedIcon fontSize="small" />
                     </IconButton>
@@ -177,7 +171,7 @@ export const AdminCatalogSection = ({
             {filteredProducts.length === 0 && (
               <tr>
                 <td colSpan="7" className="admin-empty-table">
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  <Typography variant="body2" className="admin-empty-message">
                     No se encontraron productos para esa búsqueda.
                   </Typography>
                 </td>
@@ -190,56 +184,17 @@ export const AdminCatalogSection = ({
           <Typography variant="body2">{showingText}</Typography>
 
           <Box className="admin-pagination">
-            <IconButton size="small" sx={{ color: 'text.secondary' }}>
+            <button type="button" aria-label="Página anterior">
               <KeyboardArrowLeftIcon />
-            </IconButton>
-
-            <Button
-              size="small"
-              variant="contained"
-              sx={{
-                minWidth: '32px',
-                width: '32px',
-                height: '32px',
-                p: 0,
-                borderRadius: '6px',
-                bgcolor: 'primary.light',
-                color: 'background.default',
-                fontWeight: 'bold',
-              }}
-            >
+            </button>
+            <button type="button" className="active">
               1
-            </Button>
-
-            <Button
-              size="small"
-              sx={{
-                minWidth: '32px',
-                width: '32px',
-                height: '32px',
-                p: 0,
-                color: 'text.primary',
-              }}
-            >
-              2
-            </Button>
-
-            <Button
-              size="small"
-              sx={{
-                minWidth: '32px',
-                width: '32px',
-                height: '32px',
-                p: 0,
-                color: 'text.primary',
-              }}
-            >
-              3
-            </Button>
-
-            <IconButton size="small" sx={{ color: 'text.secondary' }}>
+            </button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button" aria-label="Página siguiente">
               <KeyboardArrowRightIcon />
-            </IconButton>
+            </button>
           </Box>
         </Box>
       </Box>

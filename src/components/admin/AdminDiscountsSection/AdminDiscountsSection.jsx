@@ -23,10 +23,13 @@ import CloseIcon from '@mui/icons-material/Close'
 import PercentIcon from '@mui/icons-material/Percent'
 import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog'
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
-import { AdminSectionHeader } from '../AdminSectionHeader/AdminSectionHeader'
+import { PageHeader } from '../../layout/PageHeader'
+import '../styles.scss'
 import './styles.scss'
 
 export const AdminDiscountsSection = ({
+  title,
+  subtitle,
   products = [],
   discounts = [],
   onAddDiscount,
@@ -106,10 +109,10 @@ export const AdminDiscountsSection = ({
 
   return (
     <Box className="admin-discounts-section">
-      <AdminSectionHeader
-        eyebrow="ADMIN › DESCUENTOS"
-        title="Gestión de Descuentos"
-        description="Configura promociones temporales para tus productos de alto rendimiento."
+      <PageHeader
+        variant="profile"
+        title={title}
+        subtitle={subtitle}
         alignActions="center"
         actions={
           <Button
@@ -152,34 +155,34 @@ export const AdminDiscountsSection = ({
             {discounts.map((discount) => (
               <tr key={discount.id}>
                 <td>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Box className="admin-discount-product-row">
                     <img
                       className="admin-product-image"
                       src={discount.productImg}
                       alt={discount.productTitle}
                     />
                     <Box className="admin-product-info">
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: 'text.primary' }}>
+                      <Typography variant="body2" className="admin-product-info__title">
                         {discount.productTitle}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
+                      <Typography variant="caption" className="admin-product-info__sku">
                         {discount.productCategory}
                       </Typography>
                     </Box>
                   </Box>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <Typography variant="h6" sx={{ fontWeight: 900, color: 'success.main' }}>
+                  <Typography variant="h6" className="admin-discount-percent">
                     {discount.percentage}%
                   </Typography>
                 </td>
                 <td>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  <Typography variant="body2" className="admin-discount-date">
                     {discount.startDate}
                   </Typography>
                 </td>
                 <td>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  <Typography variant="body2" className="admin-discount-date">
                     {discount.endDate}
                   </Typography>
                 </td>
@@ -190,10 +193,10 @@ export const AdminDiscountsSection = ({
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   <IconButton
-                    color="error"
                     size="small"
                     onClick={() => setDiscountToDelete(discount)}
-                    sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}
+                    className="admin-icon-btn admin-icon-btn--danger"
+                    aria-label="Eliminar descuento"
                   >
                     <DeleteOutlineOutlinedIcon fontSize="small" />
                   </IconButton>
@@ -203,7 +206,7 @@ export const AdminDiscountsSection = ({
             {discounts.length === 0 && (
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: 'gray' }}>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  <Typography variant="body2" className="admin-empty-message">
                     No hay promociones o descuentos activos en este momento.
                   </Typography>
                 </td>
@@ -218,28 +221,27 @@ export const AdminDiscountsSection = ({
         open={isModalOpen}
         onClose={handleCloseModal}
         PaperProps={{
-          sx: {
-            bgcolor: 'background.paper',
-            border: '1px solid var(--mui-palette-divider)',
-            borderRadius: 3,
-            width: '100%',
-            maxWidth: '500px',
-          }
+          className: 'admin-dialog-paper admin-dialog-paper--form',
         }}
       >
         <form onSubmit={handleSubmit}>
           <DialogTitle>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h6" sx={{ fontWeight: 800, fontFamily: 'Outfit' }}>
+            <Box className="admin-dialog-header-row">
+              <Typography variant="h6" className="admin-dialog-title">
                 Nuevo Descuento
               </Typography>
-              <IconButton onClick={handleCloseModal} size="small" sx={{ color: 'text.secondary' }}>
+              <IconButton
+                onClick={handleCloseModal}
+                size="small"
+                className="admin-icon-btn"
+                aria-label="Cerrar"
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
           </DialogTitle>
 
-          <DialogContent dividers sx={{ borderColor: 'rgba(255, 255, 255, 0.05)', display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+          <DialogContent dividers className="admin-dialog-body--form">
             <FormControl fullWidth>
               <InputLabel id="discount-product-select">Producto</InputLabel>
               <Select
@@ -258,7 +260,7 @@ export const AdminDiscountsSection = ({
               </Select>
             </FormControl>
 
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+            <Box className="admin-form-grid-2">
               <TextField
                 name="percentage"
                 label="Porcentaje (%)"
@@ -272,11 +274,11 @@ export const AdminDiscountsSection = ({
               <FormControlLabel
                 control={<Switch name="active" defaultChecked color="success" />}
                 label="Activar ahora"
-                sx={{ ml: 0.5, height: '100%', display: 'flex', alignItems: 'center' }}
+                className="admin-form-switch-row"
               />
             </Box>
 
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+            <Box className="admin-form-grid-2">
               <TextField
                 name="startDate"
                 label="Fecha de Inicio"
@@ -299,8 +301,8 @@ export const AdminDiscountsSection = ({
             </Box>
           </DialogContent>
 
-          <DialogActions sx={{ padding: 2, bgcolor: 'surface.main' }}>
-            <Button onClick={handleCloseModal} sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
+          <DialogActions className="admin-dialog-footer">
+            <Button onClick={handleCloseModal} className="admin-btn-ghost">
               Cancelar
             </Button>
             <Button
@@ -308,7 +310,7 @@ export const AdminDiscountsSection = ({
               variant="contained"
               color="primary"
               startIcon={<PercentIcon />}
-              sx={{ fontWeight: 'bold' }}
+              className="admin-btn-bold admin-btn-primary"
             >
               Aplicar Descuento
             </Button>
@@ -336,10 +338,10 @@ export const AdminDiscountsSection = ({
       >
         {discountToDelete && (
           <Box className="admin-delete-selected-product">
-            <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', letterSpacing: 1.6, display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" className="admin-delete-dialog-eyebrow">
               PRODUCTO CON DESCUENTO
             </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 900, color: 'primary.light' }}>
+            <Typography variant="body1" className="admin-delete-dialog-product">
               {discountToDelete.productTitle} ({discountToDelete.percentage}%)
             </Typography>
           </Box>

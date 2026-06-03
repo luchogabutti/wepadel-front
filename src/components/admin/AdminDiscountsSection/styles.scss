@@ -3,6 +3,34 @@
   flex-direction: column;
 }
 
+.admin-discount-product-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-discount-percent {
+  font-weight: 900;
+  color: var(--mui-palette-success-main);
+}
+
+.admin-discount-date {
+  color: var(--mui-palette-text-secondary);
+}
+
+.admin-delete-dialog-eyebrow {
+  font-weight: 800;
+  color: var(--mui-palette-text-secondary);
+  letter-spacing: 1.6px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.admin-delete-dialog-product {
+  font-weight: 900;
+  color: var(--mui-palette-primary-light);
+}
+
 .status-tag {
   display: inline-flex;
   align-items: center;

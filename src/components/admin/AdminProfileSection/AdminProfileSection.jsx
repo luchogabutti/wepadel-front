@@ -1,19 +1,11 @@
 import { Box, Typography, Button } from '@mui/material';
+import { PageHeader } from '../../layout/PageHeader';
 import '../styles.scss';
 
-export const AdminProfileSection = () => {
+export const AdminProfileSection = ({ title, subtitle }) => {
   return (
     <>
-      <header className="admin-section-header-row">
-        <Box className="admin-section-header-copy">
-          <Typography component="span" className="admin-section-eyebrow">
-            ADMIN › PERFIL
-          </Typography>
-          <Typography component="h1" className="admin-section-title">
-            Perfil Administrador
-          </Typography>
-        </Box>
-      </header>
+      <PageHeader variant="profile" title={title} subtitle={subtitle} />
 
       <Box className="surface-card admin-profile-card">
         <Box className="admin-profile-avatar">JP</Box>
