@@ -114,7 +114,7 @@ export const AdminDiscountsSection = ({
         </Button>
       }
     >
-      <AdminStatsGrid stats={stats} spaced />
+      <AdminStatsGrid stats={stats} />
 
       <AdminTableCard>
         <table className="admin-products-table">

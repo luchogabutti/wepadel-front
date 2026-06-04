@@ -33,7 +33,16 @@ export const ConfirmationDialog = ({
       open={open}
       onClose={onClose}
       className={`confirmation-dialog-root${center ? ' confirmation-dialog--centered' : ''}`}
-      PaperProps={{ className: 'confirmation-dialog-paper' }}
+      slotProps={{
+        paper: {
+          className: 'confirmation-dialog-paper',
+          sx: {
+            outline: 'none',
+            '&:focus': { outline: 'none', boxShadow: '0 24px 48px color-mix(in srgb, var(--mui-palette-background-default) 45%, transparent)' },
+            '&:focus-visible': { outline: 'none', boxShadow: '0 24px 48px color-mix(in srgb, var(--mui-palette-background-default) 45%, transparent)' },
+          },
+        },
+      }}
       aria-labelledby="confirmation-dialog-title"
       aria-describedby={subtitle ? 'confirmation-dialog-description' : undefined}
     >
@@ -69,8 +78,17 @@ export const ConfirmationDialog = ({
         <Button
           variant="contained"
           color={confirmColor}
+          disableElevation
+          disableFocusRipple
           onClick={handleConfirm}
           className="confirmation-dialog-confirm"
+          sx={{
+            boxShadow: 'none',
+            outline: 'none',
+            '&:hover': { boxShadow: 'none' },
+            '&:focus': { boxShadow: 'none', outline: 'none' },
+            '&.Mui-focusVisible': { boxShadow: 'none', outline: 'none' },
+          }}
         >
           {confirmLabel}
         </Button>

@@ -4,6 +4,16 @@
     backdrop-filter: blur(4px);
   }
 
+  .MuiDialog-paper,
+  .confirmation-dialog-paper {
+    outline: none !important;
+
+    &:focus,
+    &:focus-visible {
+      outline: none !important;
+    }
+  }
+
   &.confirmation-dialog--centered {
     .confirmation-dialog-paper {
       text-align: center;
@@ -47,9 +57,16 @@
   padding: 8px 8px 16px;
   max-width: 420px;
   width: calc(100% - 32px);
-  box-shadow: 0 24px 48px color-mix(in srgb, var(--mui-palette-background-default) 45%, transparent);
+  box-shadow: 0 24px 48px color-mix(in srgb, var(--mui-palette-background-default) 45%, transparent) !important;
   position: relative;
   overflow: hidden;
+  outline: none !important;
+
+  &:focus,
+  &:focus-visible {
+    outline: none !important;
+    box-shadow: 0 24px 48px color-mix(in srgb, var(--mui-palette-background-default) 45%, transparent) !important;
+  }
 }
 
 .confirmation-dialog-icon-container {
@@ -120,14 +137,10 @@
     }
   }
 
-  .confirmation-dialog-confirm {
+  .confirmation-dialog-confirm.MuiButton-root {
     padding-left: 20px;
     padding-right: 20px;
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--mui-palette-primary-main) 25%, transparent);
-
-    &.MuiButton-containedError {
-      box-shadow: 0 4px 12px color-mix(in srgb, var(--mui-palette-error-main) 25%, transparent);
-    }
+    box-shadow: none;
   }
 }
 

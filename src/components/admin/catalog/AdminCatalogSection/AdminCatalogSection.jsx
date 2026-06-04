@@ -27,9 +27,8 @@ export const AdminCatalogSection = ({
   })
 
   const totalProducts = products.length
-  const lowStockProducts = products.filter((product) => product.stock <= 10).length
   const activeProducts = products.filter((product) => product.enabled).length
-  const categoriesCount = new Set(products.map((product) => product.category)).size
+  const categoriesCount = products.map((product) => product.category).length
 
   const catalogStats = [
     {
@@ -37,12 +36,6 @@ export const AdminCatalogSection = ({
       label: 'TOTAL PRODUCTOS',
       value: totalProducts,
       variant: 'default',
-    },
-    {
-      id: 'low-stock-products',
-      label: 'STOCK BAJO',
-      value: lowStockProducts,
-      variant: 'danger',
     },
     {
       id: 'active-products',
