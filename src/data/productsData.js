@@ -9,6 +9,11 @@ export const allProducts = [
     oldPrice: 412.00,
     badge: '15% OFF',
     img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXKAgpP53VaYUIYhiPLYu0myrXae465GDTDUpNqtkVLF_ipW1Baj_Lv7BGfRPbI_uEIUcD5aHT4_U5n3TPpcua5PA164OHuVI0ZMOQa932eOUkrjL4iLHplXZezbWFs9iU39dIMa0WMjQE_aSvjUZIgKlXAnDpTp6hYmI5JryLvMVs7D5b6mK3JRRqCBLFeDd4GAoIb3VW0Ev5jkDV_zm1-kZa7TQf7hKNmpSZGj6cjeUENXBj8i0E4biiXhPFMeKNX9-6SHsMzfVR',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBXKAgpP53VaYUIYhiPLYu0myrXae465GDTDUpNqtkVLF_ipW1Baj_Lv7BGfRPbI_uEIUcD5aHT4_U5n3TPpcua5PA164OHuVI0ZMOQa932eOUkrjL4iLHplXZezbWFs9iU39dIMa0WMjQE_aSvjUZIgKlXAnDpTp6hYmI5JryLvMVs7D5b6mK3JRRqCBLFeDd4GAoIb3VW0Ev5jkDV_zm1-kZa7TQf7hKNmpSZGj6cjeUENXBj8i0E4biiXhPFMeKNX9-6SHsMzfVR',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBWhJ0DcIyfcCe5ql7ivzgEpctZ11YOyDFSzVIe2mx4Zjc5kFbregCqha5QHVlBJumWK24XjLLG9Hnq8ynCrCUl2qooiqia_ExNkYP0Qqp-xv0L4a1T5EMPwTaAZsgJZttAc56hFrbbMhxhilPjXIt8mV_ituUm4RFQiycaLNfNytCgGaIksfJLgNeU0gyoyodcl_UpvZ0n-hOe_I6igIx7zZejxhs9q64SHK5gHlP30w7AO2UEN5S3o0wB9Lt9zJHi-lo7FPtnJFn1',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuA5PFu8T9sFFeCZyWG_U_HCsT64FBwHrCXIxpsM4x06rQ_IXbWaO-XeENBwckqb9sYGAD81pVEC-b7mLr_MXuowLtXrJbOGBV209IkSFRVutYzRm5zXOuIikFbnBAgMp-8akJSnKK7FTsFWvCYFo2aQzM-pzVV7X6s0bhFXfxdvDxuFW9_LPqJK1bEbwvrL5gymBb5zhbXQbyTt6kyWf1K1pOCmSYvvwFvwPjeNSKhYQ7q9wnxZPpiqLR8L1H3r7zo-jd3mh2Na-eFm',
+    ],
     inStock: true,
   },
   {
@@ -189,9 +194,9 @@ export const allProducts = [
 ];
 
 export const featuredProducts = [
-  allProducts[0],  // Pro Carbon Stealth (id 1)
-  allProducts[12], // Master Tour Pack x3 (id 13)
-  allProducts[2],  // Neon Strike Hybrid (id 3)
-  allProducts[7]   // Bolso Pro Tour 2024 (id 8)
+  allProducts[0],
+  allProducts[12],
+  allProducts[2],
+  allProducts[7],
 ];
 

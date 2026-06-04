@@ -16,9 +16,20 @@
     color: var(--mui-palette-text-primary);
   }
 
+  &__actions {
+    display: flex;
+    gap: 8px;
+  }
+
   &__edit-btn {
-    border-color: var(--mui-palette-primary-light);
     color: var(--mui-palette-primary-light);
+    border-color: var(--mui-palette-primary-light);
+    text-transform: none;
+  }
+
+  &__save-btn,
+  &__cancel-btn {
+    text-transform: none;
   }
 
   &__field {

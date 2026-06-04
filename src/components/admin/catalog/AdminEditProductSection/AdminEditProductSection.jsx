@@ -34,11 +34,11 @@ export const AdminEditProductSection = ({
     const updatedProduct = {
       ...product,
       title: formData.get('title'),
-      name: formData.get('title'), // compatibility
+      name: formData.get('title'),
       description: formData.get('description'),
       sku: formData.get('sku'),
       categoryId: formData.get('categoryId'),
-      category: formData.get('categoryId').toUpperCase(), // compatibility
+      category: formData.get('categoryId').toUpperCase(),
       price: Number(formData.get('price')),
       stock: Number(formData.get('stock')),
       enabled,

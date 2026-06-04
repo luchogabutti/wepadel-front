@@ -22,6 +22,9 @@ const OrderField = ({ label, value }) => (
 export const OrderDetailDrawer = ({ open, onClose, order }) => {
   if (!order) return null;
 
+  const pointsUsed = order.pointsUsed ?? 0;
+  const pointsEarned = order.pointsEarned ?? 0;
+
   return (
     <Drawer
       anchor="right"
@@ -48,9 +51,12 @@ export const OrderDetailDrawer = ({ open, onClose, order }) => {
 
       <Box className="order-detail-drawer-body">
         <OrderField label="Nº de pedido" value={`#${order.id}`} />
+        {order.customerName && <OrderField label="Cliente" value={order.customerName} />}
         <OrderField label="Fecha" value={order.date} />
         <OrderField label="Estado" value={STATUS_LABELS[order.status] ?? order.status} />
         <OrderField label="Total" value={`$${order.total.toFixed(2)}`} />
+        <OrderField label="Puntos usados" value={String(pointsUsed)} />
+        <OrderField label="Puntos generados" value={String(pointsEarned)} />
 
         <Typography variant="caption" className="order-detail-section-label">
           Productos

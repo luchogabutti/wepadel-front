@@ -38,6 +38,7 @@ export const AdminDiscountsSection = ({
   discounts = [],
   onAddDiscount,
   onDeleteDiscount,
+  onToggleStatus,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProductId, setSelectedProductId] = useState('')
@@ -69,7 +70,7 @@ export const AdminDiscountsSection = ({
       percentage: Number(formData.get('percentage')),
       startDate: formData.get('startDate') || new Date().toISOString().split('T')[0],
       endDate: formData.get('endDate') || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      status: formData.get('active') === 'on' ? 'Confirmada' : 'Pendiente',
+      status: formData.get('active') === 'on' ? 'Activado' : 'Desactivado',
     }
 
     onAddDiscount(newDiscount)
@@ -82,9 +83,8 @@ export const AdminDiscountsSection = ({
     }
   }
 
-  // Calculate Stats
-  const activeDiscounts = discounts.filter((d) => d.status === 'Confirmada').length
-  const pendingDiscounts = discounts.filter((d) => d.status === 'Pendiente').length
+  const activeDiscounts = discounts.filter((d) => d.status === 'Activado').length
+  const inactiveDiscounts = discounts.filter((d) => d.status === 'Desactivado').length
 
   const stats = [
     {
@@ -94,9 +94,9 @@ export const AdminDiscountsSection = ({
       variant: 'success',
     },
     {
-      id: 'pending-promos',
-      label: 'PENDIENTES DE ACTIVACIÓN',
-      value: pendingDiscounts,
+      id: 'inactive-promos',
+      label: 'DESCUENTOS INACTIVOS',
+      value: inactiveDiscounts,
       variant: 'warning',
     },
   ]
@@ -134,7 +134,7 @@ export const AdminDiscountsSection = ({
               <th style={{ textAlign: 'center', width: '150px' }}>% DESCUENTO</th>
               <th>FECHA INICIO</th>
               <th>FECHA FIN</th>
-              <th style={{ textAlign: 'center', width: '160px' }}>ESTADO</th>
+              <th style={{ textAlign: 'center', width: '120px' }}>HABILITADO</th>
               <th style={{ textAlign: 'right', width: '120px' }}>ACCIONES</th>
             </tr>
           </thead>
@@ -174,9 +174,12 @@ export const AdminDiscountsSection = ({
                   </Typography>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <span className={`status-tag ${discount.status === 'Confirmada' ? 'active' : 'pending'}`}>
-                    {discount.status.toUpperCase()}
-                  </span>
+                  <Switch
+                    checked={discount.status === 'Activado'}
+                    onChange={() => onToggleStatus(discount.id)}
+                    color="success"
+                    size="small"
+                  />
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   <IconButton
@@ -203,7 +206,6 @@ export const AdminDiscountsSection = ({
         </table>
       </AdminTableCard>
 
-      {/* Create Modal */}
       <Dialog
         open={isModalOpen}
         onClose={handleCloseModal}
@@ -305,7 +307,6 @@ export const AdminDiscountsSection = ({
         </form>
       </Dialog>
 
-      {/* Delete Confirmation */}
       <ConfirmationDialog
         open={Boolean(discountToDelete)}
         onClose={() => setDiscountToDelete(null)}

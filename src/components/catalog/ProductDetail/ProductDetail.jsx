@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Typography, Button, IconButton, Rating, Breadcrumbs, Link as MuiLink } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -13,9 +13,16 @@ import './styles.scss';
 
 export const ProductDetail = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedImg, setSelectedImg] = useState(product?.img || '');
   const navigate = useNavigate();
   const { addItem } = useCart();
+
+  const [selectedImg, setSelectedImg] = useState(product?.img || '');
+
+  useEffect(() => {
+    if (!product) return;
+    const images = product.images?.length ? product.images : [product.img];
+    setSelectedImg(images[0]);
+  }, [product]);
 
   if (!product) {
     return (
@@ -43,7 +50,6 @@ export const ProductDetail = ({ product }) => {
     addItem(product, quantity);
   };
 
-  // Generate mock specifications based on category
   const getSpecs = (categoryId) => {
     switch (categoryId) {
       case 'paletas':
@@ -73,14 +79,13 @@ export const ProductDetail = ({ product }) => {
     }
   };
 
+  const galleryImages = product.images?.length ? product.images : [product.img];
   const specifications = getSpecs(product.categoryId);
 
-  // Generate fallback description
   const fallbackDesc = product.description || `La línea WePadel ${product.title} representa la cúspide del equipamiento deportivo para pádel de alto rendimiento. Diseñada meticulosamente en fibra de carbono y con tecnologías avanzadas de amortiguación de impacto, ofrece a los jugadores exigentes la máxima precisión y velocidad en cada golpe. Probada bajo estándares de competencia profesional.`;
 
   return (
     <div className="product-detail-container">
-      {/* Back button and Breadcrumbs */}
       <div className="detail-navigation">
         <Button 
           startIcon={<ArrowBackIcon />} 
@@ -102,36 +107,28 @@ export const ProductDetail = ({ product }) => {
       </div>
 
       <div className="detail-layout">
-        {/* Left: Image Gallery */}
         <div className="detail-gallery">
           <div className="main-image-wrapper">
             <img src={selectedImg || product.img} alt={product.title} className="main-image" />
             {product.badge && <span className="detail-badge">{product.badge}</span>}
           </div>
-          {/* Thumbnail preview list (mock gallery) */}
-          <div className="thumbnail-list">
-            <button 
-              className={`thumb-btn ${selectedImg === product.img ? 'active' : ''}`}
-              onClick={() => setSelectedImg(product.img)}
-            >
-              <img src={product.img} alt="Thumbnail 1" />
-            </button>
-            <button 
-              className={`thumb-btn ${selectedImg === product.img + '_alt1' ? 'active' : ''}`}
-              onClick={() => setSelectedImg(product.img)}
-            >
-              <img src={product.img} alt="Thumbnail 2" style={{ filter: 'hue-rotate(45deg)' }} />
-            </button>
-            <button 
-              className={`thumb-btn ${selectedImg === product.img + '_alt2' ? 'active' : ''}`}
-              onClick={() => setSelectedImg(product.img)}
-            >
-              <img src={product.img} alt="Thumbnail 3" style={{ filter: 'hue-rotate(-45deg)' }} />
-            </button>
-          </div>
+          {galleryImages.length > 1 && (
+            <div className="thumbnail-list">
+              {galleryImages.map((image, index) => (
+                <button
+                  key={`${product.id}-${index}`}
+                  type="button"
+                  className={`thumb-btn ${selectedImg === image ? 'active' : ''}`}
+                  onClick={() => setSelectedImg(image)}
+                  aria-label={`Ver imagen ${index + 1}`}
+                >
+                  <img src={image} alt={`${product.title} vista ${index + 1}`} />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Right: Product Info & Actions */}
         <div className="detail-info">
           <span className="product-category-label">
             {product.category || (product.categoryId ? product.categoryId.toUpperCase() : 'WEPADEL ELITE')}
@@ -169,7 +166,6 @@ export const ProductDetail = ({ product }) => {
             {fallbackDesc}
           </Typography>
 
-          {/* Technical Specifications */}
           <div className="specs-section">
             <Typography variant="h6" className="specs-title">
               Especificaciones Técnicas
@@ -184,7 +180,6 @@ export const ProductDetail = ({ product }) => {
             </div>
           </div>
 
-          {/* Actions: Quantity Selector & Add to Cart */}
           <div className="purchase-actions">
             <div className="quantity-selector">
               <IconButton onClick={handleDecrease} className="qty-btn" disabled={product.inStock === false}>
@@ -210,7 +205,6 @@ export const ProductDetail = ({ product }) => {
             </Button>
           </div>
 
-          {/* Guarantee & Shipping Highlights */}
           <div className="highlights-section">
             <div className="highlight-item">
               <LocalShippingIcon className="highlight-icon" />

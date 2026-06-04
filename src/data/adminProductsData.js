@@ -15,6 +15,10 @@ export const adminSectionContent = {
     title: 'Perfil Administrador',
     subtitle: 'Datos de la cuenta con acceso al panel de administración.',
   },
+  orders: {
+    title: 'Pedidos de la tienda',
+    subtitle: 'Vista global de todos los pedidos de clientes.',
+  },
 };
 
 export const initialDiscounts = [
@@ -28,7 +32,7 @@ export const initialDiscounts = [
     percentage: 15,
     startDate: '2026-06-01',
     endDate: '2026-06-30',
-    status: 'Confirmada',
+    status: 'Activado',
   },
   {
     id: 2,
@@ -40,7 +44,7 @@ export const initialDiscounts = [
     percentage: 20,
     startDate: '2026-05-15',
     endDate: '2026-06-15',
-    status: 'Confirmada',
+    status: 'Activado',
   },
 ];
 

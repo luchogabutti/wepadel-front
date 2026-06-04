@@ -8,7 +8,7 @@ const splitName = (fullName) => {
   return { firstName, lastName: rest.join(' ') };
 };
 
-export const AdminProfileSection = ({ title, subtitle }) => {
+export const AdminProfileSection = ({ title, subtitle, onProfileSaved }) => {
   const { firstName, lastName } = splitName(accountUser.name);
 
   return (
@@ -19,6 +19,7 @@ export const AdminProfileSection = ({ title, subtitle }) => {
         firstName={firstName}
         lastName={lastName}
         email={accountUser.email}
+        onSaved={onProfileSaved}
       />
     </>
   );

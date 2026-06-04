@@ -109,19 +109,18 @@ export const AdminCatalogSection = ({
                 </td>
 
                 <td>
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    className={`admin-stock-cell__value ${product.stock <= 10 ? 'stock-low' : ''}`}
-                  >
-                    {product.stock}
-                  </Typography>
-
-                  {product.stock <= 10 && (
-                    <Typography component="span" variant="caption" className="stock-low-text">
-                      BAJO
+                  <Box className="admin-stock-cell">
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={`admin-stock-cell__value ${product.stock <= 10 ? 'stock-low' : ''}`}
+                    >
+                      {product.stock}
                     </Typography>
-                  )}
+                    {product.stock <= 10 && (
+                      <span className="stock-low-text">BAJO</span>
+                    )}
+                  </Box>
                 </td>
 
                 <td style={{ textAlign: 'center' }}>

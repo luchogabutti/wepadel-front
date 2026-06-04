@@ -15,6 +15,36 @@
     }
   }
 
+  .order-customer {
+    color: var(--mui-palette-primary-light);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .order-points-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--mui-palette-divider);
+    background-color: color-mix(in srgb, var(--mui-palette-background-default) 6%, transparent);
+  }
+
+  .order-points-label {
+    color: var(--mui-palette-text-secondary);
+    font-size: 12px;
+
+    strong {
+      color: var(--mui-palette-text-primary);
+    }
+  }
+
+  .order-cancel-warning {
+    color: var(--mui-palette-warning-main);
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
   .order-card-header {
     display: flex;
     justify-content: space-between;

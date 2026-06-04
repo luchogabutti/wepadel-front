@@ -95,7 +95,6 @@ export const AdminProductModal = ({
           dividers
         >
           <Box className="admin-product-dialog-grid">
-            {/* Columna de Imagen */}
             <Box className="admin-product-images-column">
               <Typography variant="caption" className="admin-product-images-caption">
                 IMAGEN DEL PRODUCTO
@@ -120,7 +119,6 @@ export const AdminProductModal = ({
               </Box>
             </Box>
 
-            {/* Columna de Formulario */}
             <Box className="admin-product-form-column">
               <TextField
                 name="title"

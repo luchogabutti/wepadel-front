@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
-import { ConfirmationDialog } from '../../../general/confirmationDialog/ConfirmationDialog';
+import { ConfirmationDialog } from '../../../general/ConfirmationDialog/ConfirmationDialog';
 import './styles.scss';
 
 export const PointsBadge = ({ pointsValue = 500 }) => {

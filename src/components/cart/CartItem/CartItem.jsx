@@ -3,7 +3,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { QuantityPicker } from '../QuantityPicker/QuantityPicker';
 import { formatCartPrice } from '../../../data/cartData';
 import './styles.scss';
-import { ConfirmationDialog } from '../../general/confirmationDialog/ConfirmationDialog';
+import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog';
 import { useState } from 'react';
 
 export const CartItem = ({ item, onQuantityChange, onRemove }) => {

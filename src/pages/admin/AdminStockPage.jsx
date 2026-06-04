@@ -1,16 +1,26 @@
 import { useState } from 'react';
-import { Snackbar, Alert } from '@mui/material';
 import { AdminStockSection } from '../../components/admin/stock/AdminStockSection/AdminStockSection';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
+import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
 import { adminProducts, adminSectionContent } from '../../data/adminProductsData';
 
 export const AdminStockPage = () => {
   const [products, setProducts] = useState(adminProducts);
   const [pendingStockSave, setPendingStockSave] = useState(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+    key: 0,
+  });
 
-  const triggerAlert = (message, severity = 'success') => {
-    setSnackbar({ open: true, message, severity });
+  const showSnackbar = (message, severity = 'success') => {
+    setSnackbar((prev) => ({
+      open: true,
+      message,
+      severity,
+      key: prev.key + 1,
+    }));
   };
 
   const handleCloseSnackbar = () => {
@@ -30,7 +40,7 @@ export const AdminStockPage = () => {
       setProducts(pendingStockSave);
     }
     setPendingStockSave(null);
-    triggerAlert('Stock guardado con éxito');
+    showSnackbar('Stock guardado con éxito');
   };
 
   return (
@@ -53,21 +63,7 @@ export const AdminStockPage = () => {
         center
       />
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          className="admin-snackbar-alert"
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };
