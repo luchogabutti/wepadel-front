@@ -1,14 +1,18 @@
 import { Typography, Button, TextField, Grid } from '@mui/material';
 import './styles.scss';
 
-export const ProfileDataCard = () => {
+export const ProfileDataCard = ({
+  firstName = 'Juan',
+  lastName = 'Pérez',
+  email = 'juan.perez@padelpro.com',
+}) => {
   return (
     <div className="surface-card surface-card--elevated profile-data-card">
       <div className="profile-data-card__header">
         <Typography variant="h5" className="profile-data-card__title">
           Mis datos
         </Typography>
-        <Button variant="outlined" className="profile-data-card__edit-btn">
+        <Button variant="outlined" sx={{ color: 'primary.light', borderColor: 'primary.light' }} className="profile-data-card__edit-btn">
           Editar
         </Button>
       </div>
@@ -19,7 +23,7 @@ export const ProfileDataCard = () => {
             <Typography variant="caption" className="profile-data-card__label">
               Nombre
             </Typography>
-            <TextField fullWidth value="Juan" disabled variant="outlined" />
+            <TextField fullWidth value={firstName} disabled variant="outlined" />
           </div>
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
@@ -27,7 +31,7 @@ export const ProfileDataCard = () => {
             <Typography variant="caption" className="profile-data-card__label">
               Apellido
             </Typography>
-            <TextField fullWidth value="Pérez" disabled variant="outlined" />
+            <TextField fullWidth value={lastName} disabled variant="outlined" />
           </div>
         </Grid>
         <Grid size={{ xs: 12 }}>
@@ -35,7 +39,7 @@ export const ProfileDataCard = () => {
             <Typography variant="caption" className="profile-data-card__label">
               Email
             </Typography>
-            <TextField fullWidth value="juan.perez@padelpro.com" disabled variant="outlined" />
+            <TextField fullWidth value={email} disabled variant="outlined" />
           </div>
         </Grid>
       </Grid>

@@ -21,7 +21,9 @@ import AddIcon from '@mui/icons-material/Add'
 import CloseIcon from '@mui/icons-material/Close'
 import PercentIcon from '@mui/icons-material/Percent'
 import { ConfirmationDialog } from '../../../general/ConfirmationDialog/ConfirmationDialog'
-import { PageHeader } from '../../../layout/PageHeader'
+import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
+import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
+import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -96,38 +98,25 @@ export const AdminDiscountsSection = ({
   ]
 
   return (
-    <Box className="admin-discounts-section">
-      <PageHeader
-        variant="profile"
-        title={title}
-        subtitle={subtitle}
-        alignActions="center"
-        actions={
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleOpenModal}
-            startIcon={<AddIcon />}
-            className="admin-btn-bold admin-btn-primary"
-          >
-            Nuevo descuento
-          </Button>
-        }
-      />
+    <AdminSectionLayout
+      className="admin-discounts-section"
+      title={title}
+      subtitle={subtitle}
+      actions={
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpenModal}
+          startIcon={<AddIcon />}
+          className="admin-btn-bold admin-btn-primary"
+        >
+          Nuevo descuento
+        </Button>
+      }
+    >
+      <AdminStatsGrid stats={stats} spaced />
 
-      <Box className="admin-stats-grid admin-stats-grid--spaced">
-        {stats.map((stat) => (
-          <Box key={stat.id} className="admin-stat-card">
-            <Typography className="admin-stat-label">{stat.label}</Typography>
-            <Typography variant="h4" component="strong" className={`admin-stat-value ${stat.variant}`}>
-              {stat.value}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
-
-      {/* Table */}
-      <Box className="admin-products-table-card">
+      <AdminTableCard>
         <table className="admin-products-table">
           <thead>
             <tr>
@@ -202,7 +191,7 @@ export const AdminDiscountsSection = ({
             )}
           </tbody>
         </table>
-      </Box>
+      </AdminTableCard>
 
       {/* Create Modal */}
       <Dialog
@@ -318,6 +307,6 @@ export const AdminDiscountsSection = ({
         confirmColor="error"
         center
       />
-    </Box>
+    </AdminSectionLayout>
   )
 }

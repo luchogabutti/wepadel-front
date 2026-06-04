@@ -10,7 +10,9 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
-import { PageHeader } from '../../../layout/PageHeader'
+import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
+import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
+import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -20,7 +22,6 @@ export const AdminStockSection = ({
   products = [],
   onRequestSaveStock,
 }) => {
-  // Local state to store temporary stock changes before saving
   const [localStocks, setLocalStocks] = useState(() => {
     const stocksMap = {}
     products.forEach((p) => {
@@ -76,7 +77,6 @@ export const AdminStockSection = ({
     onRequestSaveStock(updatedProducts)
   }
 
-  // Calculate Stats
   const totalStock = Object.values(localStocks).reduce((a, b) => a + b, 0)
   const lowStockCount = Object.values(localStocks).filter((s) => s <= 10 && s > 0).length
   const outOfStockCount = Object.values(localStocks).filter((s) => s === 0).length
@@ -105,50 +105,37 @@ export const AdminStockSection = ({
   const hasChanges = products.some((p) => localStocks[p.id] !== p.stock)
 
   return (
-    <Box className="admin-stock-section">
-      <PageHeader
-        variant="profile"
-        title={title}
-        subtitle={subtitle}
-        alignActions="center"
-        actions={
-          <>
-            {hasChanges && (
-              <Button
-                variant="outlined"
-                sx={{color: 'primary.light', borderColor: 'primary.light'}}
-                onClick={handleReset}
-                startIcon={<SettingsBackupRestoreIcon />}
-              >
-                Deshacer
-              </Button>
-            )}
+    <AdminSectionLayout
+      className="admin-stock-section"
+      title={title}
+      subtitle={subtitle}
+      actions={
+        <>
+          {hasChanges && (
             <Button
-              variant="contained"
-              disabled={!hasChanges}
-              onClick={handleSave}
-              startIcon={<SaveOutlinedIcon />}
-              className="admin-btn-bold admin-btn-primary"
+              variant="outlined"
+              sx={{ color: 'primary.light', borderColor: 'primary.light' }}
+              onClick={handleReset}
+              startIcon={<SettingsBackupRestoreIcon />}
             >
-              Guardar Stock
+              Deshacer
             </Button>
-          </>
-        }
-      />
+          )}
+          <Button
+            variant="contained"
+            disabled={!hasChanges}
+            onClick={handleSave}
+            startIcon={<SaveOutlinedIcon />}
+            className="admin-btn-bold admin-btn-primary"
+          >
+            Guardar Stock
+          </Button>
+        </>
+      }
+    >
+      <AdminStatsGrid stats={stats} spaced />
 
-      <Box className="admin-stats-grid admin-stats-grid--spaced">
-        {stats.map((stat) => (
-          <article key={stat.id} className="admin-stat-card">
-            <p className="admin-stat-label">{stat.label}</p>
-            <strong className={`admin-stat-value ${stat.variant}`}>
-              {stat.value}
-            </strong>
-          </article>
-        ))}
-      </Box>
-
-      {/* Table */}
-      <Box className="admin-products-table-card">
+      <AdminTableCard>
         <table className="admin-products-table">
           <thead>
             <tr>
@@ -241,7 +228,7 @@ export const AdminStockSection = ({
             })}
           </tbody>
         </table>
-      </Box>
-    </Box>
+      </AdminTableCard>
+    </AdminSectionLayout>
   )
 }

@@ -1,9 +1,12 @@
 import { Box, Typography, IconButton, Switch } from '@mui/material'
-import '../../styles.scss'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
+import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
+import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
+import '../../styles.scss'
 import './styles.scss'
 
 export const AdminCatalogSection = ({
@@ -60,20 +63,31 @@ export const AdminCatalogSection = ({
       ? `Mostrando 1-${filteredProducts.length} de ${products.length} productos`
       : `Mostrando 0 de ${products.length} productos`
 
-  return (
-    <Box className="admin-catalog-section">
-      <Box className="admin-stats-grid">
-        {catalogStats.map((stat) => (
-          <Box key={stat.id} className="admin-stat-card">
-            <Typography className="admin-stat-label">{stat.label}</Typography>
-            <Typography variant="h4" component="strong" className={`admin-stat-value ${stat.variant}`}>
-              {stat.value}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+  const tableFooter = (
+    <Box className="admin-table-footer">
+      <Typography variant="body2">{showingText}</Typography>
 
-      <Box className="admin-products-table-card">
+      <Box className="admin-pagination">
+        <button type="button" aria-label="Página anterior">
+          <KeyboardArrowLeftIcon />
+        </button>
+        <button type="button" className="active">
+          1
+        </button>
+        <button type="button">2</button>
+        <button type="button">3</button>
+        <button type="button" aria-label="Página siguiente">
+          <KeyboardArrowRightIcon />
+        </button>
+      </Box>
+    </Box>
+  )
+
+  return (
+    <AdminSectionLayout className="admin-catalog-section">
+      <AdminStatsGrid stats={catalogStats} />
+
+      <AdminTableCard footer={tableFooter}>
         <table className="admin-products-table">
           <thead>
             <tr>
@@ -179,25 +193,7 @@ export const AdminCatalogSection = ({
             )}
           </tbody>
         </table>
-
-        <Box className="admin-table-footer">
-          <Typography variant="body2">{showingText}</Typography>
-
-          <Box className="admin-pagination">
-            <button type="button" aria-label="Página anterior">
-              <KeyboardArrowLeftIcon />
-            </button>
-            <button type="button" className="active">
-              1
-            </button>
-            <button type="button">2</button>
-            <button type="button">3</button>
-            <button type="button" aria-label="Página siguiente">
-              <KeyboardArrowRightIcon />
-            </button>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+      </AdminTableCard>
+    </AdminSectionLayout>
   )
 }

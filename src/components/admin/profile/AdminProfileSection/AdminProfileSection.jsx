@@ -1,36 +1,25 @@
-import { Box, Typography, Button } from '@mui/material';
 import { PageHeader } from '../../../layout/PageHeader';
+import { ProfileDataCard } from '../../../profile/ProfileDataCard/ProfileDataCard';
+import { accountUser } from '../../../../config/accountUser';
 import '../../styles.scss';
 
+const splitName = (fullName) => {
+  const [firstName, ...rest] = fullName.trim().split(' ');
+  return { firstName, lastName: rest.join(' ') };
+};
+
 export const AdminProfileSection = ({ title, subtitle }) => {
+  const { firstName, lastName } = splitName(accountUser.name);
+
   return (
     <>
       <PageHeader variant="profile" title={title} subtitle={subtitle} />
 
-      <Box className="surface-card admin-profile-card">
-        <Box className="admin-profile-avatar">JP</Box>
-
-        <Box className="admin-profile-info">
-          <Typography variant="h5" className="admin-profile-name">
-            Juan Pérez
-          </Typography>
-          <Typography variant="body2" className="admin-profile-email">
-            juan.perez@padelpro.com
-          </Typography>
-          <Typography variant="caption" className="admin-profile-role">
-            Administrador General
-          </Typography>
-        </Box>
-
-        <Button
-          variant="outlined"
-          color="inherit"
-          href="/"
-          className="admin-profile-back-btn"
-        >
-          Volver a la Tienda Pública
-        </Button>
-      </Box>
+      <ProfileDataCard
+        firstName={firstName}
+        lastName={lastName}
+        email={accountUser.email}
+      />
     </>
   );
 };
