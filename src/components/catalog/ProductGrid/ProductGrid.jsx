@@ -11,17 +11,19 @@ import {
 import { alpha } from '@mui/material/styles';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ProductCard } from '../ProductCard/ProductCard';
+import {
+  TablePaginationFooter,
+  buildShowingLabel,
+} from '../../general/TablePaginationFooter/TablePaginationFooter';
 import './styles.scss';
 
 export const ProductGrid = ({ products, activeCategory }) => {
   const [sortOrder, setSortOrder] = useState('default');
   const [priceRange, setPriceRange] = useState([0, 500]);
-  const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
     setSortOrder('default');
     setPriceRange([0, 500]);
-    setVisibleCount(6);
   }, [activeCategory]);
 
   const filteredAndSorted = useMemo(() => {
@@ -37,9 +39,6 @@ export const ProductGrid = ({ products, activeCategory }) => {
 
     return result;
   }, [products, sortOrder, priceRange]);
-
-
-  const displayed = filteredAndSorted.slice(0, visibleCount);
 
   const filterControls = (
     <>
@@ -98,7 +97,6 @@ export const ProductGrid = ({ products, activeCategory }) => {
 
   return (
     <div className="product-grid">
-      {/* Sidebar — desktop only */}
       <aside className="sidebar">
         <div className="sidebar-header">
           <TuneIcon sx={{ color: 'primary.light', fontSize: '20px' }} />
@@ -109,9 +107,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
         {filterControls}
       </aside>
 
-      {/* Main content */}
       <main className="main">
-        {/* Filter bar — mobile/tablet only */}
         <div className="mobile-bar">
           <div className="mobile-sort">
             <Typography variant="caption" className="filter-label" sx={{ fontWeight: 700, letterSpacing: '0.05em' }}>
@@ -158,8 +154,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
           </div>
         </div>
 
-        {/* Grid or empty state */}
-        {displayed.length === 0 ? (
+        {filteredAndSorted.length === 0 ? (
           <div className="empty">
             <Typography variant="body1" className="empty-message">
               No se encontraron productos en este rango de precios.
@@ -175,35 +170,17 @@ export const ProductGrid = ({ products, activeCategory }) => {
           </div>
         ) : (
           <div className="grid">
-            {displayed.map((product) => (
+            {filteredAndSorted.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         )}
 
-        {/* Load more */}
-        {filteredAndSorted.length > displayed.length && (
-          <div className="load-more">
-            <Button
-              variant="outlined"
-              onClick={() => setVisibleCount((prev) => prev + 3)}
-              sx={(theme) => ({
-                color: 'primary.light',
-                borderColor: alpha(theme.palette.text.primary, 0.1),
-                px: 4,
-                py: 1.5,
-                fontWeight: 700,
-                fontSize: '14px',
-                borderRadius: 2,
-                '&:hover': {
-                  borderColor: 'primary.main',
-                  bgcolor: alpha(theme.palette.primary.main, 0.05),
-                },
-              })}
-            >
-              Cargar más productos
-            </Button>
-          </div>
+        {filteredAndSorted.length > 0 && (
+          <TablePaginationFooter
+            className="table-pagination-footer--catalog"
+            label={buildShowingLabel(filteredAndSorted.length, filteredAndSorted.length, 'productos')}
+          />
         )}
       </main>
     </div>

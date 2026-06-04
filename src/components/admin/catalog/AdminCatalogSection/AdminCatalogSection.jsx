@@ -1,13 +1,14 @@
 import { Box, Typography, IconButton, Switch } from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
 import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
 import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
+import {
+  TablePaginationFooter,
+  buildShowingLabel,
+} from '../../../general/TablePaginationFooter/TablePaginationFooter'
 import '../../styles.scss'
-import './styles.scss'
 
 export const AdminCatalogSection = ({
   searchTerm = '',
@@ -51,29 +52,10 @@ export const AdminCatalogSection = ({
     },
   ]
 
-  const showingText =
-    filteredProducts.length > 0
-      ? `Mostrando 1-${filteredProducts.length} de ${products.length} productos`
-      : `Mostrando 0 de ${products.length} productos`
-
   const tableFooter = (
-    <Box className="admin-table-footer">
-      <Typography variant="body2">{showingText}</Typography>
-
-      <Box className="admin-pagination">
-        <button type="button" aria-label="Página anterior">
-          <KeyboardArrowLeftIcon />
-        </button>
-        <button type="button" className="active">
-          1
-        </button>
-        <button type="button">2</button>
-        <button type="button">3</button>
-        <button type="button" aria-label="Página siguiente">
-          <KeyboardArrowRightIcon />
-        </button>
-      </Box>
-    </Box>
+    <TablePaginationFooter
+      label={buildShowingLabel(filteredProducts.length, products.length, 'productos')}
+    />
   )
 
   return (

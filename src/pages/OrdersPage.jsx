@@ -1,6 +1,10 @@
 import { Stack } from '@mui/material';
 import { PageHeader } from '../components/layout/PageHeader';
 import { OrderCard } from '../components/profile/orders/OrderCard/OrderCard';
+import {
+  TablePaginationFooter,
+  buildShowingLabel,
+} from '../components/general/TablePaginationFooter/TablePaginationFooter';
 import { orders } from '../data/orders';
 
 export const OrdersPage = () => {
@@ -17,6 +21,11 @@ export const OrdersPage = () => {
           <OrderCard key={order.id} order={order} />
         ))}
       </Stack>
+
+      <TablePaginationFooter
+        className="table-pagination-footer--orders"
+        label={buildShowingLabel(orders.length, orders.length, 'órdenes')}
+      />
     </>
   );
 };

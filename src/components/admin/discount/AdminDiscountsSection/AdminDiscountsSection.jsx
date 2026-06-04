@@ -24,6 +24,10 @@ import { ConfirmationDialog } from '../../../general/ConfirmationDialog/Confirma
 import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
 import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
 import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
+import {
+  TablePaginationFooter,
+  buildShowingLabel,
+} from '../../../general/TablePaginationFooter/TablePaginationFooter'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -116,7 +120,13 @@ export const AdminDiscountsSection = ({
     >
       <AdminStatsGrid stats={stats} />
 
-      <AdminTableCard>
+      <AdminTableCard
+        footer={
+          <TablePaginationFooter
+            label={buildShowingLabel(discounts.length, discounts.length, 'promociones')}
+          />
+        }
+      >
         <table className="admin-products-table">
           <thead>
             <tr>
