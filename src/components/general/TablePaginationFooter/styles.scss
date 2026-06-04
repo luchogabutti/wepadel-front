@@ -1,0 +1,64 @@
+.table-pagination-footer {
+  min-height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 0 22px;
+  background-color: var(--mui-palette-surface-main);
+  border-top: 1px solid var(--mui-palette-divider);
+
+  &__label {
+    margin: 0;
+    color: var(--mui-palette-text-primary);
+    font-size: 14px;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    button {
+      min-width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--mui-palette-text-primary);
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        font-size: 22px;
+        display: block;
+      }
+
+      &:hover {
+        background-color: color-mix(in srgb, var(--mui-palette-text-primary) 6%, transparent);
+      }
+
+      &.active {
+        background-color: var(--mui-palette-primary-light);
+        color: var(--mui-palette-background-default);
+      }
+    }
+  }
+
+  &--catalog {
+    margin-top: 32px;
+    border: 1px solid var(--mui-palette-divider);
+    border-radius: 8px;
+    border-top: 1px solid var(--mui-palette-divider);
+  }
+
+  &--orders {
+    margin-top: 24px;
+    border: 1px solid var(--mui-palette-divider);
+    border-radius: 8px;
+  }
+}

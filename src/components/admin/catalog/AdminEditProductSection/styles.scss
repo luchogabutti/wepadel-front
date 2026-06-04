@@ -1,0 +1,128 @@
+.admin-edit-product-section {
+  width: 100%;
+}
+
+.admin-edit-card--spaced {
+  margin-top: 24px;
+}
+
+.admin-form-grid-2--responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+
+  @media (min-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  &--spaced-top {
+    margin-top: 16px;
+  }
+}
+
+.admin-edit-image-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.admin-edit-publication-label {
+  font-weight: 800;
+  color: var(--mui-palette-text-secondary);
+  letter-spacing: 1.2px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.admin-edit-publication-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-edit-visible-label {
+  font-weight: 700;
+}
+
+.admin-edit-product-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 32px;
+  max-width: 100%;
+  
+  @media (max-width: 1050px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-edit-product-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-edit-card {
+  /* .surface-card takes care of background, border, border-radius */
+  
+  .admin-card-title {
+    margin: 0 0 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--mui-palette-text-primary);
+
+    svg {
+      font-size: 22px;
+      color: var(--mui-palette-primary-light);
+    }
+  }
+}
+
+.admin-form-fields-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-edit-product-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-edit-image-card {
+  /* .surface-card takes care of style */
+  
+  .admin-card-title {
+    margin: 0 0 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--mui-palette-text-primary);
+
+    svg {
+      font-size: 22px;
+      color: var(--mui-palette-primary-light);
+    }
+  }
+}
+
+.admin-edit-product-image {
+  width: 100%;
+  height: 210px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
+  background-color: var(--mui-palette-background-default);
+  border: 1px solid var(--mui-palette-divider);
+}
+
+.admin-edit-publication-box {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--mui-palette-divider);
+}

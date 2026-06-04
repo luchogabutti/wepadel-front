@@ -1,0 +1,83 @@
+.admin-discounts-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-discount-product-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-discount-percent {
+  font-weight: 900;
+  color: var(--mui-palette-success-main);
+}
+
+.admin-discount-date {
+  color: var(--mui-palette-text-secondary);
+}
+
+.admin-delete-dialog-eyebrow {
+  font-weight: 800;
+  color: var(--mui-palette-text-secondary);
+  letter-spacing: 1.6px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.admin-delete-dialog-product {
+  font-weight: 900;
+  color: var(--mui-palette-primary-light);
+}
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+
+  &.active {
+    background-color: color-mix(in srgb, var(--mui-palette-success-main) 12%, transparent);
+    color: var(--mui-palette-success-main);
+    border: 1px solid color-mix(in srgb, var(--mui-palette-success-main) 20%, transparent);
+  }
+
+  &.pending {
+    background-color: color-mix(in srgb, var(--mui-palette-text-hint) 12%, transparent);
+    color: var(--mui-palette-text-secondary);
+    border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 20%, transparent);
+  }
+}
+
+.admin-delete-selected-product {
+  min-height: 78px;
+  border-radius: 7px;
+  background-color: var(--mui-palette-surface-main);
+  border: 1px solid var(--mui-palette-divider);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0;
+  padding: 12px;
+
+  span {
+    color: var(--mui-palette-text-secondary);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    margin-bottom: 6px;
+  }
+
+  strong {
+    color: var(--mui-palette-primary-light);
+    font-size: 16px;
+    font-weight: 900;
+    text-align: center;
+  }
+}

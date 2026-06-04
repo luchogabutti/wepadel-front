@@ -1,0 +1,175 @@
+.admin-product-dialog-root {
+  .MuiDialog-paper {
+    background-color: var(--mui-palette-background-paper);
+    color: var(--mui-palette-text-primary);
+  }
+}
+
+.admin-product-dialog-paper {
+  background-color: var(--mui-palette-background-paper) !important;
+  border: 1px solid var(--mui-palette-divider) !important;
+  border-radius: 12px !important;
+}
+
+.admin-product-dialog-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.admin-product-dialog-title {
+  font-weight: 800;
+  color: var(--mui-palette-text-primary);
+  font-family: 'Outfit', sans-serif;
+}
+
+.admin-product-dialog-subtitle {
+  color: var(--mui-palette-text-secondary);
+  margin-top: 4px;
+}
+
+.admin-product-dialog-body--dividers {
+  border-top-color: color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);
+}
+
+.admin-product-images-caption {
+  font-weight: 700;
+  color: var(--mui-palette-text-secondary);
+  letter-spacing: 1.5px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.admin-product-upload-title {
+  font-weight: 700;
+  color: var(--mui-palette-text-primary);
+  margin-top: 8px;
+}
+
+.admin-product-upload-hint {
+  color: var(--mui-palette-text-secondary);
+  margin-top: 4px;
+}
+
+.admin-product-dialog-footer.MuiDialogActions-root {
+  background-color: var(--mui-palette-surface-main);
+  padding: 16px 24px;
+}
+
+.admin-form-grid-2--spaced-y {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-form-grid-2--spaced-top-sm {
+  margin-top: 8px;
+}
+
+.thumbnail-btn--dashed.MuiButton-root {
+  height: 80px;
+  border-style: dashed;
+}
+
+.admin-product-dialog-header {
+  padding: 24px 24px 16px;
+}
+
+.admin-product-dialog-body {
+  padding: 24px;
+}
+
+.admin-product-dialog-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-product-images-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-product-upload-box {
+  height: 200px;
+  border-radius: 8px;
+  border: 1px dashed color-mix(in srgb, var(--mui-palette-text-hint) 30%, transparent);
+  background-color: var(--mui-palette-background-default);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+
+  svg {
+    color: var(--mui-palette-text-hint);
+    font-size: 36px;
+  }
+}
+
+.admin-product-thumbnails {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+
+  .thumbnail-btn {
+    border-color: color-mix(in srgb, var(--mui-palette-text-hint) 20%, transparent);
+    color: var(--mui-palette-text-secondary);
+    
+    &:hover {
+      border-color: var(--mui-palette-primary-main);
+      background-color: color-mix(in srgb, var(--mui-palette-primary-main) 4%, transparent);
+    }
+  }
+
+  .thumbnail-placeholder {
+    height: 80px;
+    border-radius: 8px;
+    background-color: var(--mui-palette-surface-main);
+    border: 1px solid var(--mui-palette-divider);
+  }
+}
+
+.admin-product-form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  
+  /* MUI TextFields styles override */
+  .MuiFormControl-root {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+}
+
+.admin-product-note-box {
+  margin-top: 12px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--mui-palette-primary-main) 15%, transparent);
+  background-color: color-mix(in srgb, var(--mui-palette-primary-main) 4%, transparent);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  color: var(--mui-palette-text-emphasis);
+
+  svg {
+    margin-top: 2px;
+    color: var(--mui-palette-primary-light);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}

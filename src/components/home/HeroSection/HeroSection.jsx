@@ -60,13 +60,10 @@ export const HeroSection = () => {
               px: 4, py: 2, fontWeight: 'bold',
               color: 'primary.light',
               borderColor: 'primary.light',
-              '&:hover': (theme) => ({
-                borderColor: 'primary.light',
-                bgcolor: alpha(theme.palette.primary.light, 0.08),
-              }),
             }}
+            onClick={() => navigate('/login')}
           >
-            Nuevos Ingresos
+            Iniciar sesión
           </Button>
         </div>
       </div>

@@ -1,0 +1,247 @@
+.admin-main-inner {
+  width: 100%;
+  max-width: 1320px;
+}
+
+.admin-catalog-toolbar {
+  margin-bottom: 32px;
+}
+
+.admin-search-field {
+  width: 240px;
+  min-width: 180px;
+
+  @media (max-width: 599px) {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .MuiOutlinedInput-root {
+    height: 42px;
+    border-radius: 8px;
+  }
+}
+
+.admin-search-field__icon {
+  color: var(--mui-palette-text-secondary);
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+.admin-btn-primary {
+  background-color: var(--mui-palette-primary-main);
+  border-radius: 8px;
+  padding-left: 24px;
+  padding-right: 24px;
+  height: 42px;
+  font-weight: 700;
+  text-transform: none;
+
+  &:hover {
+    background-color: var(--mui-palette-primary-dark);
+  }
+}
+
+.admin-profile-card {
+  padding: 32px;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.admin-profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-color: var(--mui-palette-primary-dark);
+  color: var(--mui-palette-primary-contrastText);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--mui-palette-primary-main) 20%, transparent);
+}
+
+.admin-profile-info {
+  text-align: center;
+}
+
+.admin-profile-name {
+  font-weight: 700;
+  color: var(--mui-palette-text-primary);
+}
+
+.admin-profile-email {
+  color: var(--mui-palette-text-secondary);
+  margin-top: 4px;
+}
+
+.admin-profile-role {
+  color: var(--mui-palette-primary-light);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-top: 8px;
+}
+
+.admin-profile-back-btn {
+  margin-top: 8px;
+  font-weight: 700;
+  border-color: color-mix(in srgb, var(--mui-palette-text-primary) 10%, transparent);
+}
+
+.admin-snackbar-alert {
+  width: 100%;
+  font-weight: 700;
+}
+
+.admin-product-info__title {
+  font-weight: 800;
+  color: var(--mui-palette-text-primary);
+}
+
+.admin-product-info__sku {
+  color: var(--mui-palette-text-secondary);
+  font-weight: 700;
+}
+
+.admin-empty-message {
+  color: var(--mui-palette-text-secondary);
+}
+
+/* --- Botones e iconos (MUI) --- */
+
+.admin-btn-ghost.MuiButton-root {
+  color: var(--mui-palette-text-secondary);
+  font-weight: 700;
+  text-transform: none;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--mui-palette-text-primary) 6%, transparent);
+  }
+}
+
+.admin-btn-outlined-muted.MuiButton-root {
+  font-weight: 700;
+  color: var(--mui-palette-text-secondary);
+  text-transform: none;
+  border-color: color-mix(in srgb, var(--mui-palette-text-primary) 15%, transparent);
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--mui-palette-text-primary) 25%, transparent);
+    background-color: color-mix(in srgb, var(--mui-palette-text-primary) 4%, transparent);
+  }
+}
+
+.admin-btn-upload-dashed.MuiButton-root {
+  border-style: dashed;
+  color: var(--mui-palette-text-secondary);
+  padding-top: 9.6px;
+  padding-bottom: 9.6px;
+  text-transform: none;
+}
+
+.admin-icon-btn.MuiIconButton-root {
+  color: var(--mui-palette-text-secondary);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--mui-palette-text-primary) 6%, transparent);
+  }
+}
+
+.admin-icon-btn--edit.MuiIconButton-root:hover {
+  color: var(--mui-palette-primary-main);
+}
+
+.admin-icon-btn--danger.MuiIconButton-root:hover {
+  color: var(--mui-palette-error-main);
+}
+
+.admin-stock-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.admin-stock-stepper-btn.MuiIconButton-root {
+  background-color: color-mix(in srgb, var(--mui-palette-text-primary) 3%, transparent);
+  color: var(--mui-palette-text-primary);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--mui-palette-text-primary) 8%, transparent);
+  }
+}
+
+.admin-stock-stepper-input {
+  .MuiOutlinedInput-root {
+    height: 34px;
+    border-radius: 6px;
+  }
+
+  input {
+    text-align: center;
+    width: 60px;
+  }
+}
+
+.stock-badge__icon {
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* --- Diálogos admin --- */
+
+.admin-dialog-paper {
+  background-color: var(--mui-palette-background-paper) !important;
+  border: 1px solid var(--mui-palette-divider) !important;
+  border-radius: 12px !important;
+}
+
+.admin-dialog-paper--form {
+  width: 100%;
+  max-width: 500px;
+}
+
+.admin-dialog-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.admin-dialog-title {
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: var(--mui-palette-text-primary);
+}
+
+.admin-dialog-body--form {
+  border-top: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-dialog-footer.MuiDialogActions-root {
+  padding: 16px 24px;
+  background-color: var(--mui-palette-surface-main);
+}
+
+.admin-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.admin-form-switch-row {
+  margin-left: 4px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}

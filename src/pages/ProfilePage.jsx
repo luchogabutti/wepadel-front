@@ -1,5 +1,4 @@
 import { Grid } from '@mui/material';
-import { ProfilePageLayout } from '../components/layout/ProfilePageLayout';
 import { PageHeader } from '../components/layout/PageHeader';
 import { ProfileDataCard } from '../components/profile/ProfileDataCard/ProfileDataCard';
 import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/ProfileBenefitsGrid';
@@ -7,7 +6,7 @@ import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadg
 
 export const ProfilePage = () => {
   return (
-    <ProfilePageLayout>
+    <>
       <PageHeader
         variant="profile"
         title="Mi Perfil"
@@ -24,6 +23,6 @@ export const ProfilePage = () => {
       </Grid>
 
       <ProfileBenefitsGrid />
-    </ProfilePageLayout>
+    </>
   );
 };

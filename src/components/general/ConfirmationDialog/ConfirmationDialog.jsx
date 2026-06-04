@@ -5,8 +5,10 @@ import {
   DialogActions,
   Typography,
   Button,
+  Box,
 } from '@mui/material';
 import './styles.scss';
+
 
 export const ConfirmationDialog = ({
   open,
@@ -17,6 +19,9 @@ export const ConfirmationDialog = ({
   confirmLabel = 'Confirmar',
   cancelLabel = 'Cerrar',
   confirmColor = 'primary',
+  children,
+  icon,
+  center = false,
 }) => {
   const handleConfirm = () => {
     onConfirm?.();
@@ -27,24 +32,42 @@ export const ConfirmationDialog = ({
     <Dialog
       open={open}
       onClose={onClose}
-      className="confirmation-dialog-root"
-      PaperProps={{ className: 'confirmation-dialog-paper' }}
+      className={`confirmation-dialog-root${center ? ' confirmation-dialog--centered' : ''}`}
+      slotProps={{
+        paper: {
+          className: 'confirmation-dialog-paper',
+          sx: {
+            outline: 'none',
+            '&:focus': { outline: 'none', boxShadow: '0 24px 48px color-mix(in srgb, var(--mui-palette-background-default) 45%, transparent)' },
+            '&:focus-visible': { outline: 'none', boxShadow: '0 24px 48px color-mix(in srgb, var(--mui-palette-background-default) 45%, transparent)' },
+          },
+        },
+      }}
       aria-labelledby="confirmation-dialog-title"
       aria-describedby={subtitle ? 'confirmation-dialog-description' : undefined}
     >
+      {icon}
+
       <DialogTitle id="confirmation-dialog-title" className="confirmation-dialog-title">
         {title}
       </DialogTitle>
 
-      {subtitle && (
+      {(subtitle || children) && (
         <DialogContent className="confirmation-dialog-content">
-          <Typography
-            id="confirmation-dialog-description"
-            variant="body2"
-            className="confirmation-dialog-subtitle"
-          >
-            {subtitle}
-          </Typography>
+          {subtitle && (
+            <Typography
+              id="confirmation-dialog-description"
+              variant="body2"
+              className="confirmation-dialog-subtitle"
+            >
+              {subtitle}
+            </Typography>
+          )}
+          {children && (
+            <Box className="confirmation-dialog-custom-content">
+              {children}
+            </Box>
+          )}
         </DialogContent>
       )}
 
@@ -55,8 +78,17 @@ export const ConfirmationDialog = ({
         <Button
           variant="contained"
           color={confirmColor}
+          disableElevation
+          disableFocusRipple
           onClick={handleConfirm}
           className="confirmation-dialog-confirm"
+          sx={{
+            boxShadow: 'none',
+            outline: 'none',
+            '&:hover': { boxShadow: 'none' },
+            '&:focus': { boxShadow: 'none', outline: 'none' },
+            '&.Mui-focusVisible': { boxShadow: 'none', outline: 'none' },
+          }}
         >
           {confirmLabel}
         </Button>
@@ -64,3 +96,4 @@ export const ConfirmationDialog = ({
     </Dialog>
   );
 };
+
