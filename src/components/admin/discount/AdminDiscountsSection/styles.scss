@@ -47,7 +47,7 @@
     border: 1px solid color-mix(in srgb, var(--mui-palette-success-main) 20%, transparent);
   }
 
-  &.pending {
+  &.inactive {
     background-color: color-mix(in srgb, var(--mui-palette-text-hint) 12%, transparent);
     color: var(--mui-palette-text-secondary);
     border: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 20%, transparent);

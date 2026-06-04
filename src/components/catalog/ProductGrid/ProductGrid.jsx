@@ -20,6 +20,7 @@ import './styles.scss';
 export const ProductGrid = ({ products, activeCategory }) => {
   const [sortOrder, setSortOrder] = useState('default');
   const [priceRange, setPriceRange] = useState([0, 500]);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(true);
 
   useEffect(() => {
     setSortOrder('default');
@@ -39,6 +40,14 @@ export const ProductGrid = ({ products, activeCategory }) => {
 
     return result;
   }, [products, sortOrder, priceRange]);
+
+  const hasActiveFilters =
+    sortOrder !== 'default' || priceRange[0] !== 0 || priceRange[1] !== 500;
+
+  const resetFilters = () => {
+    setSortOrder('default');
+    setPriceRange([0, 500]);
+  };
 
   const filterControls = (
     <>
@@ -101,14 +110,33 @@ export const ProductGrid = ({ products, activeCategory }) => {
         <div className="sidebar-header">
           <TuneIcon sx={{ color: 'primary.light', fontSize: '20px' }} />
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            Catálogo
+            Filtrar por
           </Typography>
         </div>
         {filterControls}
+        <Button
+          variant="text"
+          color="primary"
+          className="filter-reset-btn"
+          onClick={resetFilters}
+          disabled={!hasActiveFilters}
+        >
+          Restablecer
+        </Button>
       </aside>
 
       <main className="main">
-        <div className="mobile-bar">
+        <Button
+          variant="outlined"
+          color="primary"
+          className="mobile-filters-toggle"
+          startIcon={<TuneIcon />}
+          onClick={() => setMobileFiltersOpen((open) => !open)}
+        >
+          {mobileFiltersOpen ? 'Ocultar filtros' : 'Mostrar filtros'}
+        </Button>
+
+        <div className={`mobile-bar ${mobileFiltersOpen ? 'is-open' : ''}`}>
           <div className="mobile-sort">
             <Typography variant="caption" className="filter-label" sx={{ fontWeight: 700, letterSpacing: '0.05em' }}>
               ORDENAR POR PRECIO
@@ -152,6 +180,16 @@ export const ProductGrid = ({ products, activeCategory }) => {
               }}
             />
           </div>
+
+          <Button
+            variant="text"
+            color="primary"
+            className="filter-reset-btn filter-reset-btn--mobile"
+            onClick={resetFilters}
+            disabled={!hasActiveFilters}
+          >
+            Restablecer
+          </Button>
         </div>
 
         {filteredAndSorted.length === 0 ? (
@@ -162,10 +200,10 @@ export const ProductGrid = ({ products, activeCategory }) => {
             <Button
               variant="outlined"
               color="primary"
-              onClick={() => { setPriceRange([0, 500]); setSortOrder('default'); }}
+              onClick={resetFilters}
               sx={{ textTransform: 'none', fontWeight: 600 }}
             >
-              Restablecer filtros
+              Restablecer
             </Button>
           </div>
         ) : (

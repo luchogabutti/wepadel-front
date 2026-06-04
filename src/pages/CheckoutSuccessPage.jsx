@@ -3,7 +3,6 @@ import { CenteredPage } from '../components/layout/CenteredPage';
 import { PageContainer } from '../components/layout/PageContainer';
 import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard/CheckoutSuccessCard';
 import { CHECKOUT_ITEMS } from '../data/cartData';
-
 export const CheckoutSuccessPage = () => {
   const { orderId } = useParams();
   const location = useLocation();

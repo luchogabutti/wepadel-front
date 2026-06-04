@@ -16,6 +16,7 @@ import { AdminCatalogPage } from './pages/admin/AdminCatalogPage'
 import { AdminStockPage } from './pages/admin/AdminStockPage'
 import { AdminDiscountsPage } from './pages/admin/AdminDiscountsPage'
 import { AdminProfilePage } from './pages/admin/AdminProfilePage'
+import { AdminOrdersPage } from './pages/admin/AdminOrdersPage'
 import { AdminEditProductPage } from './pages/admin/AdminEditProductPage'
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
           <Route path="catalogo/editar/:productId" element={<AdminEditProductPage />} />
           <Route path="stock" element={<AdminStockPage />} />
           <Route path="descuentos" element={<AdminDiscountsPage />} />
+          <Route path="pedidos" element={<AdminOrdersPage />} />
           <Route path="perfil" element={<AdminProfilePage />} />
         </Route>
 

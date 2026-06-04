@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Snackbar, Alert } from '@mui/material';
 import { AdminCatalogToolbar } from '../../components/admin/catalog/AdminCatalogToolbar/AdminCatalogToolbar';
+import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
 import { AdminCatalogSection } from '../../components/admin/catalog/AdminCatalogSection/AdminCatalogSection';
 import { AdminProductModal } from '../../components/admin/catalog/AdminProductModal/AdminProductModal';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
@@ -13,10 +13,20 @@ export const AdminCatalogPage = () => {
   const [products, setProducts] = useState(adminProducts);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+    key: 0,
+  });
 
-  const triggerAlert = (message, severity = 'success') => {
-    setSnackbar({ open: true, message, severity });
+  const showSnackbar = (message, severity = 'success') => {
+    setSnackbar((prev) => ({
+      open: true,
+      message,
+      severity,
+      key: prev.key + 1,
+    }));
   };
 
   const handleCloseSnackbar = () => {
@@ -24,9 +34,14 @@ export const AdminCatalogPage = () => {
   };
 
   const handleToggleProductEnabled = (productId) => {
+    const product = products.find((p) => p.id === productId);
+    const nextEnabled = !product?.enabled;
+
     setProducts((current) =>
-      current.map((p) => (p.id === productId ? { ...p, enabled: !p.enabled } : p))
+      current.map((p) => (p.id === productId ? { ...p, enabled: nextEnabled } : p))
     );
+
+    showSnackbar(nextEnabled ? 'Producto habilitado.' : 'Producto deshabilitado.');
   };
 
   const handleRequestEditProduct = (product) => {
@@ -35,7 +50,7 @@ export const AdminCatalogPage = () => {
 
   const handleSaveProduct = () => {
     setIsProductModalOpen(false);
-    triggerAlert('¡Producto creado con éxito!');
+    showSnackbar('¡Producto creado con éxito!');
   };
 
   const handleCloseDeleteModal = () => {
@@ -43,7 +58,11 @@ export const AdminCatalogPage = () => {
   };
 
   const handleConfirmDelete = () => {
-    triggerAlert('¡Producto eliminado con éxito!');
+    if (productToDelete) {
+      setProducts((current) => current.filter((p) => p.id !== productToDelete.id));
+    }
+    setProductToDelete(null);
+    showSnackbar('¡Producto eliminado con éxito!');
   };
 
   return (
@@ -82,21 +101,7 @@ export const AdminCatalogPage = () => {
         center
       />
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          className="admin-snackbar-alert"
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

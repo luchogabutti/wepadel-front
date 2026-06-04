@@ -1,21 +1,34 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Box, Typography, Button, TextField, FormControlLabel, Checkbox, Link, InputAdornment } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Typography,
+  Button,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  InputAdornment,
+} from '@mui/material';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LockIcon from '@mui/icons-material/Lock';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
+import { isLoginFormValid } from '../../../utils/authValidation';
 import './styles.scss';
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
 
+  const canSubmit = isLoginFormValid({ email, password });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Login submitted:', { email, password, remember });
-    // Aquí se manejaría el login
+    if (!canSubmit) return;
+    navigate('/');
   };
 
   return (
@@ -28,19 +41,18 @@ export const LoginForm = () => {
       footerActionTo="/registro"
       maxWidth="420px"
     >
-      {/* Email */}
       <Box className="form-field">
         <Typography variant="caption" className="field-label">
           Email
         </Typography>
         <TextField
           fullWidth
+          required
           variant="outlined"
           placeholder="usuario@wepadel.com"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -51,28 +63,23 @@ export const LoginForm = () => {
         />
       </Box>
 
-      {/* Contraseña */}
       <Box className="form-field">
         <Box className="password-label-row">
           <Typography variant="caption" className="field-label">
             Contraseña
           </Typography>
-          <Link
-            component={RouterLink}
-            to="#"
-            className="forgot-password-link"
-          >
+          <Link component={RouterLink} to="#" className="forgot-password-link">
             ¿Olvidaste tu contraseña?
           </Link>
         </Box>
         <TextField
           fullWidth
+          required
           variant="outlined"
           placeholder="••••••••"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -83,7 +90,6 @@ export const LoginForm = () => {
         />
       </Box>
 
-      {/* Recordarme */}
       <FormControlLabel
         control={
           <Checkbox
@@ -106,13 +112,13 @@ export const LoginForm = () => {
         sx={{ mt: 1, mb: 2 }}
       />
 
-      {/* Botón de Enviar */}
       <Button
         type="submit"
         fullWidth
         variant="contained"
+        disabled={!canSubmit}
         endIcon={<ArrowForwardIcon />}
-        sx={{py: '12px'}}
+        sx={{ py: '12px' }}
       >
         Iniciar sesión
       </Button>

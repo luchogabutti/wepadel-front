@@ -1,8 +1,8 @@
-import { AppBar, Toolbar, Typography, InputBase, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { UserLogin } from './components/UserLogin';
 import { ShoppingCart } from './components/ShoppingCart';
-import SearchIcon from '@mui/icons-material/Search';
+import { ProductSearch } from './components/ProductSearch';
 import './styles.scss';
 
 const AUTH_ROUTES = ['/login', '/registro'];
@@ -31,15 +31,7 @@ export const Header = () => {
 
         {!isAuthPage && !isAdminPage && (
           <>
-            <div className="search-container">
-              <div className="search-box">
-                <SearchIcon sx={{ color: 'text.secondary', fontSize: '20px', mr: 1 }} />
-                <InputBase
-                  placeholder="Buscar"
-                  className="search-input"
-                />
-              </div>
-            </div>
+            <ProductSearch />
 
             <div className="header-actions">
               <ShoppingCart />

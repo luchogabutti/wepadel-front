@@ -45,7 +45,6 @@
     }
   }
 
-  // Left Column: Gallery
   .detail-gallery {
     display: flex;
     flex-direction: column;
@@ -126,7 +125,6 @@
     }
   }
 
-  // Right Column: Info & Actions
   .detail-info {
     display: flex;
     flex-direction: column;
@@ -218,7 +216,6 @@
     margin-bottom: 32px;
   }
 
-  // Specifications
   .specs-section {
     border-top: 1px solid var(--mui-palette-divider);
     padding-top: 24px;
@@ -260,7 +257,6 @@
     }
   }
 
-  // Actions
   .purchase-actions {
     display: flex;
     flex-wrap: wrap;
@@ -304,7 +300,6 @@
     }
   }
 
-  // Guarantee highlights
   .highlights-section {
     border-top: 1px solid var(--mui-palette-divider);
     padding-top: 24px;

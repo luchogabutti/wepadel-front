@@ -14,12 +14,10 @@ export const Form = ({
 }) => {
   return (
     <Box className="generic-form-container" sx={{ maxWidth }}>
-      {/* Luces Ambientales Decorativas */}
       <Box className="ambient-light-top" />
       <Box className="ambient-light-bottom" />
 
       <Box className="surface-card form-card">
-        {/* Cabecera del Formulario */}
         <Box className="card-header">
           {title && (
             <Typography variant="h4" className="card-title">
@@ -33,12 +31,10 @@ export const Form = ({
           )}
         </Box>
 
-        {/* Formulario */}
-        <Box component="form" onSubmit={onSubmit} className="form-content">
+        <Box component="form" noValidate onSubmit={onSubmit} className="form-content">
           {children}
         </Box>
 
-        {/* Footer del Formulario */}
         {footerText && footerActionText && footerActionTo && (
           <Box className="card-footer">
             <Typography variant="body2" className="footer-text">

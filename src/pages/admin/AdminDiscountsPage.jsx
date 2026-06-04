@@ -1,14 +1,23 @@
 import { useState } from 'react';
-import { Snackbar, Alert } from '@mui/material';
 import { AdminDiscountsSection } from '../../components/admin/discount/AdminDiscountsSection/AdminDiscountsSection';
+import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
 import { adminProducts, adminSectionContent, initialDiscounts } from '../../data/adminProductsData';
-
 export const AdminDiscountsPage = () => {
   const [discounts, setDiscounts] = useState(initialDiscounts);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+    key: 0,
+  });
 
-  const triggerAlert = (message, severity = 'success') => {
-    setSnackbar({ open: true, message, severity });
+  const showSnackbar = (message, severity = 'success') => {
+    setSnackbar((prev) => ({
+      open: true,
+      message,
+      severity,
+      key: prev.key + 1,
+    }));
   };
 
   const handleCloseSnackbar = () => {
@@ -17,12 +26,23 @@ export const AdminDiscountsPage = () => {
 
   const handleAddDiscount = (newDiscount) => {
     setDiscounts((prev) => [newDiscount, ...prev]);
-    triggerAlert('¡Descuento aplicado con éxito!');
+    showSnackbar('¡Descuento aplicado con éxito!');
   };
 
   const handleDeleteDiscount = (discountId) => {
     setDiscounts((prev) => prev.filter((d) => d.id !== discountId));
-    triggerAlert('¡Descuento eliminado con éxito!');
+    showSnackbar('¡Descuento eliminado con éxito!');
+  };
+
+  const handleToggleStatus = (discountId) => {
+    const discount = discounts.find((item) => item.id === discountId);
+    const nextStatus = discount?.status === 'Activado' ? 'Desactivado' : 'Activado';
+
+    setDiscounts((prev) =>
+      prev.map((item) => (item.id === discountId ? { ...item, status: nextStatus } : item))
+    );
+
+    showSnackbar(nextStatus === 'Activado' ? 'Descuento activado.' : 'Descuento desactivado.');
   };
 
   return (
@@ -34,23 +54,10 @@ export const AdminDiscountsPage = () => {
         discounts={discounts}
         onAddDiscount={handleAddDiscount}
         onDeleteDiscount={handleDeleteDiscount}
+        onToggleStatus={handleToggleStatus}
       />
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          variant="filled"
-          className="admin-snackbar-alert"
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

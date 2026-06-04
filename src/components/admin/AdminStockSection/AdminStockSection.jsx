@@ -20,7 +20,6 @@ export const AdminStockSection = ({
   products = [],
   onSaveStock,
 }) => {
-  // Local state to store temporary stock changes before saving
   const [localStocks, setLocalStocks] = useState(() => {
     const stocksMap = {}
     products.forEach((p) => {
@@ -68,7 +67,6 @@ export const AdminStockSection = ({
     onSaveStock(updatedProducts)
   }
 
-  // Calculate Stats
   const totalStock = Object.values(localStocks).reduce((a, b) => a + b, 0)
   const lowStockCount = Object.values(localStocks).filter((s) => s <= 10 && s > 0).length
   const outOfStockCount = Object.values(localStocks).filter((s) => s === 0).length
@@ -139,7 +137,6 @@ export const AdminStockSection = ({
         ))}
       </Box>
 
-      {/* Table */}
       <Box className="admin-products-table-card">
         <table className="admin-products-table">
           <thead>

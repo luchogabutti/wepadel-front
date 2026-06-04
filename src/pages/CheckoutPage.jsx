@@ -19,7 +19,6 @@ import {
   getPointsDiscount,
   getCheckoutValidationMessage,
 } from '../utils/checkoutValidation';
-
 export const CheckoutPage = () => {
   const navigate = useNavigate();
 
