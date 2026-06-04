@@ -99,9 +99,11 @@ export const CheckoutShippingCard = ({
             placeholder="1425"
             value={shippingData.postalCode}
             onChange={handleChange('postalCode')}
-            inputProps={{
-              inputMode: 'numeric',
-              maxLength: 8,
+            slotProps={{
+              htmlInput: {
+                inputMode: 'numeric',
+                maxLength: 8,
+              },
             }}
             {...fieldProps('postalCode')}
           />

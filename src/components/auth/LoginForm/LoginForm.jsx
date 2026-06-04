@@ -53,12 +53,14 @@ export const LoginForm = () => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <AlternateEmailIcon className="field-icon" />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <AlternateEmailIcon className="field-icon" />
+                </InputAdornment>
+              ),
+            },
           }}
         />
       </Box>
@@ -80,12 +82,14 @@ export const LoginForm = () => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <LockIcon className="field-icon" />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <LockIcon className="field-icon" />
+                </InputAdornment>
+              ),
+            },
           }}
         />
       </Box>

@@ -61,8 +61,10 @@ export const AdminProductModal = ({
       open={open}
       onClose={onClose}
       className="admin-product-dialog-root"
-      PaperProps={{
-        className: 'admin-product-dialog-paper',
+      slotProps={{
+        paper: {
+          className: 'admin-product-dialog-paper',
+        },
       }}
       maxWidth="md"
       fullWidth
