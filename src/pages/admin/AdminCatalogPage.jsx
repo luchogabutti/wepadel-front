@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Snackbar, Alert } from '@mui/material';
-import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+import { Snackbar, Alert } from '@mui/material';
 import { AdminCatalogToolbar } from '../../components/admin/catalog/AdminCatalogToolbar/AdminCatalogToolbar';
 import { AdminCatalogSection } from '../../components/admin/catalog/AdminCatalogSection/AdminCatalogSection';
 import { AdminProductModal } from '../../components/admin/catalog/AdminProductModal/AdminProductModal';
@@ -44,7 +43,6 @@ export const AdminCatalogPage = () => {
   };
 
   const handleConfirmDelete = () => {
-    setProductToDelete(null);
     triggerAlert('¡Producto eliminado con éxito!');
   };
 
@@ -76,25 +74,13 @@ export const AdminCatalogPage = () => {
         open={Boolean(productToDelete)}
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        title="¿Estás seguro de que deseas eliminar este producto?"
-        subtitle="Esta acción es irreversible. Se eliminarán todos los registros de stock y las estadísticas asociadas a este modelo del catálogo activo."
+        title="¿Eliminar este producto?"
+        subtitle="Esta acción es irreversible. Se eliminarán el stock y las estadísticas asociadas."
         confirmLabel="Eliminar"
         cancelLabel="Cancelar"
         confirmColor="error"
         center
-        icon={
-          <Box className="confirmation-dialog-icon-container">
-            <WarningAmberOutlinedIcon />
-          </Box>
-        }
-      >
-        {productToDelete && (
-          <Box className="admin-delete-selected-product">
-            <span>PRODUCTO SELECCIONADO</span>
-            <strong>{productToDelete.title}</strong>
-          </Box>
-        )}
-      </ConfirmationDialog>
+      />
 
       <Snackbar
         open={snackbar.open}

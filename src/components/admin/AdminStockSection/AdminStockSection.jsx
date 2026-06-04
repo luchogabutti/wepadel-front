@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
-import { PageHeader } from '../../../layout/PageHeader'
-import '../../styles.scss'
+import { PageHeader } from '../../layout/PageHeader'
+import '../styles.scss'
 import './styles.scss'
 
 export const AdminStockSection = ({
   title,
   subtitle,
   products = [],
-  onRequestSaveStock,
+  onSaveStock,
 }) => {
   // Local state to store temporary stock changes before saving
   const [localStocks, setLocalStocks] = useState(() => {
@@ -28,14 +28,6 @@ export const AdminStockSection = ({
     })
     return stocksMap
   })
-
-  useEffect(() => {
-    const stocksMap = {}
-    products.forEach((p) => {
-      stocksMap[p.id] = p.stock
-    })
-    setLocalStocks(stocksMap)
-  }, [products])
 
   const handleStockChange = (productId, newStock) => {
     const stockVal = Math.max(0, parseInt(newStock) || 0)
@@ -73,7 +65,7 @@ export const AdminStockSection = ({
       stock: localStocks[p.id] ?? p.stock,
       inStock: (localStocks[p.id] ?? p.stock) > 0,
     }))
-    onRequestSaveStock(updatedProducts)
+    onSaveStock(updatedProducts)
   }
 
   // Calculate Stats

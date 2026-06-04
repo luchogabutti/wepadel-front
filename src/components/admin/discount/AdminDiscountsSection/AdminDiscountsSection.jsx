@@ -73,7 +73,6 @@ export const AdminDiscountsSection = ({
   const handleConfirmDelete = () => {
     if (discountToDelete) {
       onDeleteDiscount(discountToDelete.id)
-      setDiscountToDelete(null)
     }
   }
 
@@ -312,24 +311,13 @@ export const AdminDiscountsSection = ({
         open={Boolean(discountToDelete)}
         onClose={() => setDiscountToDelete(null)}
         onConfirm={handleConfirmDelete}
-        title="¿Deseas eliminar este descuento?"
-        subtitle={`Esta acción eliminará el descuento del producto "${discountToDelete?.productTitle}".`}
+        title="¿Eliminar este descuento?"
+        subtitle="Esta acción no se puede deshacer."
         confirmLabel="Eliminar"
         cancelLabel="Cancelar"
         confirmColor="error"
         center
-      >
-        {discountToDelete && (
-          <Box className="admin-delete-selected-product">
-            <Typography variant="caption" className="admin-delete-dialog-eyebrow">
-              PRODUCTO CON DESCUENTO
-            </Typography>
-            <Typography variant="body1" className="admin-delete-dialog-product">
-              {discountToDelete.productTitle} ({discountToDelete.percentage}%)
-            </Typography>
-          </Box>
-        )}
-      </ConfirmationDialog>
+      />
     </Box>
   )
 }
