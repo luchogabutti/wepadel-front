@@ -70,10 +70,12 @@ export const CheckoutPointsCard = ({
             onChange={handleManualChange}
             className="manual-points-field"
             error={showManualError}
-            inputProps={{
-              inputMode: 'numeric',
-              min: 1,
-              max: availablePoints,
+            slotProps={{
+              htmlInput: {
+                inputMode: 'numeric',
+                min: 1,
+                max: availablePoints,
+              },
             }}
             helperText={`Máximo ${availablePoints} puntos disponibles`}
           />

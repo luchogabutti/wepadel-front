@@ -50,11 +50,11 @@ export const CheckoutPaymentForm = ({ formData, onFieldChange, showValidation })
           placeholder="0000 0000 0000 0000"
           value={formData.cardNumber}
           onChange={handleChange('cardNumber')}
-          inputProps={{
-            inputMode: 'numeric',
-            maxLength: 19,
-          }}
           slotProps={{
+            htmlInput: {
+              inputMode: 'numeric',
+              maxLength: 19,
+            },
             input: {
               endAdornment: <CreditCardOutlinedIcon className="card-icon" />,
             },
@@ -69,9 +69,11 @@ export const CheckoutPaymentForm = ({ formData, onFieldChange, showValidation })
             placeholder="MM/AA"
             value={formData.expiry}
             onChange={handleChange('expiry')}
-            inputProps={{
-              inputMode: 'numeric',
-              maxLength: 5,
+            slotProps={{
+              htmlInput: {
+                inputMode: 'numeric',
+                maxLength: 5,
+              },
             }}
             {...fieldProps('expiry')}
           />
@@ -82,9 +84,11 @@ export const CheckoutPaymentForm = ({ formData, onFieldChange, showValidation })
             placeholder="123"
             value={formData.cvc}
             onChange={handleChange('cvc')}
-            inputProps={{
-              inputMode: 'numeric',
-              maxLength: 4,
+            slotProps={{
+              htmlInput: {
+                inputMode: 'numeric',
+                maxLength: 4,
+              },
             }}
             {...fieldProps('cvc')}
           />

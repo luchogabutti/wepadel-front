@@ -209,8 +209,10 @@ export const AdminDiscountsSection = ({
       <Dialog
         open={isModalOpen}
         onClose={handleCloseModal}
-        PaperProps={{
-          className: 'admin-dialog-paper admin-dialog-paper--form',
+        slotProps={{
+          paper: {
+            className: 'admin-dialog-paper admin-dialog-paper--form',
+          },
         }}
       >
         <form onSubmit={handleSubmit}>
