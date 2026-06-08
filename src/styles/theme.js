@@ -110,6 +110,10 @@ export const theme = createTheme({
           textTransform: 'none',
           fontWeight: 700,
         },
+        outlined: ({ theme }) => ({
+          color: theme.palette.primary.light,
+          borderColor: theme.palette.primary.light,
+        }),
       },
     },
     MuiOutlinedInput: {

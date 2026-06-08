@@ -112,7 +112,6 @@ export const OrderCard = ({ order, showCustomer = false, onCancel, onReorder }) 
             <Button
               variant="outlined"
               onClick={() => setDetailOpen(true)}
-              sx={{ color: 'primary.light', borderColor: 'primary.light' }}
             >
               Ver Detalle
             </Button>
