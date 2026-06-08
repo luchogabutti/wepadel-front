@@ -293,7 +293,7 @@ export const AdminDiscountsSection = ({
           </DialogContent>
 
           <DialogActions className="admin-dialog-footer">
-            <Button onClick={handleCloseModal} className="admin-btn-ghost">
+            <Button onClick={handleCloseModal} className="admin-btn-ghost" variant="outlined" color="inherit">
               Cancelar
             </Button>
             <Button

@@ -53,7 +53,7 @@ export const HeroSection = () => {
           <Button
             variant="contained"
             color="primary"
-            sx={{ px: 4, py: 2, fontWeight: 'bold' }}
+            sx={{ px: 4, py: 2 }}
             onClick={() => navigate('/catalogo')}
           >
             Ver catálogo
@@ -63,7 +63,6 @@ export const HeroSection = () => {
             sx={{
               px: 4,
               py: 2,
-              fontWeight: 'bold',
               color: 'primary.light',
               borderColor: 'primary.light',
             }}

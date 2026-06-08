@@ -1,6 +1,6 @@
 # WePadel
 
-E-commerce de productos de pádel desarrollado como proyecto universitario en **UADE** (Universidad Argentina de la Empresa). Permite explorar el catálogo, gestionar el carrito, completar el checkout y consultar el perfil del usuario.
+E-commerce de productos de pádel desarrollado como proyecto universitario en **UADE** (Universidad Argentina de la Empresa). Permite explorar el catálogo, gestionar el carrito, completar el checkout, consultar el perfil del usuario y administrar el negocio desde un panel interno (catálogo, stock, descuentos y pedidos).
 
 ## Stack tecnológico
 
@@ -10,44 +10,95 @@ E-commerce de productos de pádel desarrollado como proyecto universitario en **
 - **JavaScript** — lógica de la aplicación
 - **React Router DOM** — navegación y rutas
 - **Sass (SCSS)** — estilos por componente y clases globales
-- **Context API** — estado del carrito (`src/context/CartContext.jsx`)
+- **Context API** — estado del carrito (`src/context/CartContext.jsx`, provisto desde `MainLayout`)
 
-Los datos de productos, categorías y pedidos están en `src/data/` (mock local). La integración con API REST está prevista para una etapa posterior.
+Los datos de productos, categorías, pedidos y configuración admin están en `src/data/` (mock local). La integración con API REST está prevista para una etapa posterior.
 
 ## Estructura del proyecto
 
 ```
 src/
-├── layouts/           # Shell de la app (header, main, footer)
-├── pages/             # Rutas: solo composición, sin estilos repetidos
-├── components/        # UI por dominio (cart, catalog, checkout, profile…)
-│   └── layout/        # Wrappers de página reutilizables
-├── context/           # Estado global (carrito)
-├── data/              # Datos mock
-├── hooks/
+├── layouts/              # Shells de ruta (MainLayout, ProfileAreaLayout, AdminAreaLayout)
+├── pages/                # Rutas: solo composición, sin estilos repetidos
+│   └── admin/            # Páginas del panel de administración
+├── components/           # UI por dominio
+│   ├── admin/            # Catálogo, stock, descuentos, perfil admin
+│   ├── auth/             # Login y registro
+│   ├── cart/             # Carrito y notificaciones
+│   ├── catalog/          # Catálogo, filtros, detalle de producto
+│   ├── checkout/         # Envío, pago y confirmación
+│   ├── general/          # Header, footer, sidebar, diálogos, snackbar
+│   ├── home/             # Hero, categorías, destacados
+│   ├── layout/           # Wrappers de página reutilizables (PageContainer, etc.)
+│   └── profile/          # Datos de usuario y órdenes
+├── config/               # Configuración de UI (sidebar, usuario mock)
+├── context/              # Estado global (carrito)
+├── data/                 # Datos mock
+├── utils/                # Validaciones (auth, checkout, perfil)
 └── styles/
-    ├── theme.js       # Tokens MUI + overrides de componentes
-    └── globals.scss   # Clases reutilizables (.surface-card, etc.)
+    ├── theme.js          # Tokens MUI + overrides de componentes
+    └── globals.scss      # Clases reutilizables (.surface-card, etc.)
 ```
+
+### Datos mock (`src/data/`)
+
+| Archivo | Contenido |
+|---------|-----------|
+| `productsData.js` | Productos del catálogo público |
+| `categoriesData.js` | Categorías del catálogo |
+| `cartData.js` | Ítems iniciales del carrito |
+| `orders.js` | Órdenes del usuario |
+| `adminProductsData.js` | Productos del panel admin |
+| `adminOrders.js` | Pedidos del panel admin |
+| `heroSlides.js` | Imágenes del hero de la home |
+
+### Configuración (`src/config/`)
+
+| Archivo | Contenido |
+|---------|-----------|
+| `accountUser.js` | Usuario mock para sidebar de perfil/admin |
+| `sidebarItems.jsx` | Ítems de navegación lateral (perfil y admin) |
 
 ## Rutas actuales
 
-Todas las rutas viven dentro de `MainLayout` (header + footer).
+Todas las rutas viven dentro de `MainLayout` (header + footer + `CartProvider`).
+
+### Tienda y cuenta
 
 | Ruta | Página | Descripción |
 |------|--------|-------------|
 | `/` | Home | Inicio, destacados y categorías |
-| `/catalogo` | Catalog | Catálogo (redirige a categoría por defecto) |
-| `/catalogo/:categoria` | Catalog | Catálogo por categoría |
+| `/catalogo` | Catalog | Catálogo (categoría por defecto: `paletas`, sin cambiar la URL) |
+| `/catalogo/:categoria` | Catalog | Catálogo filtrado por categoría |
 | `/producto/:id` | ProductDetail | Detalle de producto |
 | `/carrito` | Cart | Carrito de compras |
 | `/checkout` | Checkout | Envío y pago |
 | `/checkout/confirmacion/:orderId` | CheckoutSuccess | Confirmación de compra |
 | `/login` | Auth | Inicio de sesión |
 | `/registro` | Auth | Registro |
+| `/mis-pedidos` | Placeholder | Sección pendiente |
+
+### Área de perfil (`ProfileAreaLayout`)
+
+Sidebar lateral + contenido. Rutas anidadas bajo `MainLayout`.
+
+| Ruta | Página | Descripción |
+|------|--------|-------------|
 | `/perfil` | Profile | Datos y beneficios del usuario |
 | `/perfil/ordenes` | Orders | Historial de órdenes |
-| `/mis-pedidos` | Placeholder | Sección pendiente |
+
+### Área de administración (`AdminAreaLayout`)
+
+Panel interno con sidebar propio. `/admin` redirige a `/admin/catalogo`.
+
+| Ruta | Página | Descripción |
+|------|--------|-------------|
+| `/admin/catalogo` | AdminCatalog | Gestión del catálogo |
+| `/admin/catalogo/editar/:productId` | AdminEditProduct | Edición de producto |
+| `/admin/stock` | AdminStock | Control de stock |
+| `/admin/descuentos` | AdminDiscounts | Gestión de descuentos |
+| `/admin/pedidos` | AdminOrders | Pedidos recibidos |
+| `/admin/perfil` | AdminProfile | Perfil del administrador |
 
 ## Ejecución local
 
@@ -74,7 +125,8 @@ Fuente de verdad para:
 
 - Paleta de colores (`primary`, `surface`, `text.emphasis`, etc.)
 - Tipografía base y variantes de página: `pageTitle`, `pageTitleProfile`, `pageSubtitle`
-- Overrides de MUI (`Button`, `TextField`, `OutlinedInput`, campos `disabled`, etc.)
+- Overrides de MUI (`AppBar`, `Button`, `TextField`, `OutlinedInput`, campos `disabled`, etc.)
+- Botones `outlined` usan `primary.light` de forma global (borde y texto)
 
 Usar tokens del theme en lugar de valores sueltos (`#0066FF` → `primary.main`).
 
@@ -110,21 +162,24 @@ Cada componente de UI tiene su SCSS co-located. Ahí va **solo el estilo interno
 - `md` = 900px
 - `lg` = 1200px
 
-### 4. Layout de la app (`src/layouts/MainLayout.jsx`)
+### 4. Layouts de ruta (`src/layouts/`)
 
-Define el shell global: columna flex, `minHeight: 100vh`, header, `<main>` con `pt: 64px`, footer.
+| Layout | Rol |
+|--------|-----|
+| `MainLayout` | Shell global: header, footer, `CartProvider`, scroll al cambiar de ruta |
+| `ProfileAreaLayout` | Sidebar de perfil + `PageContainer` estrecho para `/perfil` y `/perfil/ordenes` |
+| `AdminAreaLayout` | Sidebar de admin + área de contenido para rutas `/admin/*` |
 
-Las **pages no deben repetir** ese shell (`minHeight`, `bgcolor`, etc.).
+Las **pages no deben repetir** el shell de `MainLayout` (`minHeight`, `bgcolor`, etc.).
 
-### 5. Layouts de página (`src/components/layout/`)
+### 5. Wrappers de página (`src/components/layout/`)
 
-Wrappers para estructura de ruta (no para el look de cards):
+Componentes de estructura reutilizable (no definen el look de cards):
 
 | Componente | Cuándo usarlo |
 |------------|----------------|
 | `PageContainer` | Padding y ancho máximo (`Container` MUI). Prop `narrow` para perfil (max 1024px) |
 | `PageHeader` | Título + subtítulo (`variant="profile"` en perfil/órdenes) |
-| `ProfilePageLayout` | Sidebar + área de contenido (perfil, órdenes) |
 | `CenteredPage` | Contenido centrado verticalmente (auth, placeholder, error de producto) |
 
 Importar cada layout desde su archivo, por ejemplo:

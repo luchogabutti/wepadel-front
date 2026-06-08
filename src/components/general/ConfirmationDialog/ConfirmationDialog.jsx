@@ -82,13 +82,6 @@ export const ConfirmationDialog = ({
           disableFocusRipple
           onClick={handleConfirm}
           className="confirmation-dialog-confirm"
-          sx={{
-            boxShadow: 'none',
-            outline: 'none',
-            '&:hover': { boxShadow: 'none' },
-            '&:focus': { boxShadow: 'none', outline: 'none' },
-            '&.Mui-focusVisible': { boxShadow: 'none', outline: 'none' },
-          }}
         >
           {confirmLabel}
         </Button>
