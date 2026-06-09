@@ -63,8 +63,6 @@ export const HeroSection = () => {
             sx={{
               px: 4,
               py: 2,
-              color: 'primary.light',
-              borderColor: 'primary.light',
             }}
             onClick={() => navigate('/login')}
           >
