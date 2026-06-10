@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
@@ -11,12 +11,23 @@ export const CatalogPage = () => {
   const { categoria } = useParams();
   const activeCategory = categoria ?? 'paletas';
 
+  const [products, setProducts] = useState([]);
+
   const title = categories.find((cat) => cat.id === activeCategory)?.label;
 
   const categoryProducts = useMemo(
     () => allProducts.filter((p) => p.categoryId === activeCategory),
     [activeCategory]
   );
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/productos`)
+      .then((response) => response.json())
+      .then((data) => setProducts(data))
+      .catch((error) => console.error('Error fetching products:', error));
+  }, [activeCategory]);
+
+  console.log('Fetched products:', products);
 
   return (
     <>
