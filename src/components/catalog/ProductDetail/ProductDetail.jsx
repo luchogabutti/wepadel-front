@@ -24,17 +24,6 @@ export const ProductDetail = ({ product }) => {
     setSelectedImg(images[0]);
   }, [product]);
 
-  if (!product) {
-    return (
-      <div className="product-detail-empty">
-        <Typography variant="h5">Producto no encontrado</Typography>
-        <Button variant="contained" component={RouterLink} to="/catalogo" sx={{ mt: 2 }}>
-          Volver al catálogo
-        </Button>
-      </div>
-    );
-  }
-
   const handleDecrease = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
