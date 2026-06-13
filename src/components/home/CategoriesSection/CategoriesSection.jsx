@@ -13,10 +13,13 @@ export const CategoriesSection = () => {
       <div className="categories-grid">
         {categories.map((cat) => {
           const IconComponent = cat.icon;
-          const isExternal = cat.path.startsWith('#');
-          
-          const CardContent = (
-            <>
+
+          return (
+            <Link
+              key={cat.id}
+              to={cat.path}
+              className="category-card"
+            >
               <img
                 src={cat.img}
                 alt={cat.label}
@@ -35,28 +38,6 @@ export const CategoriesSection = () => {
                   DESCUBRIR
                 </Typography>
               </div>
-            </>
-          );
-
-          if (isExternal) {
-            return (
-              <a
-                key={cat.id}
-                href={cat.path}
-                className="category-card"
-              >
-                {CardContent}
-              </a>
-            );
-          }
-
-          return (
-            <Link
-              key={cat.id}
-              to={cat.path}
-              className="category-card"
-            >
-              {CardContent}
             </Link>
           );
         })}
@@ -64,4 +45,3 @@ export const CategoriesSection = () => {
     </section>
   );
 };
-
