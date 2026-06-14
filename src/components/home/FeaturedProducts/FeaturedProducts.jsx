@@ -2,13 +2,14 @@ import { Typography, Button, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
-import { featuredProducts } from '../../../data/productsData';
 import { useCart } from '../../../context/CartContext';
 import './styles.scss';
 
-export const FeaturedProducts = () => {
+export const FeaturedProducts = ({products}) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
+
+  console.log('products en el featured products',products);
 
   const handleCardClick = (productId) => {
     navigate(`/producto/${productId}`);
@@ -42,7 +43,7 @@ export const FeaturedProducts = () => {
       </div>
 
       <div className="products-grid">
-        {featuredProducts.map((product) => (
+        {products.map((product) => (
           <div
             key={product.id}
             className="product-card"
@@ -51,7 +52,7 @@ export const FeaturedProducts = () => {
             <div className="product-image-container">
               <img
                 src={product.img}
-                alt={product.title}
+                alt={product.nombre}
                 className="product-image"
               />
               {product.badge && (
@@ -78,17 +79,17 @@ export const FeaturedProducts = () => {
                 variant="caption"
                 className="product-category"
               >
-                {product.category}
+                {product.categoria}
               </Typography>
               <Typography
                 variant="body1"
                 className="product-title"
               >
-                {product.title}
+                {product.nombre || product.descripcion}
               </Typography>
               <div className="product-price-container">
                 <Typography variant="body1" className="product-price">
-                  {typeof product.price === 'number' ? `$${product.price.toFixed(2)}` : product.price}
+                  {typeof product.precio === 'number' ? `$${product.precio.toFixed(2)}` : product.price}
                 </Typography>
                 {product.oldPrice && (
                   <Typography variant="body2" className="product-old-price">

@@ -5,7 +5,7 @@ import { PageHeader } from '../components/layout/PageHeader';
 import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
 import { ProductGrid } from '../components/catalog/ProductGrid/ProductGrid';
 import { categories } from '../data/categoriesData';
-import { allProducts } from '../data/productsData';
+import { getProducts } from '../services/productsService';
 
 export const CatalogPage = () => {
   const { categoria } = useParams();
@@ -16,16 +16,23 @@ export const CatalogPage = () => {
   const title = categories.find((cat) => cat.id === activeCategory)?.label;
 
   const categoryProducts = useMemo(
-    () => allProducts.filter((p) => p.categoryId === activeCategory),
-    [activeCategory]
+    () => products.filter((p) => p.categoria === activeCategory.toLowerCase()),
+    [activeCategory, products]
   );
 
   useEffect(() => {
-    fetch(`http://localhost:8080/productos`)
-      .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.error('Error fetching products:', error));
-  }, [activeCategory]);
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+        //add toast of success
+      } catch (error) {
+        //add toast of error
+        console.error('Error fetching products:', error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   console.log('Fetched products:', products);
 
