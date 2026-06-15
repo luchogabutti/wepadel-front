@@ -8,7 +8,13 @@ export const HomePage = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    getProducts().then((data) => setProducts(data));
+    getProducts()
+      .then((data) => {
+        setProducts(data.filter((p) => p.estaHabilitado !== false));
+      })
+      .catch((error) => {
+        console.error('Error fetching products:', error);
+      });
   }, []);
 
   return (

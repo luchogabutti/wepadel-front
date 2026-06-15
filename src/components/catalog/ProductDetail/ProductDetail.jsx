@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Typography, Button, IconButton, Rating, Breadcrumbs, Link as MuiLink } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -16,20 +16,22 @@ export const ProductDetail = ({ product }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
 
-  const [selectedImg, setSelectedImg] = useState(product?.img || '');
+  const nombre = product.nombre || product.descripcion;
+  const categoriaSlug = product.categoria?.toLowerCase() || '';
+  const imagen = product.imagen || 'https://placehold.co/400x400?text=WePadel'; // TODO: agregar data en backend/revisar — campo `imagen`
+  const imagenes = product.imagenes?.length // TODO: agregar data en backend/revisar — campo `imagenes`
+    ? product.imagenes
+    : [imagen];
+  const inStock = (product.stock ?? 1) > 0; // TODO: agregar data en backend/revisar — campo `stock`
 
-  useEffect(() => {
-    if (!product) return;
-    const images = product.images?.length ? product.images : [product.img];
-    setSelectedImg(images[0]);
-  }, [product]);
+  const [selectedImg, setSelectedImg] = useState(null);
+  const displayImg = selectedImg || imagenes[0];
 
   const handleDecrease = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   };
-
 
   const handleIncrease = () => {
     setQuantity(quantity + 1);
@@ -39,15 +41,16 @@ export const ProductDetail = ({ product }) => {
     addItem(product, quantity);
   };
 
-  const getSpecs = (categoryId) => {
-    switch (categoryId) {
+  // TODO: agregar data en backend/revisar — campo `especificaciones`
+  const getSpecs = (categoria) => {
+    switch (categoria) {
       case 'paletas':
         return [
-          { name: 'Forma', value: product.title.includes('Control') ? 'Redonda' : 'Lágrima / Diamante' },
-          { name: 'Balance', value: product.title.includes('Control') ? 'Bajo' : 'Medio-Alto' },
+          { name: 'Forma', value: 'Lágrima / Diamante' },
+          { name: 'Balance', value: 'Medio-Alto' },
           { name: 'Núcleo', value: 'Goma EVA Soft Premium' },
           { name: 'Caras', value: 'Carbono 12K de alta resistencia' },
-          { name: 'Peso', value: '360g - 375g' }
+          { name: 'Peso', value: '360g - 375g' },
         ];
       case 'pelotas':
         return [
@@ -55,7 +58,7 @@ export const ProductDetail = ({ product }) => {
           { name: 'Núcleo', value: 'Caucho natural reforzado' },
           { name: 'Fieltro', value: 'Lana natural y nylon sintético' },
           { name: 'Presión', value: 'Alta duración y rebote óptimo' },
-          { name: 'Cantidad', value: 'Tubo de 3 bolas' }
+          { name: 'Cantidad', value: 'Tubo de 3 bolas' },
         ];
       case 'accesorios':
       default:
@@ -63,21 +66,18 @@ export const ProductDetail = ({ product }) => {
           { name: 'Material', value: 'Poliéster técnico transpirable' },
           { name: 'Medidas', value: 'Ajuste elástico adaptable' },
           { name: 'Uso recomendado', value: 'Entrenamiento y alta competencia' },
-          { name: 'Detalle', value: 'Logo reflectante WePadel' }
+          { name: 'Detalle', value: 'Logo reflectante WePadel' },
         ];
     }
   };
 
-  const galleryImages = product.images?.length ? product.images : [product.img];
-  const specifications = getSpecs(product.categoryId);
-
-  const fallbackDesc = product.description || `La línea WePadel ${product.title} representa la cúspide del equipamiento deportivo para pádel de alto rendimiento. Diseñada meticulosamente en fibra de carbono y con tecnologías avanzadas de amortiguación de impacto, ofrece a los jugadores exigentes la máxima precisión y velocidad en cada golpe. Probada bajo estándares de competencia profesional.`;
+  const specifications = getSpecs(categoriaSlug);
 
   return (
     <div className="product-detail-container">
       <div className="detail-navigation">
-        <Button 
-          startIcon={<ArrowBackIcon />} 
+        <Button
+          startIcon={<ArrowBackIcon />}
           onClick={() => navigate(-1)}
           className="back-btn"
           sx={{ textTransform: 'none', fontWeight: 600, color: 'text.secondary' }}
@@ -88,22 +88,29 @@ export const ProductDetail = ({ product }) => {
           <MuiLink component={RouterLink} to="/" color="inherit" underline="hover">
             Inicio
           </MuiLink>
-          <MuiLink component={RouterLink} to={`/catalogo/${product.categoryId || ''}`} color="inherit" underline="hover">
-            {product.categoryId ? product.categoryId.toUpperCase() : 'Catálogo'}
+          <MuiLink
+            component={RouterLink}
+            to={`/catalogo/${categoriaSlug}`}
+            color="inherit"
+            underline="hover"
+          >
+            {product.categoria || 'Catálogo'}
           </MuiLink>
-          <Typography color="text.primary">{product.title}</Typography>
+          <Typography color="text.primary">{nombre}</Typography>
         </Breadcrumbs>
       </div>
 
       <div className="detail-layout">
         <div className="detail-gallery">
           <div className="main-image-wrapper">
-            <img src={selectedImg || product.img} alt={product.title} className="main-image" />
-            {product.badge && <span className="detail-badge">{product.badge}</span>}
+            <img src={displayImg} alt={nombre} className="main-image" />
+            {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
+              <span className="detail-badge">{product.badge}</span>
+            )}
           </div>
-          {galleryImages.length > 1 && (
+          {imagenes.length > 1 && (
             <div className="thumbnail-list">
-              {galleryImages.map((image, index) => (
+              {imagenes.map((image, index) => (
                 <button
                   key={`${product.id}-${index}`}
                   type="button"
@@ -111,7 +118,7 @@ export const ProductDetail = ({ product }) => {
                   onClick={() => setSelectedImg(image)}
                   aria-label={`Ver imagen ${index + 1}`}
                 >
-                  <img src={image} alt={`${product.title} vista ${index + 1}`} />
+                  <img src={image} alt={`${nombre} vista ${index + 1}`} />
                 </button>
               ))}
             </div>
@@ -120,11 +127,11 @@ export const ProductDetail = ({ product }) => {
 
         <div className="detail-info">
           <span className="product-category-label">
-            {product.category || (product.categoryId ? product.categoryId.toUpperCase() : 'WEPADEL ELITE')}
+            {product.categoria || 'WEPADEL ELITE'}
           </span>
 
           <Typography variant="h1" className="product-title">
-            {product.title}
+            {nombre}
           </Typography>
 
           <div className="rating-row">
@@ -136,23 +143,23 @@ export const ProductDetail = ({ product }) => {
 
           <div className="price-row">
             <Typography variant="h2" className="current-price">
-              {typeof product.price === 'number' ? `$${product.price.toFixed(2)}` : product.price}
+              ${product.precio.toFixed(2)}
             </Typography>
-            {product.oldPrice && (
+            {product.precioAnterior && ( // TODO: agregar data en backend/revisar — campo `precioAnterior`
               <Typography variant="body1" className="old-price">
-                {typeof product.oldPrice === 'number' ? `$${product.oldPrice.toFixed(2)}` : product.oldPrice}
+                ${product.precioAnterior.toFixed(2)}
               </Typography>
             )}
           </div>
 
           <div className="stock-row">
-            <span className={`stock-badge ${product.inStock !== false ? 'in-stock' : 'out-of-stock'}`}>
-              {product.inStock !== false ? 'Stock disponible' : 'Sin stock'}
+            <span className={`stock-badge ${inStock ? 'in-stock' : 'out-of-stock'}`}>
+              {inStock ? 'Stock disponible' : 'Sin stock'}
             </span>
           </div>
 
           <Typography variant="body1" className="product-description">
-            {fallbackDesc}
+            {product.descripcion}
           </Typography>
 
           <div className="specs-section">
@@ -171,22 +178,22 @@ export const ProductDetail = ({ product }) => {
 
           <div className="purchase-actions">
             <div className="quantity-selector">
-              <IconButton onClick={handleDecrease} className="qty-btn" disabled={product.inStock === false}>
+              <IconButton onClick={handleDecrease} className="qty-btn" disabled={!inStock}>
                 <RemoveIcon fontSize="small" />
               </IconButton>
               <span className="qty-value">{quantity}</span>
-              <IconButton onClick={handleIncrease} className="qty-btn" disabled={product.inStock === false}>
+              <IconButton onClick={handleIncrease} className="qty-btn" disabled={!inStock}>
                 <AddIcon fontSize="small" />
               </IconButton>
             </div>
-            
+
             <Button
               variant="contained"
               color="primary"
               size="large"
               startIcon={<AddShoppingCartIcon />}
               className="add-to-cart-btn"
-              disabled={product.inStock === false}
+              disabled={!inStock}
               onClick={handleAddToCart}
               sx={{ fontWeight: 'bold', textTransform: 'none' }}
             >

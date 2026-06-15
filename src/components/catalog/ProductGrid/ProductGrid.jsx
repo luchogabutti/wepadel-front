@@ -29,13 +29,13 @@ export const ProductGrid = ({ products, activeCategory }) => {
 
   const filteredAndSorted = useMemo(() => {
     let result = products.filter(
-      (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
+      (p) => p.precio >= priceRange[0] && p.precio <= priceRange[1]
     );
 
     if (sortOrder === 'asc') {
-      result.sort((a, b) => a.price - b.price);
+      result.sort((a, b) => a.precio - b.precio);
     } else if (sortOrder === 'desc') {
-      result.sort((a, b) => b.price - a.price);
+      result.sort((a, b) => b.precio - a.precio);
     }
 
     return result;

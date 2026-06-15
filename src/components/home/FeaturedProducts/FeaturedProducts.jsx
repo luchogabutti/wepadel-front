@@ -5,11 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import './styles.scss';
 
-export const FeaturedProducts = ({products}) => {
+export const FeaturedProducts = ({ products }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
-
-  console.log('products en el featured products',products);
 
   const handleCardClick = (productId) => {
     navigate(`/producto/${productId}`);
@@ -51,11 +49,11 @@ export const FeaturedProducts = ({products}) => {
           >
             <div className="product-image-container">
               <img
-                src={product.img}
-                alt={product.nombre}
+                src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
+                alt={product.nombre || product.descripcion}
                 className="product-image"
               />
-              {product.badge && (
+              {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
                 <span className="product-badge">
                   {product.badge}
                 </span>
@@ -89,11 +87,11 @@ export const FeaturedProducts = ({products}) => {
               </Typography>
               <div className="product-price-container">
                 <Typography variant="body1" className="product-price">
-                  {typeof product.precio === 'number' ? `$${product.precio.toFixed(2)}` : product.price}
+                  ${product.precio.toFixed(2)}
                 </Typography>
-                {product.oldPrice && (
+                {product.precioAnterior && ( // TODO: agregar data en backend/revisar — campo `precioAnterior`
                   <Typography variant="body2" className="product-old-price">
-                    {typeof product.oldPrice === 'number' ? `$${product.oldPrice.toFixed(2)}` : product.oldPrice}
+                    ${product.precioAnterior.toFixed(2)}
                   </Typography>
                 )}
               </div>

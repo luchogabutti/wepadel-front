@@ -1,8 +1,9 @@
 export const getProducts = async () => {
-  try {
-    const response = await fetch('http://localhost:8080/productos');
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching products:', error);
+  const response = await fetch('http://localhost:8080/productos');
+
+  if (!response.ok) {
+    throw new Error(`Error al obtener productos (${response.status})`);
   }
+
+  return response.json();
 };

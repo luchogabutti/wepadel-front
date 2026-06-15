@@ -14,7 +14,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const addItem = (product, quantity = 1) => {
-    if (!product?.inStock) return;
+    if ((product?.stock ?? 1) <= 0) return; // TODO: agregar data en backend/revisar — campo `stock`
 
     setItems((prev) => {
       const existingItem = prev.find((item) => item.id === product.id);
@@ -32,7 +32,7 @@ export const CartProvider = ({ children }) => {
 
     setNotification({
       open: true,
-      message: `${product.title} agregado al carrito exitosamente.`,
+      message: `${product.nombre || product.descripcion} agregado al carrito exitosamente.`,
     });
   };
 

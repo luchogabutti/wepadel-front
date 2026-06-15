@@ -16,25 +16,24 @@ export const CatalogPage = () => {
   const title = categories.find((cat) => cat.id === activeCategory)?.label;
 
   const categoryProducts = useMemo(
-    () => products.filter((p) => p.categoria === activeCategory.toLowerCase()),
+    () =>
+      products.filter(
+        (p) =>
+          p.estaHabilitado !== false &&
+          p.categoria?.toLowerCase() === activeCategory
+      ),
     [activeCategory, products]
   );
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getProducts();
-        setProducts(data);
-        //add toast of success
-      } catch (error) {
-        //add toast of error
+    getProducts()
+      .then((data) => {
+        setProducts(data.filter((p) => p.estaHabilitado !== false));
+      })
+      .catch((error) => {
         console.error('Error fetching products:', error);
-      }
-    };
-    fetchProducts();
+      });
   }, []);
-
-  console.log('Fetched products:', products);
 
   return (
     <>

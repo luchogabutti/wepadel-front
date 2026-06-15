@@ -1,15 +1,40 @@
-import { Typography, Button } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Typography, Button, CircularProgress } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { ProductDetail } from '../components/catalog/ProductDetail/ProductDetail';
-import { allProducts } from '../data/productsData';
+import { getProducts } from '../services/productsService';
 import './styles.scss';
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
   const productId = parseInt(id, 10);
-  const product = allProducts.find((p) => p.id === productId);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProducts()
+      .then((data) => {
+        setProduct(
+          data.find((p) => p.id === productId && p.estaHabilitado !== false) ?? null
+        );
+      })
+      .catch((error) => {
+        console.error('Error fetching product:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <CenteredPage>
+        <CircularProgress color="primary" />
+      </CenteredPage>
+    );
+  }
 
   if (!product) {
     return (
@@ -36,5 +61,5 @@ export const ProductDetailPage = () => {
     );
   }
 
-  return <ProductDetail product={product} />;
+  return <ProductDetail key={product.id} product={product} />;
 };

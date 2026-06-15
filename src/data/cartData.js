@@ -21,11 +21,11 @@ export const INITIAL_CART_ITEMS = [
 
 export const mapProductToCartItem = (product, quantity = 1) => ({
   id: product.id,
-  name: product.title,
-  description: product.category,
-  unitPrice: product.price,
+  name: product.nombre || product.descripcion,
+  description: product.categoria,
+  unitPrice: product.precio,
   quantity,
-  image: product.img,
+  image: product.imagen || 'https://placehold.co/400x400?text=WePadel', // TODO: agregar data en backend/revisar — campo `imagen`
 });
 
 export const CHECKOUT_ITEMS = [
