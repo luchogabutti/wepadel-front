@@ -1,6 +1,7 @@
 import { Typography, Link, IconButton, Container } from '@mui/material';
-import ShareIcon from '@mui/icons-material/Share';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import { Link as RouterLink } from 'react-router-dom';
+import CallMadeIcon from '@mui/icons-material/CallMade';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import './styles.scss';
 
 const FooterColumn = ({ title, children }) => {
@@ -39,30 +40,30 @@ export const Footer = () => {
           </div>
 
           <FooterColumn title="Compañía">
-            <Link href="#" className="column-link" underline="hover">
+            <Link component={RouterLink} to="/sobre-nosotros" className="column-link" underline="hover">
               Sobre nosotros
             </Link>
-            <Link href="#" className="column-link" underline="hover">
-              Contacto
+            <Link href="https://api.whatsapp.com/send/?phone=5491130638729" className="column-link" underline="hover">
+              Contactanos
             </Link>
           </FooterColumn>
 
           <FooterColumn title="Soporte">
-            <Link href="#" className="column-link" underline="hover">
+            <Link component={RouterLink} to="/politica-de-privacidad" className="column-link" underline="hover">
               Política de privacidad
             </Link>
-            <Link href="#" className="column-link" underline="hover">
+            <Link component={RouterLink} to="/terminos-de-servicio" className="column-link" underline="hover">
               Términos de servicio
             </Link>
           </FooterColumn>
 
-          <FooterColumn title="Síguenos">
+          <FooterColumn title="Novedades del deporte">
             <div className="social-icons">
-              <IconButton className="icon-btn">
-                <ShareIcon />
+              <IconButton className="icon-btn" onClick={() => window.open('https://premierpadel.com/es', '_blank')}>
+                <CallMadeIcon />
               </IconButton>
-              <IconButton className="icon-btn">
-                <CameraAltIcon />
+              <IconButton className="icon-btn" onClick={() => window.open('https://www.instagram.com/premierpadel/', '_blank')}>
+                <InstagramIcon />
               </IconButton>
             </div>
           </FooterColumn>
