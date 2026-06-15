@@ -1,4 +1,5 @@
 import { Typography, Link, IconButton, Container } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import './styles.scss';
@@ -39,7 +40,7 @@ export const Footer = () => {
           </div>
 
           <FooterColumn title="Compañía">
-            <Link href="#" className="column-link" underline="hover">
+            <Link component={RouterLink} to="/sobre-nosotros" className="column-link" underline="hover">
               Sobre nosotros
             </Link>
             <Link href="https://api.whatsapp.com/send/?phone=5491130638729" className="column-link" underline="hover">
@@ -48,10 +49,10 @@ export const Footer = () => {
           </FooterColumn>
 
           <FooterColumn title="Soporte">
-            <Link href="#" className="column-link" underline="hover">
+            <Link component={RouterLink} to="/politica-de-privacidad" className="column-link" underline="hover">
               Política de privacidad
             </Link>
-            <Link href="#" className="column-link" underline="hover">
+            <Link component={RouterLink} to="/terminos-de-servicio" className="column-link" underline="hover">
               Términos de servicio
             </Link>
           </FooterColumn>
