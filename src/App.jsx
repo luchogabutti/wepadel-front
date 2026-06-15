@@ -18,6 +18,9 @@ import { AdminDiscountsPage } from './pages/admin/AdminDiscountsPage'
 import { AdminProfilePage } from './pages/admin/AdminProfilePage'
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage'
 import { AdminEditProductPage } from './pages/admin/AdminEditProductPage'
+import { AboutUsPage } from './pages/AboutUsPage'
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
+import { TermsOfServicePage } from './pages/TermsOfServicePage'
 
 const App = () => {
   return (
@@ -33,6 +36,9 @@ const App = () => {
         <Route path="login" element={<AuthPage />} />
         <Route path="registro" element={<AuthPage />} />
         <Route path="mis-pedidos" element={<PlaceholderPage title="Mis pedidos" />} />
+        <Route path="sobre-nosotros" element={<AboutUsPage />} />
+        <Route path="politica-de-privacidad" element={<PrivacyPolicyPage />} />
+        <Route path="terminos-de-servicio" element={<TermsOfServicePage />} />
 
         <Route element={<ProfileAreaLayout />}>
           <Route path="perfil" element={<ProfilePage />} />
