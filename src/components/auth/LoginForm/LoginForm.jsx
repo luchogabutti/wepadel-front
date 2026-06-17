@@ -37,7 +37,7 @@ export const LoginForm = () => {
     setError('');
     setSubmitting(true);
     try {
-      await login({ email: email.trim(), password });
+      await login({ email: email.trim(), password, remember });
       navigate('/');
     } catch (err) {
       setError(err.message || 'No se pudo iniciar sesión. Revisá tus datos.');
