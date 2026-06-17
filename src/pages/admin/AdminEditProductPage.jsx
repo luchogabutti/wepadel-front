@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { CircularProgress, Box } from '@mui/material';
 import { AdminEditProductSection } from '../../components/admin/catalog/AdminEditProductSection/AdminEditProductSection';
 import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
-import { adminProducts } from '../../data/adminProductsData';
+import { useAdminProducts } from '../../hooks/useAdminProducts';
+import { updateProducto, buildProductoRequest } from '../../services/productsService';
+import { updateStock } from '../../services/stocksService';
 
 export const AdminEditProductPage = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
+  const { products, loading, refresh } = useAdminProducts();
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -27,7 +31,15 @@ export const AdminEditProductPage = () => {
     setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
-  const product = adminProducts.find((item) => String(item.id) === String(productId));
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+        <CircularProgress color="primary" />
+      </Box>
+    );
+  }
+
+  const product = products.find((item) => String(item.id) === String(productId));
 
   if (!product) {
     return <Navigate to="/admin/catalogo" replace />;
@@ -37,9 +49,16 @@ export const AdminEditProductPage = () => {
     navigate('/admin/catalogo');
   };
 
-  const handleSave = () => {
-    showSnackbar('¡Producto actualizado con éxito!');
-    window.setTimeout(() => navigate('/admin/catalogo'), 1200);
+  const handleSave = async (updatedProduct) => {
+    try {
+      await updateProducto(updatedProduct.id, buildProductoRequest(updatedProduct));
+      await updateStock(updatedProduct.id, Number(updatedProduct.stock));
+      await refresh();
+      showSnackbar('¡Producto actualizado con éxito!');
+      window.setTimeout(() => navigate('/admin/catalogo'), 1000);
+    } catch (error) {
+      showSnackbar(error.message || 'No se pudo actualizar el producto.', 'error');
+    }
   };
 
   return (

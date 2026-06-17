@@ -1,17 +1,18 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { Box, CircularProgress, Typography, Alert } from '@mui/material';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
 import { ProductGrid } from '../components/catalog/ProductGrid/ProductGrid';
 import { categories } from '../data/categoriesData';
-import { getProducts } from '../services/productsService';
+import { useProducts } from '../context/ProductsContext';
 
 export const CatalogPage = () => {
   const { categoria } = useParams();
   const activeCategory = categoria ?? 'paletas';
 
-  const [products, setProducts] = useState([]);
+  const { products, loading, error } = useProducts();
 
   const title = categories.find((cat) => cat.id === activeCategory)?.label;
 
@@ -25,15 +26,33 @@ export const CatalogPage = () => {
     [activeCategory, products]
   );
 
-  useEffect(() => {
-    getProducts()
-      .then((data) => {
-        setProducts(data.filter((p) => p.estaHabilitado !== false));
-      })
-      .catch((error) => {
-        console.error('Error fetching products:', error);
-      });
-  }, []);
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+          <CircularProgress color="primary" />
+        </Box>
+      );
+    }
+
+    if (error) {
+      return (
+        <Alert severity="error" sx={{ my: 4 }}>
+          No se pudieron cargar los productos. Intentá nuevamente más tarde.
+        </Alert>
+      );
+    }
+
+    if (categoryProducts.length === 0) {
+      return (
+        <Typography variant="body1" color="text.secondary" sx={{ py: 6, textAlign: 'center' }}>
+          No hay productos disponibles en esta categoría.
+        </Typography>
+      );
+    }
+
+    return <ProductGrid products={categoryProducts} activeCategory={activeCategory} />;
+  };
 
   return (
     <>
@@ -43,7 +62,7 @@ export const CatalogPage = () => {
           title={title}
           subtitle="Equipamiento de alto rendimiento para jugadores exigentes."
         />
-        <ProductGrid products={categoryProducts} activeCategory={activeCategory} />
+        {renderContent()}
       </PageContainer>
     </>
   );

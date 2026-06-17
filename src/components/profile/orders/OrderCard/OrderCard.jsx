@@ -88,7 +88,7 @@ export const OrderCard = ({ order, showCustomer = false, onCancel, onReorder }) 
         </Box>
 
         <Box className="order-actions-row">
-          {order.status === 'pendiente' && (
+          {(order.status === 'pendiente' || order.status === 'confirmada') && onCancel && (
             <Button
               variant="outlined"
               onClick={() => setCancelDialogOpen(true)}
@@ -98,7 +98,7 @@ export const OrderCard = ({ order, showCustomer = false, onCancel, onReorder }) 
             </Button>
           )}
 
-          {order.status === 'cancelada' && (
+          {order.status === 'cancelada' && onReorder && (
             <Button
               variant="outlined"
               onClick={handleReorder}

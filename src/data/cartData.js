@@ -21,7 +21,7 @@ export const INITIAL_CART_ITEMS = [
 
 export const mapProductToCartItem = (product, quantity = 1) => ({
   id: product.id,
-  name: product.nombre || product.descripcion,
+  name: product.nombre,
   description: product.categoria,
   unitPrice: product.precio,
   quantity,

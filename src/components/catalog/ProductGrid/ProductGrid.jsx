@@ -17,15 +17,25 @@ import {
 } from '../../general/TablePaginationFooter/TablePaginationFooter';
 import './styles.scss';
 
+const STEP_FALLBACK = 500;
+
+const getMaxPrice = (products) => {
+  if (!products.length) return STEP_FALLBACK;
+  const max = Math.max(...products.map((p) => Number(p.precio) || 0));
+  return Math.max(Math.ceil(max), 1);
+};
+
 export const ProductGrid = ({ products, activeCategory }) => {
+  const maxPrice = useMemo(() => getMaxPrice(products), [products]);
+
   const [sortOrder, setSortOrder] = useState('default');
-  const [priceRange, setPriceRange] = useState([0, 500]);
+  const [priceRange, setPriceRange] = useState([0, maxPrice]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(true);
 
   useEffect(() => {
     setSortOrder('default');
-    setPriceRange([0, 500]);
-  }, [activeCategory]);
+    setPriceRange([0, maxPrice]);
+  }, [activeCategory, maxPrice]);
 
   const filteredAndSorted = useMemo(() => {
     let result = products.filter(
@@ -42,11 +52,11 @@ export const ProductGrid = ({ products, activeCategory }) => {
   }, [products, sortOrder, priceRange]);
 
   const hasActiveFilters =
-    sortOrder !== 'default' || priceRange[0] !== 0 || priceRange[1] !== 500;
+    sortOrder !== 'default' || priceRange[0] !== 0 || priceRange[1] !== maxPrice;
 
   const resetFilters = () => {
     setSortOrder('default');
-    setPriceRange([0, 500]);
+    setPriceRange([0, maxPrice]);
   };
 
   const filterControls = (
@@ -88,7 +98,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
           onChange={(_, val) => setPriceRange(val)}
           valueLabelDisplay="auto"
           min={0}
-          max={500}
+          max={maxPrice}
           sx={{
             color: 'primary.main',
             '& .MuiSlider-thumb': { bgcolor: 'primary.light' },
@@ -169,7 +179,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
               onChange={(_, val) => setPriceRange(val)}
               valueLabelDisplay="auto"
               min={0}
-              max={500}
+              max={maxPrice}
               size="small"
               sx={{
                 py: 1,

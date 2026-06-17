@@ -16,13 +16,16 @@ export const ProductDetail = ({ product }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
 
-  const nombre = product.nombre || product.descripcion;
+  const nombre = product.nombre;
   const categoriaSlug = product.categoria?.toLowerCase() || '';
-  const imagen = product.imagen || 'https://placehold.co/400x400?text=WePadel'; // TODO: agregar data en backend/revisar — campo `imagen`
-  const imagenes = product.imagenes?.length // TODO: agregar data en backend/revisar — campo `imagenes`
-    ? product.imagenes
-    : [imagen];
-  const inStock = (product.stock ?? 1) > 0; // TODO: agregar data en backend/revisar — campo `stock`
+  const imagen = product.imagen || 'https://placehold.co/400x400?text=WePadel';
+  const imagenes = product.imagenes?.length ? product.imagenes : [imagen];
+  const inStock = (product.stock ?? 1) > 0;
+
+  const descripcionParrafos = (product.descripcion || '')
+    .split(/\n+/)
+    .map((parrafo) => parrafo.trim())
+    .filter(Boolean);
 
   const [selectedImg, setSelectedImg] = useState(null);
   const displayImg = selectedImg || imagenes[0];
@@ -40,38 +43,6 @@ export const ProductDetail = ({ product }) => {
   const handleAddToCart = () => {
     addItem(product, quantity);
   };
-
-  // TODO: agregar data en backend/revisar — campo `especificaciones`
-  const getSpecs = (categoria) => {
-    switch (categoria) {
-      case 'paletas':
-        return [
-          { name: 'Forma', value: 'Lágrima / Diamante' },
-          { name: 'Balance', value: 'Medio-Alto' },
-          { name: 'Núcleo', value: 'Goma EVA Soft Premium' },
-          { name: 'Caras', value: 'Carbono 12K de alta resistencia' },
-          { name: 'Peso', value: '360g - 375g' },
-        ];
-      case 'pelotas':
-        return [
-          { name: 'Tipo', value: 'Presurizada de alta velocidad' },
-          { name: 'Núcleo', value: 'Caucho natural reforzado' },
-          { name: 'Fieltro', value: 'Lana natural y nylon sintético' },
-          { name: 'Presión', value: 'Alta duración y rebote óptimo' },
-          { name: 'Cantidad', value: 'Tubo de 3 bolas' },
-        ];
-      case 'accesorios':
-      default:
-        return [
-          { name: 'Material', value: 'Poliéster técnico transpirable' },
-          { name: 'Medidas', value: 'Ajuste elástico adaptable' },
-          { name: 'Uso recomendado', value: 'Entrenamiento y alta competencia' },
-          { name: 'Detalle', value: 'Logo reflectante WePadel' },
-        ];
-    }
-  };
-
-  const specifications = getSpecs(categoriaSlug);
 
   return (
     <div className="product-detail-container">
@@ -158,21 +129,22 @@ export const ProductDetail = ({ product }) => {
             </span>
           </div>
 
-          <Typography variant="body1" className="product-description">
-            {product.descripcion}
-          </Typography>
-
           <div className="specs-section">
             <Typography variant="h6" className="specs-title">
-              Especificaciones Técnicas
+              Descripción
             </Typography>
-            <div className="specs-grid">
-              {specifications.map((spec, i) => (
-                <div key={i} className="spec-item">
-                  <span className="spec-name">{spec.name}</span>
-                  <span className="spec-value">{spec.value}</span>
-                </div>
-              ))}
+            <div className="product-description-block">
+              {descripcionParrafos.length > 0 ? (
+                descripcionParrafos.map((parrafo, i) => (
+                  <Typography key={i} variant="body1" className="product-description">
+                    {parrafo}
+                  </Typography>
+                ))
+              ) : (
+                <Typography variant="body1" className="product-description">
+                  Este producto todavía no tiene una descripción detallada.
+                </Typography>
+              )}
             </div>
           </div>
 
