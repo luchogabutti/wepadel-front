@@ -6,13 +6,16 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { theme } from './styles/theme'
 import './styles/globals.scss'
 import App from './App.jsx'
+import { AuthProvider } from './context/AuthContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,
