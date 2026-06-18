@@ -2,14 +2,17 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:80
 
 export const AUTH_STORAGE_KEY = 'wepadel_auth';
 
-const getStoredToken = () => {
+export const getStoredAuth = () => {
   try {
-    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-    return raw ? JSON.parse(raw).token : null;
+    const raw =
+      localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 };
+
+const getStoredToken = () => getStoredAuth()?.token ?? null;
 
 export const apiRequest = async (path, { method = 'GET', body, auth = false, headers = {} } = {}) => {
   const finalHeaders = { ...headers };

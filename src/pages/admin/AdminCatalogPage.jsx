@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CircularProgress, Box } from '@mui/material';
+import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { AdminCatalogToolbar } from '../../components/admin/catalog/AdminCatalogToolbar/AdminCatalogToolbar';
-import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
+import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { AdminCatalogSection } from '../../components/admin/catalog/AdminCatalogSection/AdminCatalogSection';
 import { AdminProductModal } from '../../components/admin/catalog/AdminProductModal/AdminProductModal';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
@@ -19,28 +19,10 @@ import { updateStock } from '../../services/stocksService';
 export const AdminCatalogPage = () => {
   const navigate = useNavigate();
   const { products, loading, refresh } = useAdminProducts();
+  const { notifySuccess, notifyError } = useAppSnackbar();
   const [searchTerm, setSearchTerm] = useState('');
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-    key: 0,
-  });
-
-  const showSnackbar = (message, severity = 'success') => {
-    setSnackbar((prev) => ({
-      open: true,
-      message,
-      severity,
-      key: prev.key + 1,
-    }));
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
 
   const handleToggleProductEnabled = async (productId) => {
     const product = products.find((p) => p.id === productId);
@@ -49,9 +31,9 @@ export const AdminCatalogPage = () => {
     try {
       await updateProducto(productId, buildProductoRequest(product, { estaHabilitado: nextEnabled }));
       await refresh();
-      showSnackbar(nextEnabled ? 'Producto habilitado.' : 'Producto deshabilitado.');
+      notifySuccess(nextEnabled ? 'Producto habilitado.' : 'Producto deshabilitado.');
     } catch (error) {
-      showSnackbar(error.message || 'No se pudo actualizar el producto.', 'error');
+      notifyError(error.message || 'No se pudo actualizar el producto.');
     }
   };
 
@@ -67,9 +49,9 @@ export const AdminCatalogPage = () => {
       }
       await refresh();
       setIsProductModalOpen(false);
-      showSnackbar('¡Producto creado con éxito!');
+      notifySuccess('¡Producto creado con éxito!');
     } catch (error) {
-      showSnackbar(error.message || 'No se pudo crear el producto.', 'error');
+      notifyError(error.message || 'No se pudo crear el producto.');
     }
   };
 
@@ -82,9 +64,9 @@ export const AdminCatalogPage = () => {
     try {
       await deleteProducto(productToDelete.id);
       await refresh();
-      showSnackbar('¡Producto eliminado con éxito!');
+      notifySuccess('¡Producto eliminado con éxito!');
     } catch (error) {
-      showSnackbar(error.message || 'No se pudo eliminar el producto.', 'error');
+      notifyError(error.message || 'No se pudo eliminar el producto.');
     } finally {
       setProductToDelete(null);
     }
@@ -101,9 +83,7 @@ export const AdminCatalogPage = () => {
       />
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-          <CircularProgress color="primary" />
-        </Box>
+        <LoadingState message="Cargando catálogo..." />
       ) : (
         <AdminCatalogSection
           searchTerm={searchTerm}
@@ -132,8 +112,6 @@ export const AdminCatalogPage = () => {
         confirmColor="error"
         center
       />
-
-      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

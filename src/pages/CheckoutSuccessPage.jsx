@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
+import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { PageContainer } from '../components/layout/PageContainer';
 import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard/CheckoutSuccessCard';
@@ -36,7 +36,7 @@ export const CheckoutSuccessPage = () => {
   if (loading) {
     return (
       <CenteredPage>
-        <CircularProgress color="primary" />
+        <LoadingState message="Cargando confirmación..." />
       </CenteredPage>
     );
   }

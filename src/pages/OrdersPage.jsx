@@ -1,31 +1,28 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Stack, CircularProgress, Box, Typography } from '@mui/material';
-import { PageSnackbar } from '../components/general/PageSnackbar/PageSnackbar';
+import { Stack, Typography } from '@mui/material';
+import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { PageHeader } from '../components/layout/PageHeader';
 import { OrderCard } from '../components/profile/orders/OrderCard/OrderCard';
 import {
   TablePaginationFooter,
-  buildShowingLabel,
 } from '../components/general/TablePaginationFooter/TablePaginationFooter';
+import { buildShowingLabel } from '../utils/paginationLabels';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
+import { usePagination } from '../hooks/usePagination';
+import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { getOrdenes, cancelarOrden, mapOrden } from '../services/ordenesService';
 
 export const OrdersPage = () => {
   const { user } = useAuth();
   const { products } = useProducts();
   const { addItem } = useCart();
+  const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
 
   const [ordersRaw, setOrdersRaw] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-    key: 0,
-  });
 
   const imageById = useMemo(() => {
     const map = new Map();
@@ -55,26 +52,16 @@ export const OrdersPage = () => {
     [ordersRaw, imageById]
   );
 
-  const showSnackbar = (message, severity = 'success') => {
-    setSnackbar((prev) => ({
-      open: true,
-      message,
-      severity,
-      key: prev.key + 1,
-    }));
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
+  const { paginatedItems, page, setPage, totalPages, rangeStart, rangeEnd, totalCount } =
+    usePagination(ordersList, 5);
 
   const handleCancelOrder = async (orderId) => {
     try {
       await cancelarOrden(usuarioId, orderId);
       await load();
-      showSnackbar('Orden cancelada.');
+      notifySuccess('Orden cancelada.');
     } catch (error) {
-      showSnackbar(error.message || 'No se pudo cancelar la orden.', 'error');
+      notifyError(error.message || 'No se pudo cancelar la orden.');
     }
   };
 
@@ -85,9 +72,8 @@ export const OrdersPage = () => {
       for (const item of order.items) {
         await addItem({ id: item.productId, nombre: item.name }, item.quantity);
       }
-      showSnackbar('Productos agregados al carrito.');
     } catch {
-      showSnackbar('No se pudieron agregar los productos.', 'error');
+      notifyError('No se pudieron agregar los productos.');
     }
   };
 
@@ -99,9 +85,7 @@ export const OrdersPage = () => {
           title="Historial de Órdenes"
           subtitle="Revisa y gestiona tus pedidos recientes de equipo de alto rendimiento."
         />
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-          <CircularProgress color="primary" />
-        </Box>
+        <LoadingState message="Cargando tus pedidos..." />
       </>
     );
   }
@@ -121,7 +105,7 @@ export const OrdersPage = () => {
       ) : (
         <>
           <Stack spacing={3}>
-            {ordersList.map((order) => (
+            {paginatedItems.map((order) => (
               <OrderCard
                 key={order.id}
                 order={order}
@@ -133,12 +117,13 @@ export const OrdersPage = () => {
 
           <TablePaginationFooter
             className="table-pagination-footer--orders"
-            label={buildShowingLabel(ordersList.length, ordersList.length, 'órdenes')}
+            label={buildShowingLabel(rangeStart, rangeEnd, totalCount, 'órdenes')}
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
           />
         </>
       )}
-
-      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

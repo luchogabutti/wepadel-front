@@ -10,6 +10,7 @@ import { CheckoutPointsCard } from '../components/checkout/CheckoutPointsCard/Ch
 import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDetail/CheckoutPaymentDetail';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { getPuntos } from '../services/puntosService';
 import { createOrden } from '../services/ordenesService';
 import {
@@ -25,6 +26,7 @@ export const CheckoutPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { items, subtotal, refresh } = useCart();
+  const { notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
 
   const [shippingData, setShippingData] = useState({
@@ -130,7 +132,9 @@ export const CheckoutPage = () => {
         state: { pointsEarned: orden.puntosGenerados },
       });
     } catch (err) {
-      setError(err.message || 'No se pudo confirmar la compra. Intentá nuevamente.');
+      const message = err.message || 'No se pudo confirmar la compra. Intentá nuevamente.';
+      setError(message);
+      notifyError(message);
     } finally {
       setSubmitting(false);
     }

@@ -1,4 +1,5 @@
-import { Typography, Button, CircularProgress } from '@mui/material';
+import { Typography, Button } from '@mui/material';
+import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { CenteredPage } from '../components/layout/CenteredPage';
@@ -17,7 +18,7 @@ export const ProductDetailPage = () => {
   if (loading) {
     return (
       <CenteredPage>
-        <CircularProgress color="primary" />
+        <LoadingState message="Cargando producto..." />
       </CenteredPage>
     );
   }

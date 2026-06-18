@@ -24,10 +24,9 @@ import { ConfirmationDialog } from '../../../general/ConfirmationDialog/Confirma
 import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
 import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
 import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
-import {
-  TablePaginationFooter,
-  buildShowingLabel,
-} from '../../../general/TablePaginationFooter/TablePaginationFooter'
+import { TablePaginationFooter } from '../../../general/TablePaginationFooter/TablePaginationFooter'
+import { buildShowingLabel } from '../../../../utils/paginationLabels'
+import { usePagination } from '../../../../hooks/usePagination'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -86,6 +85,9 @@ export const AdminDiscountsSection = ({
   const activeDiscounts = discounts.filter((d) => d.status === 'Activado').length
   const inactiveDiscounts = discounts.filter((d) => d.status === 'Desactivado').length
 
+  const { paginatedItems, page, setPage, totalPages, rangeStart, rangeEnd, totalCount } =
+    usePagination(discounts, 10)
+
   const stats = [
     {
       id: 'active-promos',
@@ -123,7 +125,10 @@ export const AdminDiscountsSection = ({
       <AdminTableCard
         footer={
           <TablePaginationFooter
-            label={buildShowingLabel(discounts.length, discounts.length, 'promociones')}
+            label={buildShowingLabel(rangeStart, rangeEnd, totalCount, 'promociones')}
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
           />
         }
       >
@@ -139,7 +144,7 @@ export const AdminDiscountsSection = ({
             </tr>
           </thead>
           <tbody>
-            {discounts.map((discount) => (
+            {paginatedItems.map((discount) => (
               <tr key={discount.id}>
                 <td>
                   <Box className="admin-discount-product-row">

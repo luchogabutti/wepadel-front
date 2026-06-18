@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { CircularProgress, Box } from '@mui/material';
+import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { AdminDiscountsSection } from '../../components/admin/discount/AdminDiscountsSection/AdminDiscountsSection';
-import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
+import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { adminSectionContent } from '../../data/adminProductsData';
 import { useAdminProducts } from '../../hooks/useAdminProducts';
 import {
@@ -23,14 +23,9 @@ const toRequest = (discount, overrides = {}) => ({
 
 export const AdminDiscountsPage = () => {
   const { products, loading: productsLoading } = useAdminProducts();
+  const { notifySuccess, notifyError } = useAppSnackbar();
   const [discounts, setDiscounts] = useState([]);
   const [loadingDiscounts, setLoadingDiscounts] = useState(true);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-    key: 0,
-  });
 
   const imageById = useMemo(() => {
     const map = new Map();
@@ -85,26 +80,13 @@ export const AdminDiscountsPage = () => {
     loadDiscounts();
   }, [loadDiscounts]);
 
-  const showSnackbar = (message, severity = 'success') => {
-    setSnackbar((prev) => ({
-      open: true,
-      message,
-      severity,
-      key: prev.key + 1,
-    }));
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
-
   const handleAddDiscount = async (newDiscount) => {
     try {
       await createDescuento(toRequest(newDiscount));
       await loadDiscounts();
-      showSnackbar('¡Descuento aplicado con éxito!');
+      notifySuccess('¡Descuento aplicado con éxito!');
     } catch (error) {
-      showSnackbar(error.message || 'No se pudo aplicar el descuento.', 'error');
+      notifyError(error.message || 'No se pudo aplicar el descuento.');
     }
   };
 
@@ -112,9 +94,9 @@ export const AdminDiscountsPage = () => {
     try {
       await deleteDescuento(discountId);
       await loadDiscounts();
-      showSnackbar('¡Descuento eliminado con éxito!');
+      notifySuccess('¡Descuento eliminado con éxito!');
     } catch (error) {
-      showSnackbar(error.message || 'No se pudo eliminar el descuento.', 'error');
+      notifyError(error.message || 'No se pudo eliminar el descuento.');
     }
   };
 
@@ -125,9 +107,9 @@ export const AdminDiscountsPage = () => {
     try {
       await updateDescuento(discountId, toRequest(discount, { activo: nextActivo }));
       await loadDiscounts();
-      showSnackbar(nextActivo ? 'Descuento activado.' : 'Descuento desactivado.');
+      notifySuccess(nextActivo ? 'Descuento activado.' : 'Descuento desactivado.');
     } catch (error) {
-      showSnackbar(error.message || 'No se pudo actualizar el descuento.', 'error');
+      notifyError(error.message || 'No se pudo actualizar el descuento.');
     }
   };
 
@@ -136,9 +118,7 @@ export const AdminDiscountsPage = () => {
   return (
     <>
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-          <CircularProgress color="primary" />
-        </Box>
+        <LoadingState message="Cargando descuentos..." />
       ) : (
         <AdminDiscountsSection
           title={adminSectionContent.discounts.title}
@@ -151,7 +131,6 @@ export const AdminDiscountsPage = () => {
         />
       )}
 
-      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

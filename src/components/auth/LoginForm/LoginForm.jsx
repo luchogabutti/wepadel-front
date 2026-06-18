@@ -17,11 +17,13 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
 import { isLoginFormValid } from '../../../utils/authValidation';
 import { useAuth } from '../../../context/AuthContext';
+import { useAppSnackbar } from '../../../hooks/useAppSnackbar';
 import './styles.scss';
 
 export const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { notifyError } = useAppSnackbar();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -37,10 +39,12 @@ export const LoginForm = () => {
     setError('');
     setSubmitting(true);
     try {
-      await login({ email: email.trim(), password });
+      await login({ email: email.trim(), password, remember });
       navigate('/');
     } catch (err) {
-      setError(err.message || 'No se pudo iniciar sesión. Revisá tus datos.');
+      const message = err.message || 'No se pudo iniciar sesión. Revisá tus datos.';
+      setError(message);
+      notifyError(message);
     } finally {
       setSubmitting(false);
     }
