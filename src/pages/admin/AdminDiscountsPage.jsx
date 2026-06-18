@@ -113,6 +113,16 @@ export const AdminDiscountsPage = () => {
     }
   };
 
+  const handleEditDiscount = async (updatedDiscount) => {
+    try {
+      await updateDescuento(updatedDiscount.id, toRequest(updatedDiscount));
+      await loadDiscounts();
+      notifySuccess('Descuento actualizado con éxito.');
+    } catch (error) {
+      notifyError(error.message || 'No se pudo actualizar el descuento.');
+    }
+  };
+
   const loading = productsLoading || loadingDiscounts;
 
   return (
@@ -126,6 +136,7 @@ export const AdminDiscountsPage = () => {
           products={products}
           discounts={discounts}
           onAddDiscount={handleAddDiscount}
+          onEditDiscount={handleEditDiscount}
           onDeleteDiscount={handleDeleteDiscount}
           onToggleStatus={handleToggleStatus}
         />

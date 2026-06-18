@@ -17,9 +17,11 @@ import {
   FormControlLabel,
 } from '@mui/material'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AddIcon from '@mui/icons-material/Add'
 import CloseIcon from '@mui/icons-material/Close'
 import PercentIcon from '@mui/icons-material/Percent'
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import { ConfirmationDialog } from '../../../general/ConfirmationDialog/ConfirmationDialog'
 import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
 import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
@@ -30,50 +32,83 @@ import { usePagination } from '../../../../hooks/usePagination'
 import '../../styles.scss'
 import './styles.scss'
 
+const defaultEndDate = () =>
+  new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+
+const buildEmptyForm = (products) => ({
+  productId: products[0]?.id || '',
+  percentage: '',
+  startDate: new Date().toISOString().split('T')[0],
+  endDate: defaultEndDate(),
+  active: true,
+})
+
 export const AdminDiscountsSection = ({
   title,
   subtitle,
   products = [],
   discounts = [],
   onAddDiscount,
+  onEditDiscount,
   onDeleteDiscount,
   onToggleStatus,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedProductId, setSelectedProductId] = useState('')
+  const [editingDiscount, setEditingDiscount] = useState(null)
+  const [form, setForm] = useState(() => buildEmptyForm(products))
   const [discountToDelete, setDiscountToDelete] = useState(null)
+  const [discountToToggle, setDiscountToToggle] = useState(null)
 
-  const handleOpenModal = () => {
-    setSelectedProductId(products[0]?.id || '')
+  const isEditMode = Boolean(editingDiscount)
+  const nextDiscountActive = discountToToggle?.status !== 'Activado'
+
+  const handleOpenCreate = () => {
+    setEditingDiscount(null)
+    setForm(buildEmptyForm(products))
+    setIsModalOpen(true)
+  }
+
+  const handleOpenEdit = (discount) => {
+    setEditingDiscount(discount)
+    setForm({
+      productId: discount.productId,
+      percentage: discount.percentage,
+      startDate: discount.startDate,
+      endDate: discount.endDate,
+      active: discount.status === 'Activado',
+    })
     setIsModalOpen(true)
   }
 
   const handleCloseModal = () => {
     setIsModalOpen(false)
+    setEditingDiscount(null)
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const productId = Number(formData.get('productId'))
+    const productId = Number(form.productId)
     const product = products.find((p) => p.id === productId)
-
     if (!product) return
 
-    const newDiscount = {
-      id: Date.now(),
+    const discountData = {
       productId,
       productTitle: product.title,
       productImg: product.img,
       productCategory: product.categoryId.toUpperCase(),
-      percentage: Number(formData.get('percentage')),
-      startDate: formData.get('startDate') || new Date().toISOString().split('T')[0],
-      endDate: formData.get('endDate') || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      status: formData.get('active') === 'on' ? 'Activado' : 'Desactivado',
+      percentage: Number(form.percentage),
+      startDate: form.startDate,
+      endDate: form.endDate,
+      status: form.active ? 'Activado' : 'Desactivado',
     }
 
-    onAddDiscount(newDiscount)
-    setIsModalOpen(false)
+    if (isEditMode) {
+      onEditDiscount({ ...editingDiscount, ...discountData })
+    } else {
+      onAddDiscount({ id: Date.now(), ...discountData })
+    }
+
+    handleCloseModal()
   }
 
   const handleConfirmDelete = () => {
@@ -112,7 +147,7 @@ export const AdminDiscountsSection = ({
         <Button
           variant="contained"
           color="primary"
-          onClick={handleOpenModal}
+          onClick={handleOpenCreate}
           startIcon={<AddIcon />}
           className="admin-btn-bold admin-btn-primary"
         >
@@ -140,7 +175,7 @@ export const AdminDiscountsSection = ({
               <th>FECHA INICIO</th>
               <th>FECHA FIN</th>
               <th style={{ textAlign: 'center', width: '120px' }}>HABILITADO</th>
-              <th style={{ textAlign: 'right', width: '120px' }}>ACCIONES</th>
+              <th style={{ textAlign: 'right', width: '140px' }}>ACCIONES</th>
             </tr>
           </thead>
           <tbody>
@@ -181,20 +216,30 @@ export const AdminDiscountsSection = ({
                 <td style={{ textAlign: 'center' }}>
                   <Switch
                     checked={discount.status === 'Activado'}
-                    onChange={() => onToggleStatus(discount.id)}
+                    onChange={() => setDiscountToToggle(discount)}
                     color="success"
                     size="small"
                   />
                 </td>
-                <td style={{ textAlign: 'right' }}>
-                  <IconButton
-                    size="small"
-                    onClick={() => setDiscountToDelete(discount)}
-                    className="admin-icon-btn admin-icon-btn--danger"
-                    aria-label="Eliminar descuento"
-                  >
-                    <DeleteOutlineOutlinedIcon fontSize="small" />
-                  </IconButton>
+                <td>
+                  <Box className="admin-actions admin-actions--end">
+                    <IconButton
+                      size="small"
+                      onClick={() => handleOpenEdit(discount)}
+                      className="admin-icon-btn admin-icon-btn--edit"
+                      aria-label="Editar descuento"
+                    >
+                      <EditOutlinedIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => setDiscountToDelete(discount)}
+                      className="admin-icon-btn admin-icon-btn--danger"
+                      aria-label="Eliminar descuento"
+                    >
+                      <DeleteOutlineOutlinedIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </td>
               </tr>
             ))}
@@ -220,11 +265,11 @@ export const AdminDiscountsSection = ({
           },
         }}
       >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} key={editingDiscount?.id ?? 'new'}>
           <DialogTitle>
             <Box className="admin-dialog-header-row">
               <Typography variant="h6" className="admin-dialog-title">
-                Nuevo Descuento
+                {isEditMode ? 'Editar descuento' : 'Nuevo descuento'}
               </Typography>
               <IconButton
                 onClick={handleCloseModal}
@@ -242,9 +287,8 @@ export const AdminDiscountsSection = ({
               <InputLabel id="discount-product-select">Producto</InputLabel>
               <Select
                 labelId="discount-product-select"
-                name="productId"
-                value={selectedProductId}
-                onChange={(e) => setSelectedProductId(e.target.value)}
+                value={form.productId}
+                onChange={(e) => setForm((prev) => ({ ...prev, productId: e.target.value }))}
                 label="Producto"
                 required
               >
@@ -258,17 +302,24 @@ export const AdminDiscountsSection = ({
 
             <Box className="admin-form-grid-2">
               <TextField
-                name="percentage"
                 label="Porcentaje (%)"
                 type="number"
                 placeholder="15"
                 required
                 variant="outlined"
+                value={form.percentage}
+                onChange={(e) => setForm((prev) => ({ ...prev, percentage: e.target.value }))}
                 slotProps={{ htmlInput: { min: 5, max: 90 } }}
               />
 
               <FormControlLabel
-                control={<Switch name="active" defaultChecked color="success" />}
+                control={
+                  <Switch
+                    checked={form.active}
+                    onChange={(e) => setForm((prev) => ({ ...prev, active: e.target.checked }))}
+                    color="success"
+                  />
+                }
                 label="Activar ahora"
                 className="admin-form-switch-row"
               />
@@ -276,22 +327,22 @@ export const AdminDiscountsSection = ({
 
             <Box className="admin-form-grid-2">
               <TextField
-                name="startDate"
                 label="Fecha de Inicio"
                 type="date"
                 required
                 variant="outlined"
-                defaultValue={new Date().toISOString().split('T')[0]}
+                value={form.startDate}
+                onChange={(e) => setForm((prev) => ({ ...prev, startDate: e.target.value }))}
                 slotProps={{ inputLabel: { shrink: true } }}
               />
 
               <TextField
-                name="endDate"
                 label="Fecha de Fin"
                 type="date"
                 required
                 variant="outlined"
-                defaultValue={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                value={form.endDate}
+                onChange={(e) => setForm((prev) => ({ ...prev, endDate: e.target.value }))}
                 slotProps={{ inputLabel: { shrink: true } }}
               />
             </Box>
@@ -305,14 +356,30 @@ export const AdminDiscountsSection = ({
               type="submit"
               variant="contained"
               color="primary"
-              startIcon={<PercentIcon />}
+              startIcon={isEditMode ? <SaveOutlinedIcon /> : <PercentIcon />}
               className="admin-btn-bold admin-btn-primary"
             >
-              Aplicar Descuento
+              {isEditMode ? 'Guardar cambios' : 'Aplicar descuento'}
             </Button>
           </DialogActions>
         </form>
       </Dialog>
+
+      <ConfirmationDialog
+        open={Boolean(discountToToggle)}
+        onClose={() => setDiscountToToggle(null)}
+        onConfirm={() => discountToToggle && onToggleStatus(discountToToggle.id)}
+        title={nextDiscountActive ? '¿Activar este descuento?' : '¿Desactivar este descuento?'}
+        subtitle={
+          nextDiscountActive
+            ? 'La promoción comenzará a aplicarse según las fechas configuradas.'
+            : 'La promoción dejará de estar activa.'
+        }
+        confirmLabel={nextDiscountActive ? 'Activar' : 'Desactivar'}
+        cancelLabel="Cancelar"
+        confirmColor={nextDiscountActive ? 'success' : 'warning'}
+        center
+      />
 
       <ConfirmationDialog
         open={Boolean(discountToDelete)}

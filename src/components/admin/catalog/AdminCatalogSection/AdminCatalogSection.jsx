@@ -14,7 +14,7 @@ export const AdminCatalogSection = ({
   products = [],
   onRequestEdit,
   onRequestDelete,
-  onToggleEnabled,
+  onRequestToggleEnabled,
 }) => {
   const normalizedSearch = searchTerm.toLowerCase().trim()
 
@@ -131,7 +131,7 @@ export const AdminCatalogSection = ({
                 <td style={{ textAlign: 'center' }}>
                   <Switch
                     checked={product.enabled}
-                    onChange={() => onToggleEnabled(product.id)}
+                    onChange={() => onRequestToggleEnabled(product)}
                     color="success"
                     size="small"
                   />
