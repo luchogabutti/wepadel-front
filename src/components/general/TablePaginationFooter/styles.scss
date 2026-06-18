@@ -38,8 +38,13 @@
         display: block;
       }
 
-      &:hover {
+      &:hover:not(:disabled) {
         background-color: color-mix(in srgb, var(--mui-palette-text-primary) 6%, transparent);
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
       }
 
       &.active {

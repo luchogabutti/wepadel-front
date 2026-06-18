@@ -127,7 +127,6 @@ export const AdminEditProductSection = ({
                     <MenuItem value="paletas">Paletas</MenuItem>
                     <MenuItem value="pelotas">Pelotas</MenuItem>
                     <MenuItem value="accesorios">Accesorios</MenuItem>
-                    <MenuItem value="indumentaria">Indumentaria</MenuItem>
                   </Select>
                 </FormControl>
               </Box>

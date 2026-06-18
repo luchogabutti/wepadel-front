@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Typography, Button, TextField, Grid } from '@mui/material';
+import { Typography, Button, TextField, Grid, Alert } from '@mui/material';
 import { getProfileFieldError, isProfileFormValid } from '../../../utils/profileValidation';
 import './styles.scss';
 
 export const ProfileDataCard = ({
-  firstName = 'Juan',
-  lastName = 'Pérez',
-  email = 'juan.perez@padelpro.com',
+  firstName = '',
+  lastName = '',
+  email = '',
+  onSave,
   onSaved,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({ firstName, lastName, email });
   const [saved, setSaved] = useState({ firstName, lastName, email });
 
@@ -37,19 +40,29 @@ export const ProfileDataCard = ({
   const handleCancel = () => {
     setForm({ ...saved });
     setShowErrors(false);
+    setError('');
     setIsEditing(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!isProfileFormValid(form)) {
       setShowErrors(true);
       return;
     }
 
-    setSaved({ ...form });
-    setShowErrors(false);
-    setIsEditing(false);
-    onSaved?.();
+    setSaving(true);
+    setError('');
+    try {
+      await onSave?.(form);
+      setSaved({ ...form });
+      setShowErrors(false);
+      setIsEditing(false);
+      onSaved?.();
+    } catch (err) {
+      setError(err.message || 'No se pudieron guardar los datos.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const fieldProps = (field) => {
@@ -68,11 +81,11 @@ export const ProfileDataCard = ({
         </Typography>
         {isEditing ? (
           <div className="profile-data-card__actions">
-            <Button variant="outlined" onClick={handleCancel} className="profile-data-card__cancel-btn">
+            <Button variant="outlined" onClick={handleCancel} disabled={saving} className="profile-data-card__cancel-btn">
               Cancelar
             </Button>
-            <Button variant="contained" onClick={handleSave} className="profile-data-card__save-btn">
-              Guardar
+            <Button variant="contained" onClick={handleSave} disabled={saving} className="profile-data-card__save-btn">
+              {saving ? 'Guardando...' : 'Guardar'}
             </Button>
           </div>
         ) : (
@@ -81,6 +94,12 @@ export const ProfileDataCard = ({
           </Button>
         )}
       </div>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, sm: 6 }}>

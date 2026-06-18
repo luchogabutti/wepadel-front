@@ -1,31 +1,16 @@
 import { useState } from 'react';
+import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { AdminStockSection } from '../../components/admin/stock/AdminStockSection/AdminStockSection';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
-import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
-import { adminProducts, adminSectionContent } from '../../data/adminProductsData';
+import { useAppSnackbar } from '../../hooks/useAppSnackbar';
+import { adminSectionContent } from '../../data/adminProductsData';
+import { useAdminProducts } from '../../hooks/useAdminProducts';
+import { updateStock } from '../../services/stocksService';
 
 export const AdminStockPage = () => {
-  const [products, setProducts] = useState(adminProducts);
+  const { products, loading, refreshStocks } = useAdminProducts();
+  const { notifySuccess, notifyError } = useAppSnackbar();
   const [pendingStockSave, setPendingStockSave] = useState(null);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-    key: 0,
-  });
-
-  const showSnackbar = (message, severity = 'success') => {
-    setSnackbar((prev) => ({
-      open: true,
-      message,
-      severity,
-      key: prev.key + 1,
-    }));
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
 
   const handleRequestSaveStock = (updatedProducts) => {
     setPendingStockSave(updatedProducts);
@@ -35,25 +20,36 @@ export const AdminStockPage = () => {
     setPendingStockSave(null);
   };
 
-  const handleConfirmSaveStock = () => {
-    if (pendingStockSave) {
-      setProducts(pendingStockSave);
+  const handleConfirmSaveStock = async () => {
+    if (!pendingStockSave) return;
+    const currentById = new Map(products.map((p) => [p.id, p.stock]));
+    const changed = pendingStockSave.filter((p) => currentById.get(p.id) !== p.stock);
+    try {
+      await Promise.all(changed.map((p) => updateStock(p.id, Number(p.stock))));
+      await refreshStocks();
+      notifySuccess('Stock guardado con éxito');
+    } catch (error) {
+      notifyError(error.message || 'No se pudo guardar el stock.');
+    } finally {
+      setPendingStockSave(null);
     }
-    setPendingStockSave(null);
-    showSnackbar('Stock guardado con éxito');
   };
 
   return (
     <>
-      <AdminStockSection
-        title={adminSectionContent.stock.title}
-        subtitle={adminSectionContent.stock.subtitle}
-        products={products}
-        onRequestSaveStock={handleRequestSaveStock}
-      />
+      {loading ? (
+        <LoadingState message="Cargando stock..." />
+      ) : (
+        <AdminStockSection
+          title={adminSectionContent.stock.title}
+          subtitle={adminSectionContent.stock.subtitle}
+          products={products}
+          onRequestSaveStock={handleRequestSaveStock}
+        />
+      )}
 
       <ConfirmationDialog
-        open={pendingStockSave}
+        open={Boolean(pendingStockSave)}
         onClose={handleCloseSaveDialog}
         onConfirm={handleConfirmSaveStock}
         title="¿Guardar cambios de stock?"
@@ -63,7 +59,6 @@ export const AdminStockPage = () => {
         center
       />
 
-      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

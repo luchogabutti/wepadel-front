@@ -50,7 +50,7 @@ export const FeaturedProducts = ({ products }) => {
             <div className="product-image-container">
               <img
                 src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
-                alt={product.nombre || product.descripcion}
+                alt={product.nombre}
                 className="product-image"
               />
               {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
@@ -83,7 +83,7 @@ export const FeaturedProducts = ({ products }) => {
                 variant="body1"
                 className="product-title"
               >
-                {product.nombre || product.descripcion}
+                {product.nombre}
               </Typography>
               <div className="product-price-container">
                 <Typography variant="body1" className="product-price">

@@ -3,14 +3,16 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { UserLogin } from './components/UserLogin';
 import { ShoppingCart } from './components/ShoppingCart';
 import { ProductSearch } from './components/ProductSearch';
+import { useAuth } from '../../../context/AuthContext';
 import './styles.scss';
 
 const AUTH_ROUTES = ['/login', '/registro'];
 
 export const Header = () => {
   const { pathname } = useLocation();
+  const { isAdmin } = useAuth();
   const isAuthPage = AUTH_ROUTES.includes(pathname);
-  const isAdminPage = pathname.startsWith('/admin');
+  const isAdminView = isAdmin || pathname.startsWith('/admin');
 
   return (
     <AppBar position="fixed" elevation={0} className="app-header-bar">
@@ -24,24 +26,16 @@ export const Header = () => {
           >
             WePadel
           </Typography>
-          {isAdminPage && (
+          {isAdminView && (
             <span className="admin-header-badge">ADMIN</span>
           )}
         </Box>
 
-        {!isAuthPage && !isAdminPage && (
-          <>
-            <ProductSearch />
+        {!isAuthPage && !isAdminView && <ProductSearch />}
 
-            <div className="header-actions">
-              <ShoppingCart />
-              <UserLogin />
-            </div>
-          </>
-        )}
-
-        {isAdminPage && (
+        {!isAuthPage && (
           <div className="header-actions">
+            {!isAdminView && <ShoppingCart />}
             <UserLogin />
           </div>
         )}

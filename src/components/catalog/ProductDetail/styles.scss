@@ -255,6 +255,16 @@
         color: var(--mui-palette-text-primary);
       }
     }
+
+    .product-description-block {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .product-description {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .purchase-actions {
