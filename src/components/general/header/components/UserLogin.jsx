@@ -53,14 +53,10 @@ export const UserLogin = () => {
         )}
 
         {isAdmin
-          ? [
-              <MenuItem key="admin" onClick={() => handleNavigate('/admin')}>
-                <ListItemText>Panel de administración</ListItemText>
-              </MenuItem>,
+          ? 
               <MenuItem key="admin-perfil" onClick={() => handleNavigate('/admin/perfil')}>
                 <ListItemText>Mi perfil</ListItemText>
-              </MenuItem>,
-            ]
+              </MenuItem>
           : [
               <MenuItem key="perfil" onClick={() => handleNavigate('/perfil')}>
                 <ListItemText>Mi perfil</ListItemText>

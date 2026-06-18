@@ -73,7 +73,7 @@ export const CartProvider = ({ children }) => {
       try {
         await carritoService.addItem(usuarioId, product.id, quantity);
         await refresh();
-        notifySuccess(`${product.nombre} agregado al carrito exitosamente.`);
+        notifySuccess(`${product.nombre} Agregado al carrito exitosamente.`);
       } catch (error) {
         console.error('Error al agregar al carrito:', error);
         notifyError('No se pudo agregar el producto al carrito.');

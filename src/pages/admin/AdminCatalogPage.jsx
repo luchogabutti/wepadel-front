@@ -23,6 +23,9 @@ export const AdminCatalogPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [productToToggle, setProductToToggle] = useState(null);
+
+  const nextProductEnabled = productToToggle ? !productToToggle.enabled : false;
 
   const handleToggleProductEnabled = async (productId) => {
     const product = products.find((p) => p.id === productId);
@@ -90,7 +93,7 @@ export const AdminCatalogPage = () => {
           products={products}
           onRequestEdit={handleRequestEditProduct}
           onRequestDelete={setProductToDelete}
-          onToggleEnabled={handleToggleProductEnabled}
+          onRequestToggleEnabled={setProductToToggle}
         />
       )}
 
@@ -99,6 +102,22 @@ export const AdminCatalogPage = () => {
         productToEdit={null}
         onClose={() => setIsProductModalOpen(false)}
         onSave={handleSaveProduct}
+      />
+
+      <ConfirmationDialog
+        open={Boolean(productToToggle)}
+        onClose={() => setProductToToggle(null)}
+        onConfirm={() => productToToggle && handleToggleProductEnabled(productToToggle.id)}
+        title={nextProductEnabled ? '¿Habilitar este producto?' : '¿Deshabilitar este producto?'}
+        subtitle={
+          nextProductEnabled
+            ? 'El producto volverá a mostrarse en el catálogo.'
+            : 'El producto dejará de mostrarse en el catálogo.'
+        }
+        confirmLabel={nextProductEnabled ? 'Habilitar' : 'Deshabilitar'}
+        cancelLabel="Cancelar"
+        confirmColor={nextProductEnabled ? 'success' : 'warning'}
+        center
       />
 
       <ConfirmationDialog
