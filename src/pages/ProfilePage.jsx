@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { getUsuarioById, updateUsuario } from '../services/usuariosService';
 import { getPuntos } from '../services/puntosService';
+import { useNavigate } from 'react-router-dom';
 
 const splitNombre = (nombreApellido = '') => {
   const parts = nombreApellido.trim().split(/\s+/);
@@ -19,10 +20,10 @@ const splitNombre = (nombreApellido = '') => {
 };
 
 export const ProfilePage = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
   const { notifySuccess } = useAppSnackbar();
   const usuarioId = user?.id;
-
+  const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
   const [points, setPoints] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -49,12 +50,24 @@ export const ProfilePage = () => {
 
   const handleSave = async (form) => {
     const nombreApellido = `${form.firstName} ${form.lastName}`.trim();
+    const emailChanged =
+      form.email.trim().toLowerCase() !== (datos.email ?? '').trim().toLowerCase();
+
     const actualizado = await updateUsuario(usuarioId, {
       nombreApellido,
-      mail: form.email,
+      mail: form.email.trim(),
     });
     setUsuario(actualizado);
-    updateUser({ nombreApellido, mail: form.email });
+    updateUser({ nombreApellido, mail: form.email.trim() });
+
+    if (emailChanged) {
+      notifySuccess('Email actualizado. Iniciá sesión con tu nuevo email.');
+      logout();
+      navigate('/login');
+      return;
+    }
+
+    notifySuccess('Datos guardados.');
   };
 
   if (loading) {
@@ -77,7 +90,6 @@ export const ProfilePage = () => {
             lastName={datos.lastName}
             email={datos.email}
             onSave={handleSave}
-            onSaved={() => notifySuccess('Datos guardados.')}
           />
         </Grid>
         <Grid size={{ xs: 12, lg: 4 }}>
