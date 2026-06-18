@@ -10,7 +10,7 @@ import { useProducts } from '../../context/ProductsContext';
 import { usePagination } from '../../hooks/usePagination';
 import { getAllOrdenes, mapOrden } from '../../services/ordenesService';
 
-export const AdminOrdersPage = () => {
+export const AdminOrdersView = () => {
   const { products } = useProducts();
   const [ordersRaw, setOrdersRaw] = useState([]);
   const [loading, setLoading] = useState(true);

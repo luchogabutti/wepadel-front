@@ -1,6 +1,6 @@
 import { FooterContentLayout } from '../components/layout/FooterContentLayout';
 
-export const PrivacyPolicyPage = () => (
+export const PrivacyPolicyView = () => (
   <FooterContentLayout
     title="Política de privacidad"
     subtitle="Cómo recopilamos, usamos y protegemos tu información en WePadel."

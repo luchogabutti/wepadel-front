@@ -3,7 +3,7 @@ import { CenteredPage } from '../components/layout/CenteredPage';
 import { LoginForm } from '../components/auth/LoginForm/LoginForm';
 import { RegisterForm } from '../components/auth/RegisterForm/RegisterForm';
 
-export const AuthPage = () => {
+export const AuthView = () => {
   const { pathname } = useLocation();
   const isRegister = pathname === '/registro';
 

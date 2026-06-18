@@ -21,7 +21,7 @@ const toRequest = (discount, overrides = {}) => ({
   ...overrides,
 });
 
-export const AdminDiscountsPage = () => {
+export const AdminDiscountsView = () => {
   const { products, loading: productsLoading } = useAdminProducts();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [discounts, setDiscounts] = useState([]);

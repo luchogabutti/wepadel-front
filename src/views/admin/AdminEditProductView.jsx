@@ -8,7 +8,7 @@ import { updateProducto, buildProductoRequest } from '../../services/productsSer
 import { updateStock } from '../../services/stocksService';
 import { saveProductImage } from '../../services/imagenesService';
 
-export const AdminEditProductPage = () => {
+export const AdminEditProductView = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
   const { products, loading, refresh } = useAdminProducts();

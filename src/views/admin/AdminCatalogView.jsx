@@ -18,7 +18,7 @@ import {
 import { updateStock } from '../../services/stocksService';
 import { saveProductImage } from '../../services/imagenesService';
 
-export const AdminCatalogPage = () => {
+export const AdminCatalogView = () => {
   const navigate = useNavigate();
   const { products, loading, refresh } = useAdminProducts();
   const { refresh: refreshCatalog } = useProducts();

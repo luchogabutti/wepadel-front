@@ -9,7 +9,7 @@ import { useProducts } from '../context/ProductsContext';
 import { getOrdenById } from '../services/ordenesService';
 import { PLACEHOLDER_IMG } from '../services/productMapper';
 
-export const CheckoutSuccessPage = () => {
+export const CheckoutSuccessView = () => {
   const { orderId } = useParams();
   const { user } = useAuth();
   const { products } = useProducts();

@@ -1,6 +1,6 @@
 import { FooterContentLayout } from '../components/layout/FooterContentLayout';
 
-export const TermsOfServicePage = () => (
+export const TermsOfServiceView = () => (
   <FooterContentLayout
     title="Términos de servicio"
     subtitle="Condiciones de uso de la plataforma y compra en WePadel."

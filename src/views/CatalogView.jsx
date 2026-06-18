@@ -9,7 +9,7 @@ import { ProductGrid } from '../components/catalog/ProductGrid/ProductGrid';
 import { categories } from '../data/categoriesData';
 import { useProducts } from '../context/ProductsContext';
 
-export const CatalogPage = () => {
+export const CatalogView = () => {
   const { categoria } = useParams();
   const activeCategory = categoria ?? 'paletas';
 

@@ -7,7 +7,7 @@ import { adminSectionContent } from '../../data/adminProductsData';
 import { useAdminProducts } from '../../hooks/useAdminProducts';
 import { updateStock } from '../../services/stocksService';
 
-export const AdminStockPage = () => {
+export const AdminStockView = () => {
   const { products, loading, refreshStocks } = useAdminProducts();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [pendingStockSave, setPendingStockSave] = useState(null);

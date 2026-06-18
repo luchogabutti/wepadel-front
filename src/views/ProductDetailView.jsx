@@ -7,7 +7,7 @@ import { ProductDetail } from '../components/catalog/ProductDetail/ProductDetail
 import { useProducts } from '../context/ProductsContext';
 import './styles.scss';
 
-export const ProductDetailPage = () => {
+export const ProductDetailView = () => {
   const { id } = useParams();
   const productId = parseInt(id, 10);
   const { products, loading } = useProducts();

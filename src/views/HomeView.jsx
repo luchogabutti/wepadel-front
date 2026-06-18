@@ -6,7 +6,7 @@ import { useProducts } from '../context/ProductsContext';
 
 const FEATURED_COUNT = 4;
 
-export const HomePage = () => {
+export const HomeView = () => {
   const { products } = useProducts();
 
   const featured = useMemo(

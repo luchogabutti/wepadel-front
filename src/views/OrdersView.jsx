@@ -14,7 +14,7 @@ import { usePagination } from '../hooks/usePagination';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { getOrdenes, cancelarOrden, mapOrden } from '../services/ordenesService';
 
-export const OrdersPage = () => {
+export const OrdersView = () => {
   const { user } = useAuth();
   const { products } = useProducts();
   const { addItem } = useCart();

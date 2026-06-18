@@ -19,7 +19,7 @@ const splitNombre = (nombreApellido = '') => {
   };
 };
 
-export const ProfilePage = () => {
+export const ProfileView = () => {
   const { user, updateUser, logout } = useAuth();
   const { notifySuccess } = useAppSnackbar();
   const usuarioId = user?.id;

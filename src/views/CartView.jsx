@@ -5,7 +5,7 @@ import { CartItem } from '../components/cart/CartItem/CartItem';
 import { CartSummary } from '../components/cart/CartSummary/CartSummary';
 import { CartEmptyState } from '../components/cart/CartEmptyState/CartEmptyState';
 import { useCart } from '../context/CartContext';
-export const CartPage = () => {
+export const CartView = () => {
   const { items, subtotal, discountTotal, updateQuantity, removeItem } = useCart();
   const total = subtotal;
 

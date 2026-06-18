@@ -11,7 +11,7 @@ const splitNombre = (nombreApellido = '') => {
   return { firstName: parts[0] ?? '', lastName: parts.slice(1).join(' ') };
 };
 
-export const AdminProfilePage = () => {
+export const AdminProfileView = () => {
   const { user, updateUser, logout } = useAuth();
   const { notifySuccess } = useAppSnackbar();
   const usuarioId = user?.id;

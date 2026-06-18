@@ -1,6 +1,6 @@
 import { FooterContentLayout } from '../components/layout/FooterContentLayout';
 
-export const AboutUsPage = () => (
+export const AboutUsView = () => (
   <FooterContentLayout
     title="Sobre nosotros"
     subtitle="La historia, misión y valores detrás de WePadel."

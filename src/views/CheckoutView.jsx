@@ -22,7 +22,7 @@ import {
 
 const MONTO_ENVIO = 0;
 
-export const CheckoutPage = () => {
+export const CheckoutView = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { items, subtotal, refresh } = useCart();
