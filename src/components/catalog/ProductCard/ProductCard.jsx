@@ -2,11 +2,14 @@ import { Typography, IconButton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
+import { ProductPrice } from '../ProductPrice/ProductPrice';
 import './styles.scss';
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
+
+  const inStock = Number(product.stock) > 0;
 
   const handleCardClick = () => {
     navigate(`/producto/${product.id}`);
@@ -21,19 +24,19 @@ export const ProductCard = ({ product }) => {
     <div className="product-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="image">
         <img
-          src={product.img}
-          alt={product.title}
+          src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
+          alt={product.nombre}
           className="img"
         />
 
-        {product.badge && (
+        {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
           <span className="badge">{product.badge}</span>
         )}
 
         <IconButton
           className="cart-btn"
           onClick={handleCartClick}
-          disabled={!product.inStock}
+          disabled={!inStock}
           aria-label="Agregar al carrito"
           sx={{
             bgcolor: 'primary.main',
@@ -53,41 +56,24 @@ export const ProductCard = ({ product }) => {
             className="title"
             sx={{ fontWeight: 700, fontSize: '16px' }}
           >
-            {product.title}
+            {product.nombre}
           </Typography>
           <div className="stock-info">
             <div
-              className={`stock-dot ${product.inStock ? 'in-stock' : 'out-of-stock'
-                }`}
+              className={`stock-dot ${inStock ? 'in-stock' : 'out-of-stock'}`}
             />
             <Typography
               variant="caption"
-              className={`stock-label ${product.inStock ? 'in-stock' : 'out-of-stock'
-                }`}
+              className={`stock-label ${inStock ? 'in-stock' : 'out-of-stock'}`}
               sx={{ fontWeight: 600, fontSize: '11px' }}
             >
-              {product.inStock ? 'Stock disponible' : 'Sin stock'}
+              {inStock ? 'Stock disponible' : 'Sin stock'}
             </Typography>
           </div>
         </div>
 
         <div className="price-row">
-          <Typography
-            variant="h5"
-            className="price"
-            sx={{ fontWeight: 800, fontSize: '20px' }}
-          >
-            ${product.price.toFixed(2)}
-          </Typography>
-          {product.oldPrice && (
-            <Typography
-              variant="body2"
-              className="old-price"
-              sx={{ fontSize: '12px' }}
-            >
-              ${product.oldPrice.toFixed(2)}
-            </Typography>
-          )}
+          <ProductPrice product={product} />
         </div>
       </div>
     </div>

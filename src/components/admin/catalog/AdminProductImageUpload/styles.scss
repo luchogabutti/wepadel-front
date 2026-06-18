@@ -1,0 +1,16 @@
+.admin-product-image-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .admin-product-upload-box {
+    cursor: pointer;
+  }
+
+  .admin-product-upload-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+}

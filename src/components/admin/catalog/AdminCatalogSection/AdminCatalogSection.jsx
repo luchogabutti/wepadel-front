@@ -4,10 +4,9 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
 import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
 import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
-import {
-  TablePaginationFooter,
-  buildShowingLabel,
-} from '../../../general/TablePaginationFooter/TablePaginationFooter'
+import { TablePaginationFooter } from '../../../general/TablePaginationFooter/TablePaginationFooter'
+import { buildShowingLabel } from '../../../../utils/paginationLabels'
+import { usePagination } from '../../../../hooks/usePagination'
 import '../../styles.scss'
 
 export const AdminCatalogSection = ({
@@ -15,7 +14,7 @@ export const AdminCatalogSection = ({
   products = [],
   onRequestEdit,
   onRequestDelete,
-  onToggleEnabled,
+  onRequestToggleEnabled,
 }) => {
   const normalizedSearch = searchTerm.toLowerCase().trim()
 
@@ -26,6 +25,9 @@ export const AdminCatalogSection = ({
       product.categoryId.toLowerCase().includes(normalizedSearch)
     )
   })
+
+  const { paginatedItems, page, setPage, totalPages, rangeStart, rangeEnd, totalCount } =
+    usePagination(filteredProducts, 10)
 
   const totalProducts = products.length
   const activeProducts = products.filter((product) => product.enabled).length
@@ -54,7 +56,10 @@ export const AdminCatalogSection = ({
 
   const tableFooter = (
     <TablePaginationFooter
-      label={buildShowingLabel(filteredProducts.length, products.length, 'productos')}
+      label={buildShowingLabel(rangeStart, rangeEnd, totalCount, 'productos')}
+      currentPage={page}
+      totalPages={totalPages}
+      onPageChange={setPage}
     />
   )
 
@@ -77,7 +82,7 @@ export const AdminCatalogSection = ({
           </thead>
 
           <tbody>
-            {filteredProducts.map((product) => (
+            {paginatedItems.map((product) => (
               <tr key={product.id}>
                 <td>
                   <img
@@ -126,7 +131,7 @@ export const AdminCatalogSection = ({
                 <td style={{ textAlign: 'center' }}>
                   <Switch
                     checked={product.enabled}
-                    onChange={() => onToggleEnabled(product.id)}
+                    onChange={() => onRequestToggleEnabled(product)}
                     color="success"
                     size="small"
                   />

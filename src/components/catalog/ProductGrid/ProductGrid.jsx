@@ -11,42 +11,56 @@ import {
 import { alpha } from '@mui/material/styles';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ProductCard } from '../ProductCard/ProductCard';
-import {
-  TablePaginationFooter,
-  buildShowingLabel,
-} from '../../general/TablePaginationFooter/TablePaginationFooter';
+import { TablePaginationFooter } from '../../general/TablePaginationFooter/TablePaginationFooter';
+import { buildShowingLabel } from '../../../utils/paginationLabels';
+import { usePagination } from '../../../hooks/usePagination';
+import { getPrecioEfectivo } from '../../../utils/discountUtils';
 import './styles.scss';
 
+const STEP_FALLBACK = 500;
+
+const getMaxPrice = (products) => {
+  if (!products.length) return STEP_FALLBACK;
+  const max = Math.max(...products.map((p) => getPrecioEfectivo(p)));
+  return Math.max(Math.ceil(max), 1);
+};
+
 export const ProductGrid = ({ products, activeCategory }) => {
+  const maxPrice = useMemo(() => getMaxPrice(products), [products]);
+
   const [sortOrder, setSortOrder] = useState('default');
-  const [priceRange, setPriceRange] = useState([0, 500]);
+  const [priceRange, setPriceRange] = useState([0, maxPrice]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(true);
 
   useEffect(() => {
     setSortOrder('default');
-    setPriceRange([0, 500]);
-  }, [activeCategory]);
+    setPriceRange([0, maxPrice]);
+  }, [activeCategory, maxPrice]);
 
   const filteredAndSorted = useMemo(() => {
-    let result = products.filter(
-      (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
-    );
+    let result = products.filter((p) => {
+      const precio = getPrecioEfectivo(p);
+      return precio >= priceRange[0] && precio <= priceRange[1];
+    });
 
     if (sortOrder === 'asc') {
-      result.sort((a, b) => a.price - b.price);
+      result.sort((a, b) => getPrecioEfectivo(a) - getPrecioEfectivo(b));
     } else if (sortOrder === 'desc') {
-      result.sort((a, b) => b.price - a.price);
+      result.sort((a, b) => getPrecioEfectivo(b) - getPrecioEfectivo(a));
     }
 
     return result;
   }, [products, sortOrder, priceRange]);
 
+  const { paginatedItems, page, setPage, totalPages, rangeStart, rangeEnd, totalCount } =
+    usePagination(filteredAndSorted, 12);
+
   const hasActiveFilters =
-    sortOrder !== 'default' || priceRange[0] !== 0 || priceRange[1] !== 500;
+    sortOrder !== 'default' || priceRange[0] !== 0 || priceRange[1] !== maxPrice;
 
   const resetFilters = () => {
     setSortOrder('default');
-    setPriceRange([0, 500]);
+    setPriceRange([0, maxPrice]);
   };
 
   const filterControls = (
@@ -88,7 +102,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
           onChange={(_, val) => setPriceRange(val)}
           valueLabelDisplay="auto"
           min={0}
-          max={500}
+          max={maxPrice}
           sx={{
             color: 'primary.main',
             '& .MuiSlider-thumb': { bgcolor: 'primary.light' },
@@ -169,7 +183,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
               onChange={(_, val) => setPriceRange(val)}
               valueLabelDisplay="auto"
               min={0}
-              max={500}
+              max={maxPrice}
               size="small"
               sx={{
                 py: 1,
@@ -208,7 +222,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
           </div>
         ) : (
           <div className="grid">
-            {filteredAndSorted.map((product) => (
+            {paginatedItems.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -217,7 +231,10 @@ export const ProductGrid = ({ products, activeCategory }) => {
         {filteredAndSorted.length > 0 && (
           <TablePaginationFooter
             className="table-pagination-footer--catalog"
-            label={buildShowingLabel(filteredAndSorted.length, filteredAndSorted.length, 'productos')}
+            label={buildShowingLabel(rangeStart, rangeEnd, totalCount, 'productos')}
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
           />
         )}
       </main>

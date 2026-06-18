@@ -9,26 +9,45 @@ import {
   Checkbox,
   Link,
   InputAdornment,
+  Alert,
 } from '@mui/material';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LockIcon from '@mui/icons-material/Lock';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
 import { isLoginFormValid } from '../../../utils/authValidation';
+import { useAuth } from '../../../context/AuthContext';
+import { useAppSnackbar } from '../../../hooks/useAppSnackbar';
 import './styles.scss';
 
 export const LoginForm = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { notifyError } = useAppSnackbar();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const canSubmit = isLoginFormValid({ email, password });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!canSubmit) return;
-    navigate('/');
+    if (!canSubmit || submitting) return;
+
+    setError('');
+    setSubmitting(true);
+    try {
+      await login({ email: email.trim(), password, remember });
+      navigate('/');
+    } catch (err) {
+      const message = err.message || 'No se pudo iniciar sesión. Revisá tus datos.';
+      setError(message);
+      notifyError(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -41,6 +60,12 @@ export const LoginForm = () => {
       footerActionTo="/registro"
       maxWidth="420px"
     >
+      {error && (
+        <Alert severity="error" sx={{ mb: 1 }}>
+          {error}
+        </Alert>
+      )}
+
       <Box className="form-field">
         <Typography variant="caption" className="field-label">
           Email
@@ -70,7 +95,7 @@ export const LoginForm = () => {
           <Typography variant="caption" className="field-label">
             Contraseña
           </Typography>
-          <Link component={RouterLink} to="#" className="forgot-password-link">
+          <Link component={RouterLink} to="/recuperar-contrasena" className="forgot-password-link">
             ¿Olvidaste tu contraseña?
           </Link>
         </Box>
@@ -120,11 +145,11 @@ export const LoginForm = () => {
         type="submit"
         fullWidth
         variant="contained"
-        disabled={!canSubmit}
+        disabled={!canSubmit || submitting}
         endIcon={<ArrowForwardIcon />}
         sx={{ py: '12px' }}
       >
-        Iniciar sesión
+        {submitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </Button>
     </Form>
   );

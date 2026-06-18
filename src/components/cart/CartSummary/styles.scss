@@ -39,6 +39,12 @@
     font-weight: 500;
   }
 
+  .summary-discount {
+    color: var(--mui-palette-success-main);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
   .summary-total-row {
     padding-top: 16px;
     border-top: 1px solid color-mix(in srgb, var(--mui-palette-text-hint) 10%, transparent);

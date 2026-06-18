@@ -2,11 +2,11 @@ import { Typography, Button, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
-import { featuredProducts } from '../../../data/productsData';
 import { useCart } from '../../../context/CartContext';
+import { ProductPrice } from '../../catalog/ProductPrice/ProductPrice';
 import './styles.scss';
 
-export const FeaturedProducts = () => {
+export const FeaturedProducts = ({ products }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
 
@@ -42,7 +42,7 @@ export const FeaturedProducts = () => {
       </div>
 
       <div className="products-grid">
-        {featuredProducts.map((product) => (
+        {products.map((product) => (
           <div
             key={product.id}
             className="product-card"
@@ -50,11 +50,11 @@ export const FeaturedProducts = () => {
           >
             <div className="product-image-container">
               <img
-                src={product.img}
-                alt={product.title}
+                src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
+                alt={product.nombre}
                 className="product-image"
               />
-              {product.badge && (
+              {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
                 <span className="product-badge">
                   {product.badge}
                 </span>
@@ -78,23 +78,16 @@ export const FeaturedProducts = () => {
                 variant="caption"
                 className="product-category"
               >
-                {product.category}
+                {product.categoria}
               </Typography>
               <Typography
                 variant="body1"
                 className="product-title"
               >
-                {product.title}
+                {product.nombre}
               </Typography>
               <div className="product-price-container">
-                <Typography variant="body1" className="product-price">
-                  {typeof product.price === 'number' ? `$${product.price.toFixed(2)}` : product.price}
-                </Typography>
-                {product.oldPrice && (
-                  <Typography variant="body2" className="product-old-price">
-                    {typeof product.oldPrice === 'number' ? `$${product.oldPrice.toFixed(2)}` : product.oldPrice}
-                  </Typography>
-                )}
+                <ProductPrice product={product} />
               </div>
             </div>
           </div>

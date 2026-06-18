@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { heroSlides, HERO_SLIDE_INTERVAL_MS } from '../../../data/heroSlides';
+import { useAuth } from '../../../context/AuthContext';
 import './styles.scss';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
@@ -58,16 +60,18 @@ export const HeroSection = () => {
           >
             Ver catálogo
           </Button>
-          <Button
-            variant="outlined"
-            sx={{
-              px: 4,
-              py: 2,
-            }}
-            onClick={() => navigate('/login')}
-          >
-            Iniciar sesión
-          </Button>
+          {!isAuthenticated && (
+            <Button
+              variant="outlined"
+              sx={{
+                px: 4,
+                py: 2,
+              }}
+              onClick={() => navigate('/login')}
+            >
+              Iniciar sesión
+            </Button>
+          )}
         </div>
       </div>
     </section>

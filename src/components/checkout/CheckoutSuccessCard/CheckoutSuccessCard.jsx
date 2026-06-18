@@ -61,7 +61,7 @@ export const CheckoutSuccessCard = ({ orderId, pointsEarned, productImages, extr
       </div>
 
       <Typography className="support-text">
-        ¿Tienes alguna duda? <span className="support-link">Contacta a soporte élite</span>
+        ¿Tienes alguna duda? <span className="support-link"><a href="https://api.whatsapp.com/send/?phone=5491130638729">Contacta a soporte élite</a></span>
       </Typography>
     </div>
   );

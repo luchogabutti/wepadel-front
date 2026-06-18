@@ -2,21 +2,24 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InputBase, Paper, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { allProducts } from '../../../../data/productsData';
+import { useProducts } from '../../../../context/ProductsContext';
 
 export const ProductSearch = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const { products } = useProducts();
 
   const normalizedQuery = query.trim().toLowerCase();
   const results = normalizedQuery
-    ? allProducts
+    ? products
         .filter(
           (product) =>
-            product.title.toLowerCase().includes(normalizedQuery) ||
-            product.categoryId.toLowerCase().includes(normalizedQuery) ||
-            (product.category && product.category.toLowerCase().includes(normalizedQuery))
+            product.estaHabilitado !== false &&
+            ((product.nombre || product.descripcion || '')
+              .toLowerCase()
+              .includes(normalizedQuery) ||
+              (product.categoria || '').toLowerCase().includes(normalizedQuery))
         )
         .slice(0, 8)
     : [];
@@ -59,8 +62,11 @@ export const ProductSearch = () => {
                 className="product-search-option"
                 onMouseDown={() => handleSelect(product.id)}
               >
-                <img src={product.img} alt="" />
-                <span>{product.title}</span>
+                <img
+                  src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
+                  alt=""
+                />
+                <span>{product.nombre}</span>
               </button>
             ))
           )}

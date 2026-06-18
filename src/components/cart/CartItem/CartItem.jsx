@@ -48,9 +48,16 @@ export const CartItem = ({ item, onQuantityChange, onRemove }) => {
           <Typography variant="body2" className="item-description">
             {item.description}
           </Typography>
-          <Typography variant="subtitle1" className="item-unit-price">
-            {formatCartPrice(item.unitPrice)}
-          </Typography>
+          <div className="item-pricing">
+            <Typography variant="subtitle1" className="item-unit-price">
+              {formatCartPrice(item.unitPrice)}
+            </Typography>
+            {item.hasDiscount && (
+              <Typography variant="body2" className="item-unit-price-old">
+                {formatCartPrice(item.originalUnitPrice)}
+              </Typography>
+            )}
+          </div>
         </div>
 
         <div className="item-actions">
