@@ -74,8 +74,16 @@ export const OrderCard = ({ order, showCustomer = false, onCancel, onReorder }) 
       <Box className="order-card-body">
         <Box className="items-previews-row">
           {visibleItems.map((item, idx) => (
-            <Box key={idx} className="item-thumbnail-box">
-              <img src={item.image} alt={item.name} className="item-thumbnail-img" />
+            <Box key={idx} className="item-preview">
+              <Box className="item-thumbnail-box">
+                <img src={item.image} alt={item.name} className="item-thumbnail-img" />
+              </Box>
+              <Typography variant="caption" className="item-preview-name" title={item.name}>
+                {item.name}
+              </Typography>
+              <Typography variant="caption" className="item-preview-qty">
+                x{item.quantity}
+              </Typography>
             </Box>
           ))}
           {remainingCount > 0 && (

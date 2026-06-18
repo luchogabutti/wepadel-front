@@ -5,11 +5,13 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
 import { isRegisterFormValid } from '../../../utils/authValidation';
 import { useAuth } from '../../../context/AuthContext';
+import { useAppSnackbar } from '../../../hooks/useAppSnackbar';
 import './styles.scss';
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { notifyError } = useAppSnackbar();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -33,7 +35,9 @@ export const RegisterForm = () => {
       });
       navigate('/');
     } catch (err) {
-      setError(err.message || 'No se pudo crear la cuenta. Intentá de nuevo.');
+      const message = err.message || 'No se pudo crear la cuenta. Intentá de nuevo.';
+      setError(message);
+      notifyError(message);
     } finally {
       setSubmitting(false);
     }

@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Alert, Grid } from '@mui/material';
-import { PageSnackbar } from '../components/general/PageSnackbar/PageSnackbar';
+import { Grid } from '@mui/material';
+import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { PageHeader } from '../components/layout/PageHeader';
 import { ProfileDataCard } from '../components/profile/ProfileDataCard/ProfileDataCard';
 import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/ProfileBenefitsGrid';
 import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
 import { useAuth } from '../context/AuthContext';
+import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { getUsuarioById, updateUsuario } from '../services/usuariosService';
 import { getPuntos } from '../services/puntosService';
 
@@ -19,25 +20,25 @@ const splitNombre = (nombreApellido = '') => {
 
 export const ProfilePage = () => {
   const { user, updateUser } = useAuth();
+  const { notifySuccess } = useAppSnackbar();
   const usuarioId = user?.id;
 
   const [usuario, setUsuario] = useState(null);
   const [points, setPoints] = useState(0);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-    key: 0,
-  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!usuarioId) return;
-    getUsuarioById(usuarioId)
-      .then(setUsuario)
-      .catch((err) => console.error('Error al obtener el perfil:', err));
-    getPuntos(usuarioId)
-      .then((data) => setPoints(data?.cantidad ?? 0))
-      .catch((err) => console.error('Error al obtener los puntos:', err));
+    if (!usuarioId) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    Promise.all([
+      getUsuarioById(usuarioId).then(setUsuario),
+      getPuntos(usuarioId).then((data) => setPoints(data?.cantidad ?? 0)),
+    ])
+      .catch((err) => console.error('Error al cargar el perfil:', err))
+      .finally(() => setLoading(false));
   }, [usuarioId]);
 
   const datos = useMemo(() => {
@@ -45,19 +46,6 @@ export const ProfilePage = () => {
     const { firstName, lastName } = splitNombre(fuente.nombreApellido);
     return { firstName, lastName, email: fuente.mail ?? '' };
   }, [usuario, user]);
-
-  const showSnackbar = (message, severity = 'success') => {
-    setSnackbar((prev) => ({
-      open: true,
-      message,
-      severity,
-      key: prev.key + 1,
-    }));
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
 
   const handleSave = async (form) => {
     const nombreApellido = `${form.firstName} ${form.lastName}`.trim();
@@ -68,6 +56,10 @@ export const ProfilePage = () => {
     setUsuario(actualizado);
     updateUser({ nombreApellido, mail: form.email });
   };
+
+  if (loading) {
+    return <LoadingState message="Cargando tu perfil..." />;
+  }
 
   return (
     <>
@@ -85,7 +77,7 @@ export const ProfilePage = () => {
             lastName={datos.lastName}
             email={datos.email}
             onSave={handleSave}
-            onSaved={() => showSnackbar('Datos guardados.')}
+            onSaved={() => notifySuccess('Datos guardados.')}
           />
         </Grid>
         <Grid size={{ xs: 12, lg: 4 }}>
@@ -94,13 +86,6 @@ export const ProfilePage = () => {
       </Grid>
 
       <ProfileBenefitsGrid />
-
-      <Alert severity="info" sx={{ mt: 3 }}>
-        El botón &quot;Panel Admin&quot; es solo para esta demo y en producción se quitará del
-        perfil del cliente.
-      </Alert>
-
-      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, CircularProgress, Typography, Alert } from '@mui/material';
+import { Typography, Alert } from '@mui/material';
+import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
@@ -28,11 +29,7 @@ export const CatalogPage = () => {
 
   const renderContent = () => {
     if (loading) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-          <CircularProgress color="primary" />
-        </Box>
-      );
+      return <LoadingState message="Cargando productos..." />;
     }
 
     if (error) {

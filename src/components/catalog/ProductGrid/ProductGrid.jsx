@@ -11,10 +11,9 @@ import {
 import { alpha } from '@mui/material/styles';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ProductCard } from '../ProductCard/ProductCard';
-import {
-  TablePaginationFooter,
-  buildShowingLabel,
-} from '../../general/TablePaginationFooter/TablePaginationFooter';
+import { TablePaginationFooter } from '../../general/TablePaginationFooter/TablePaginationFooter';
+import { buildShowingLabel } from '../../../utils/paginationLabels';
+import { usePagination } from '../../../hooks/usePagination';
 import './styles.scss';
 
 const STEP_FALLBACK = 500;
@@ -50,6 +49,9 @@ export const ProductGrid = ({ products, activeCategory }) => {
 
     return result;
   }, [products, sortOrder, priceRange]);
+
+  const { paginatedItems, page, setPage, totalPages, rangeStart, rangeEnd, totalCount } =
+    usePagination(filteredAndSorted, 12);
 
   const hasActiveFilters =
     sortOrder !== 'default' || priceRange[0] !== 0 || priceRange[1] !== maxPrice;
@@ -218,7 +220,7 @@ export const ProductGrid = ({ products, activeCategory }) => {
           </div>
         ) : (
           <div className="grid">
-            {filteredAndSorted.map((product) => (
+            {paginatedItems.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -227,7 +229,10 @@ export const ProductGrid = ({ products, activeCategory }) => {
         {filteredAndSorted.length > 0 && (
           <TablePaginationFooter
             className="table-pagination-footer--catalog"
-            label={buildShowingLabel(filteredAndSorted.length, filteredAndSorted.length, 'productos')}
+            label={buildShowingLabel(rangeStart, rangeEnd, totalCount, 'productos')}
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
           />
         )}
       </main>

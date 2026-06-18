@@ -4,6 +4,7 @@ import { useAuth } from './AuthContext';
 import { useProducts } from './ProductsContext';
 import * as carritoService from '../services/carritoService';
 import { PLACEHOLDER_IMG } from '../services/productMapper';
+import { notifySuccess, notifyError } from '../utils/appSnackbar';
 
 const CartContext = createContext(null);
 
@@ -28,7 +29,6 @@ export const CartProvider = ({ children }) => {
   const isCliente = isAuthenticated && !isAdmin;
 
   const [carrito, setCarrito] = useState(null);
-  const [notification, setNotification] = useState({ open: false, message: '' });
 
   const imageById = useMemo(() => {
     const map = new Map();
@@ -62,10 +62,6 @@ export const CartProvider = ({ children }) => {
     refresh();
   }, [refresh]);
 
-  const closeNotification = () => {
-    setNotification((prev) => ({ ...prev, open: false }));
-  };
-
   const addItem = useCallback(
     async (product, quantity = 1) => {
       if (!isAuthenticated) {
@@ -77,13 +73,10 @@ export const CartProvider = ({ children }) => {
       try {
         await carritoService.addItem(usuarioId, product.id, quantity);
         await refresh();
-        setNotification({
-          open: true,
-          message: `${product.nombre} agregado al carrito exitosamente.`,
-        });
+        notifySuccess(`${product.nombre} agregado al carrito exitosamente.`);
       } catch (error) {
         console.error('Error al agregar al carrito:', error);
-        setNotification({ open: true, message: 'No se pudo agregar el producto al carrito.' });
+        notifyError('No se pudo agregar el producto al carrito.');
       }
     },
     [isAuthenticated, isCliente, usuarioId, navigate, refresh]
@@ -97,6 +90,7 @@ export const CartProvider = ({ children }) => {
         await refresh();
       } catch (error) {
         console.error('Error al actualizar la cantidad:', error);
+        notifyError('No se pudo actualizar la cantidad.');
       }
     },
     [isCliente, usuarioId, refresh]
@@ -110,6 +104,7 @@ export const CartProvider = ({ children }) => {
         await refresh();
       } catch (error) {
         console.error('Error al quitar el producto:', error);
+        notifyError('No se pudo quitar el producto del carrito.');
       }
     },
     [isCliente, usuarioId, refresh]
@@ -122,6 +117,7 @@ export const CartProvider = ({ children }) => {
       await refresh();
     } catch (error) {
       console.error('Error al vaciar el carrito:', error);
+      notifyError('No se pudo vaciar el carrito.');
     }
   }, [isCliente, usuarioId, refresh]);
 
@@ -129,13 +125,11 @@ export const CartProvider = ({ children }) => {
     items,
     itemCount,
     subtotal,
-    notification,
     addItem,
     updateQuantity,
     removeItem,
     clearCart,
     refresh,
-    closeNotification,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -85,9 +85,20 @@
     flex-shrink: 0;
   }
 
+  .order-detail-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
   .order-detail-item-name {
     color: var(--mui-palette-text-emphasis);
     line-height: 1.4;
+  }
+
+  .order-detail-item-meta {
+    color: var(--mui-palette-text-secondary);
   }
 }
 
