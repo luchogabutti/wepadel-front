@@ -9,7 +9,6 @@ import {
   Checkbox,
   Link,
   InputAdornment,
-  Alert,
 } from '@mui/material';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LockIcon from '@mui/icons-material/Lock';
@@ -27,7 +26,6 @@ export const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
-  const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const canSubmit = isLoginFormValid({ email, password });
@@ -36,14 +34,12 @@ export const LoginForm = () => {
     e.preventDefault();
     if (!canSubmit || submitting) return;
 
-    setError('');
     setSubmitting(true);
     try {
       await login({ email: email.trim(), password, remember });
       navigate('/');
     } catch (err) {
       const message = err.message || 'No se pudo iniciar sesión. Revisá tus datos.';
-      setError(message);
       notifyError(message);
     } finally {
       setSubmitting(false);
@@ -60,12 +56,6 @@ export const LoginForm = () => {
       footerActionTo="/registro"
       maxWidth="420px"
     >
-      {error && (
-        <Alert severity="error" sx={{ mb: 1 }}>
-          {error}
-        </Alert>
-      )}
-
       <Box className="form-field">
         <Typography variant="caption" className="field-label">
           Email
