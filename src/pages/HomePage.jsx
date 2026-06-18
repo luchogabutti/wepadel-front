@@ -1,26 +1,23 @@
 import { HeroSection } from '../components/home/HeroSection/HeroSection';
 import { FeaturedProducts } from '../components/home/FeaturedProducts/FeaturedProducts';
 import { CategoriesSection } from '../components/home/CategoriesSection/CategoriesSection';
-import { useState, useEffect } from 'react';
-import { getProducts } from '../services/productsService';
+import { useMemo } from 'react';
+import { useProducts } from '../context/ProductsContext';
+
+const FEATURED_COUNT = 4;
 
 export const HomePage = () => {
-  const [products, setProducts] = useState([]);
+  const { products } = useProducts();
 
-  useEffect(() => {
-    getProducts()
-      .then((data) => {
-        setProducts(data.filter((p) => p.estaHabilitado !== false));
-      })
-      .catch((error) => {
-        console.error('Error fetching products:', error);
-      });
-  }, []);
+  const featured = useMemo(
+    () => products.filter((p) => p.estaHabilitado !== false).slice(0, FEATURED_COUNT),
+    [products]
+  );
 
   return (
     <>
       <HeroSection />
-      <FeaturedProducts products={products} />
+      <FeaturedProducts products={featured} />
       <CategoriesSection />
     </>
   );

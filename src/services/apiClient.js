@@ -2,19 +2,23 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:80
 
 export const AUTH_STORAGE_KEY = 'wepadel_auth';
 
-const getStoredToken = () => {
+export const getStoredAuth = () => {
   try {
-    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-    return raw ? JSON.parse(raw).token : null;
+    const raw =
+      localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 };
 
+const getStoredToken = () => getStoredAuth()?.token ?? null;
+
 export const apiRequest = async (path, { method = 'GET', body, auth = false, headers = {} } = {}) => {
   const finalHeaders = { ...headers };
+  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
 
-  if (body !== undefined) {
+  if (body !== undefined && !isFormData) {
     finalHeaders['Content-Type'] = 'application/json';
   }
 
@@ -28,7 +32,7 @@ export const apiRequest = async (path, { method = 'GET', body, auth = false, hea
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers: finalHeaders,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
   });
 
   const isJson = response.headers.get('content-type')?.includes('application/json');

@@ -21,6 +21,7 @@ import { AdminEditProductPage } from './pages/admin/AdminEditProductPage'
 import { AboutUsPage } from './pages/AboutUsPage'
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
 import { TermsOfServicePage } from './pages/TermsOfServicePage'
+import { ProtectedRoute } from './components/general/ProtectedRoute/ProtectedRoute'
 
 const App = () => {
   return (
@@ -40,19 +41,23 @@ const App = () => {
         <Route path="politica-de-privacidad" element={<PrivacyPolicyPage />} />
         <Route path="terminos-de-servicio" element={<TermsOfServicePage />} />
 
-        <Route element={<ProfileAreaLayout />}>
-          <Route path="perfil" element={<ProfilePage />} />
-          <Route path="perfil/ordenes" element={<OrdersPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<ProfileAreaLayout />}>
+            <Route path="perfil" element={<ProfilePage />} />
+            <Route path="perfil/ordenes" element={<OrdersPage />} />
+          </Route>
         </Route>
 
-        <Route path="admin" element={<AdminAreaLayout />}>
-          <Route index element={<Navigate to="catalogo" replace />} />
-          <Route path="catalogo" element={<AdminCatalogPage />} />
-          <Route path="catalogo/editar/:productId" element={<AdminEditProductPage />} />
-          <Route path="stock" element={<AdminStockPage />} />
-          <Route path="descuentos" element={<AdminDiscountsPage />} />
-          <Route path="pedidos" element={<AdminOrdersPage />} />
-          <Route path="perfil" element={<AdminProfilePage />} />
+        <Route element={<ProtectedRoute requireAdmin />}>
+          <Route path="admin" element={<AdminAreaLayout />}>
+            <Route index element={<Navigate to="catalogo" replace />} />
+            <Route path="catalogo" element={<AdminCatalogPage />} />
+            <Route path="catalogo/editar/:productId" element={<AdminEditProductPage />} />
+            <Route path="stock" element={<AdminStockPage />} />
+            <Route path="descuentos" element={<AdminDiscountsPage />} />
+            <Route path="pedidos" element={<AdminOrdersPage />} />
+            <Route path="perfil" element={<AdminProfilePage />} />
+          </Route>
         </Route>
 
       </Route>

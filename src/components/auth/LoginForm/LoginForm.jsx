@@ -9,7 +9,6 @@ import {
   Checkbox,
   Link,
   InputAdornment,
-  Alert,
 } from '@mui/material';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LockIcon from '@mui/icons-material/Lock';
@@ -17,15 +16,16 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
 import { isLoginFormValid } from '../../../utils/authValidation';
 import { useAuth } from '../../../context/AuthContext';
+import { useAppSnackbar } from '../../../hooks/useAppSnackbar';
 import './styles.scss';
 
 export const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { notifyError } = useAppSnackbar();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
-  const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const canSubmit = isLoginFormValid({ email, password });
@@ -34,13 +34,13 @@ export const LoginForm = () => {
     e.preventDefault();
     if (!canSubmit || submitting) return;
 
-    setError('');
     setSubmitting(true);
     try {
-      await login({ email: email.trim(), password });
+      await login({ email: email.trim(), password, remember });
       navigate('/');
     } catch (err) {
-      setError(err.message || 'No se pudo iniciar sesión. Revisá tus datos.');
+      const message = err.message || 'No se pudo iniciar sesión. Revisá tus datos.';
+      notifyError(message);
     } finally {
       setSubmitting(false);
     }
@@ -56,12 +56,6 @@ export const LoginForm = () => {
       footerActionTo="/registro"
       maxWidth="420px"
     >
-      {error && (
-        <Alert severity="error" sx={{ mb: 1 }}>
-          {error}
-        </Alert>
-      )}
-
       <Box className="form-field">
         <Typography variant="caption" className="field-label">
           Email

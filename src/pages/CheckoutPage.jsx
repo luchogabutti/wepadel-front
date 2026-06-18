@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Stack } from '@mui/material';
+import { Grid, Stack, Alert } from '@mui/material';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { CheckoutProductSummary } from '../components/checkout/CheckoutProductSummary/CheckoutProductSummary';
@@ -8,19 +8,26 @@ import { CheckoutShippingCard } from '../components/checkout/CheckoutShippingCar
 import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/CheckoutPaymentForm';
 import { CheckoutPointsCard } from '../components/checkout/CheckoutPointsCard/CheckoutPointsCard';
 import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDetail/CheckoutPaymentDetail';
-import {
-  CHECKOUT_ITEMS,
-  CHECKOUT_SUMMARY,
-  AVAILABLE_POINTS,
-} from '../data/cartData';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { useAppSnackbar } from '../hooks/useAppSnackbar';
+import { getPuntos } from '../services/puntosService';
+import { createOrden } from '../services/ordenesService';
 import {
   isCheckoutReady,
   isShippingValid,
   getPointsDiscount,
   getCheckoutValidationMessage,
 } from '../utils/checkoutValidation';
+
+const MONTO_ENVIO = 0;
+
 export const CheckoutPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { items, subtotal, refresh } = useCart();
+  const { notifyError } = useAppSnackbar();
+  const usuarioId = user?.id;
 
   const [shippingData, setShippingData] = useState({
     address: '',
@@ -41,33 +48,42 @@ export const CheckoutPage = () => {
   const [manualPoints, setManualPoints] = useState('');
   const [showPaymentValidation, setShowPaymentValidation] = useState(false);
 
+  const [puntos, setPuntos] = useState({ cantidad: 0, conversion: 5 });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!usuarioId) return;
+    getPuntos(usuarioId)
+      .then((data) => {
+        setPuntos({
+          cantidad: data?.cantidad ?? 0,
+          conversion: data?.conversion ?? 5,
+        });
+      })
+      .catch((err) => console.error('Error al obtener puntos:', err));
+  }, [usuarioId]);
+
+  const availablePoints = puntos.cantidad;
+  const conversion = puntos.conversion || 1;
+
   const pointsState = {
     usePoints,
     pointsMode,
     manualPoints,
-    availablePoints: AVAILABLE_POINTS,
+    availablePoints,
   };
 
-  const subtotal = CHECKOUT_SUMMARY.subtotal;
+  const puntosUsados = getPointsDiscount(usePoints, pointsMode, manualPoints, availablePoints);
+  const pointsDiscount = puntosUsados * conversion;
+  const total = Math.max(subtotal + MONTO_ENVIO - pointsDiscount, 0);
 
-  const pointsDiscount = getPointsDiscount(
-    usePoints,
-    pointsMode,
-    manualPoints,
-    AVAILABLE_POINTS
-  );
+  const hasItems = items.length > 0;
+  const canConfirm = hasItems && isCheckoutReady(shippingCompleted, formData, pointsState);
 
-  const total = Math.max(subtotal - pointsDiscount, 0);
-
-  const canConfirm = isCheckoutReady(shippingCompleted, formData, pointsState);
-
-  const validationMessage = getCheckoutValidationMessage(
-    shippingCompleted,
-    formData,
-    pointsState
-  );
-
-  const shouldShowPaymentValidation = showPaymentValidation;
+  const validationMessage = !hasItems
+    ? 'Tu carrito está vacío. Agregá productos antes de finalizar la compra.'
+    : getCheckoutValidationMessage(shippingCompleted, formData, pointsState);
 
   const handleManualPointsChange = (value) => {
     setManualPoints(value);
@@ -91,16 +107,37 @@ export const CheckoutPage = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!canConfirm) {
       setShowPaymentValidation(true);
       return;
     }
 
-    const orderId = `WP-${Math.floor(10000 + Math.random() * 90000)}`;
-    navigate(`/checkout/confirmacion/${orderId}`, {
-      state: { pointsEarned: 120 },
-    });
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const payload = {
+        usuario: usuarioId,
+        direccion: `${shippingData.address}, ${shippingData.city}`,
+        cp: shippingData.postalCode,
+        montoEnvio: MONTO_ENVIO,
+        usaPuntos: usePoints && puntosUsados > 0,
+        puntosUsados: usePoints ? puntosUsados : 0,
+      };
+
+      const orden = await createOrden(usuarioId, payload);
+      await refresh();
+      navigate(`/checkout/confirmacion/${orden.id}`, {
+        state: { pointsEarned: orden.puntosGenerados },
+      });
+    } catch (err) {
+      const message = err.message || 'No se pudo confirmar la compra. Intentá nuevamente.';
+      setError(message);
+      notifyError(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -110,10 +147,16 @@ export const CheckoutPage = () => {
         subtitle="Revisá tu pedido y completá tu envio antes de finalizar la compra."
       />
 
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
+
       <Grid container spacing={4} alignItems="flex-start">
         <Grid size={{ xs: 12, lg: 8 }}>
           <Stack spacing={3}>
-            <CheckoutProductSummary items={CHECKOUT_ITEMS} />
+            <CheckoutProductSummary items={items} />
             <CheckoutShippingCard
               shippingData={shippingData}
               isCompleted={shippingCompleted}
@@ -125,7 +168,7 @@ export const CheckoutPage = () => {
               <CheckoutPaymentForm
                 formData={formData}
                 onFieldChange={handleFieldChange}
-                showValidation={shouldShowPaymentValidation}
+                showValidation={showPaymentValidation}
               />
             )}
           </Stack>
@@ -133,7 +176,7 @@ export const CheckoutPage = () => {
         <Grid size={{ xs: 12, lg: 4 }}>
           <Stack spacing={3}>
             <CheckoutPointsCard
-              availablePoints={AVAILABLE_POINTS}
+              availablePoints={availablePoints}
               usePoints={usePoints}
               onTogglePoints={setUsePoints}
               pointsMode={pointsMode}
@@ -145,7 +188,7 @@ export const CheckoutPage = () => {
               subtotal={subtotal}
               pointsDiscount={pointsDiscount}
               total={total}
-              canConfirm={canConfirm}
+              canConfirm={canConfirm && !submitting}
               validationMessage={validationMessage}
               onConfirm={handleConfirm}
             />

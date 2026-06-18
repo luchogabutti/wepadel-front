@@ -8,7 +8,7 @@ export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
 
-  const inStock = (product.stock ?? 1) > 0; // TODO: agregar data en backend/revisar — campo `stock`
+  const inStock = (product.stock ?? 1) > 0;
 
   const handleCardClick = () => {
     navigate(`/producto/${product.id}`);
@@ -24,7 +24,7 @@ export const ProductCard = ({ product }) => {
       <div className="image">
         <img
           src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
-          alt={product.nombre || product.descripcion}
+          alt={product.nombre}
           className="img"
         />
 
@@ -55,7 +55,7 @@ export const ProductCard = ({ product }) => {
             className="title"
             sx={{ fontWeight: 700, fontSize: '16px' }}
           >
-            {product.nombre || product.descripcion}
+            {product.nombre}
           </Typography>
           <div className="stock-info">
             <div

@@ -1,0 +1,49 @@
+import { apiRequest } from './apiClient';
+import { PLACEHOLDER_IMG } from './productMapper';
+
+const base = (usuarioId) => `/usuarios/${usuarioId}/ordenes`;
+
+export const getOrdenes = (usuarioId) => apiRequest(base(usuarioId), { auth: true });
+
+export const getOrdenById = (usuarioId, ordenId) =>
+  apiRequest(`${base(usuarioId)}/${ordenId}`, { auth: true });
+
+export const createOrden = (usuarioId, payload) =>
+  apiRequest(base(usuarioId), { method: 'POST', body: payload, auth: true });
+
+export const cancelarOrden = (usuarioId, ordenId) =>
+  apiRequest(`${base(usuarioId)}/${ordenId}/cancelar`, { method: 'PUT', auth: true });
+
+export const getAllOrdenes = () => apiRequest('/ordenes', { auth: true });
+
+const STATUS_MAP = {
+  CONFIRMADA: 'confirmada',
+  CANCELADA: 'cancelada',
+};
+
+const formatFecha = (iso) => {
+  if (!iso) return '';
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat('es-AR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
+
+export const mapOrden = (orden, imageById = new Map()) => ({
+  id: orden.id,
+  date: formatFecha(orden.fechaCompra),
+  status: STATUS_MAP[orden.estado] ?? 'confirmada',
+  total: Number(orden.total ?? 0),
+  pointsEarned: orden.puntosGenerados ?? 0,
+  pointsUsed: orden.puntosUsados ?? 0,
+  items: (orden.items ?? []).map((item) => ({
+    productId: item.producto?.id,
+    name: item.producto?.nombre,
+    quantity: item.cantidad,
+    unitPrice: Number(item.precioUnitario ?? 0),
+    image: imageById.get(item.producto?.id) || PLACEHOLDER_IMG,
+  })),
+});

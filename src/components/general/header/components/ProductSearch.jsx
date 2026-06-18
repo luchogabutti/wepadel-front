@@ -1,35 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InputBase, Paper, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { getProducts } from '../../../../services/productsService';
+import { useProducts } from '../../../../context/ProductsContext';
 
 export const ProductSearch = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    getProducts()
-      .then((data) => {
-        setProducts(data.filter((p) => p.estaHabilitado !== false));
-      })
-      .catch((error) => {
-        console.error('Error fetching products:', error);
-        // TODO: add toast of error
-      });
-  }, []);
+  const { products } = useProducts();
 
   const normalizedQuery = query.trim().toLowerCase();
   const results = normalizedQuery
     ? products
         .filter(
           (product) =>
-            (product.nombre || product.descripcion || '')
+            product.estaHabilitado !== false &&
+            ((product.nombre || product.descripcion || '')
               .toLowerCase()
               .includes(normalizedQuery) ||
-            (product.categoria || '').toLowerCase().includes(normalizedQuery)
+              (product.categoria || '').toLowerCase().includes(normalizedQuery))
         )
         .slice(0, 8)
     : [];
@@ -76,7 +66,7 @@ export const ProductSearch = () => {
                   src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
                   alt=""
                 />
-                <span>{product.nombre || product.descripcion}</span>
+                <span>{product.nombre}</span>
               </button>
             ))
           )}

@@ -1,17 +1,16 @@
 import { createContext, useContext, useState, useCallback } from 'react';
-import { AUTH_STORAGE_KEY } from '../services/apiClient';
+import { AUTH_STORAGE_KEY, getStoredAuth } from '../services/apiClient';
 import { login as loginRequest, register as registerRequest } from '../services/authService';
 
 const AuthContext = createContext(null);
 
-const readStoredAuth = () => {
-  try {
-    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
+const clearAuthStorage = () => {
+  localStorage.removeItem(AUTH_STORAGE_KEY);
+  sessionStorage.removeItem(AUTH_STORAGE_KEY);
 };
+
+const getActiveStorage = () =>
+  localStorage.getItem(AUTH_STORAGE_KEY) ? localStorage : sessionStorage;
 
 const mapAuthResponse = (data) => ({
   id: data.id,
@@ -22,21 +21,20 @@ const mapAuthResponse = (data) => ({
 });
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(readStoredAuth);
+  const [user, setUser] = useState(getStoredAuth);
 
-  const persist = useCallback((session) => {
+  const persist = useCallback((session, remember = false) => {
     setUser(session);
-    if (session) {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-    } else {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
-    }
+    clearAuthStorage();
+    if (!session) return;
+    const storage = remember ? localStorage : sessionStorage;
+    storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
   }, []);
 
   const login = useCallback(
-    async (credentials) => {
-      const session = mapAuthResponse(await loginRequest(credentials));
-      persist(session);
+    async ({ email, password, remember = false }) => {
+      const session = mapAuthResponse(await loginRequest({ email, password }));
+      persist(session, remember);
       return session;
     },
     [persist]
@@ -45,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   const register = useCallback(
     async (datos) => {
       const session = mapAuthResponse(await registerRequest(datos));
-      persist(session);
+      persist(session, true);
       return session;
     },
     [persist]
@@ -55,6 +53,18 @@ export const AuthProvider = ({ children }) => {
     persist(null);
   }, [persist]);
 
+  const updateUser = useCallback(
+    (cambios) => {
+      setUser((prev) => {
+        if (!prev) return prev;
+        const next = { ...prev, ...cambios };
+        getActiveStorage().setItem(AUTH_STORAGE_KEY, JSON.stringify(next));
+        return next;
+      });
+    },
+    []
+  );
+
   const value = {
     user,
     isAuthenticated: Boolean(user?.token),
@@ -62,6 +72,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

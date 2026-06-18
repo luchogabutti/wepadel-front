@@ -3,23 +3,15 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import './styles.scss';
 
-export const buildShowingLabel = (visibleCount, totalCount, entity = 'productos') => {
-  if (totalCount === 0) {
-    return `Mostrando 0 de 0 ${entity}`;
-  }
-
-  const shown = Math.max(0, Math.min(visibleCount, totalCount));
-
-  return `Mostrando 1-${shown} de ${totalCount} ${entity}`;
-};
-
 export const TablePaginationFooter = ({
   label,
   currentPage = 1,
-  totalPages = 3,
+  totalPages = 1,
+  onPageChange,
   className = '',
 }) => {
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+  const showControls = Boolean(onPageChange);
 
   return (
     <Box className={`table-pagination-footer ${className}`.trim()}>
@@ -27,25 +19,38 @@ export const TablePaginationFooter = ({
         {label}
       </Typography>
 
-      <Box className="table-pagination-footer__controls">
-        <button type="button" aria-label="Página anterior">
-          <KeyboardArrowLeftIcon />
-        </button>
-
-        {pages.map((page) => (
+      {showControls && (
+        <Box className="table-pagination-footer__controls">
           <button
-            key={page}
             type="button"
-            className={page === currentPage ? 'active' : undefined}
+            aria-label="Página anterior"
+            disabled={currentPage <= 1}
+            onClick={() => onPageChange(currentPage - 1)}
           >
-            {page}
+            <KeyboardArrowLeftIcon />
           </button>
-        ))}
 
-        <button type="button" aria-label="Página siguiente">
-          <KeyboardArrowRightIcon />
-        </button>
-      </Box>
+          {pages.map((page) => (
+            <button
+              key={page}
+              type="button"
+              className={page === currentPage ? 'active' : undefined}
+              onClick={() => onPageChange(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            type="button"
+            aria-label="Página siguiente"
+            disabled={currentPage >= totalPages}
+            onClick={() => onPageChange(currentPage + 1)}
+          >
+            <KeyboardArrowRightIcon />
+          </button>
+        </Box>
+      )}
     </Box>
   );
 };

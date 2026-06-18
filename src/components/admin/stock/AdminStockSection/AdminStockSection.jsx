@@ -13,10 +13,9 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { AdminSectionLayout } from '../../shared/AdminSectionLayout/AdminSectionLayout'
 import { AdminStatsGrid } from '../../shared/AdminStatsGrid/AdminStatsGrid'
 import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
-import {
-  TablePaginationFooter,
-  buildShowingLabel,
-} from '../../../general/TablePaginationFooter/TablePaginationFooter'
+import { TablePaginationFooter } from '../../../general/TablePaginationFooter/TablePaginationFooter'
+import { buildShowingLabel } from '../../../../utils/paginationLabels'
+import { usePagination } from '../../../../hooks/usePagination'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -85,6 +84,9 @@ export const AdminStockSection = ({
   const lowStockCount = Object.values(localStocks).filter((s) => s <= 10 && s > 0).length
   const outOfStockCount = Object.values(localStocks).filter((s) => s === 0).length
 
+  const { paginatedItems, page, setPage, totalPages, rangeStart, rangeEnd, totalCount } =
+    usePagination(products, 10)
+
   const stats = [
     {
       id: 'total-stock',
@@ -142,7 +144,10 @@ export const AdminStockSection = ({
       <AdminTableCard
         footer={
           <TablePaginationFooter
-            label={buildShowingLabel(products.length, products.length, 'productos')}
+            label={buildShowingLabel(rangeStart, rangeEnd, totalCount, 'productos')}
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
           />
         }
       >
@@ -158,7 +163,7 @@ export const AdminStockSection = ({
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => {
+            {paginatedItems.map((product) => {
               const currentStock = localStocks[product.id] ?? 0
               const isLow = currentStock <= 10 && currentStock > 0
               const isOut = currentStock === 0

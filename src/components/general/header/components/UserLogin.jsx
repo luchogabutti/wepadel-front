@@ -3,6 +3,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { Divider, IconButton, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
+import { ConfirmationDialog } from '../../ConfirmationDialog/ConfirmationDialog';
 
 export const UserLogin = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const UserLogin = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const iconSx = {
     color: 'primary.light',
     transition: 'opacity 0.2s ease-in-out',
@@ -70,10 +72,19 @@ export const UserLogin = () => {
 
         <Divider />
 
-        <MenuItem onClick={handleLogout}>
+        <MenuItem onClick={() => setLogoutDialogOpen(true)}>
           <ListItemText>Cerrar sesión</ListItemText>
         </MenuItem>
       </Menu>
+      <ConfirmationDialog
+        open={logoutDialogOpen}
+        onClose={() => setLogoutDialogOpen(false)}
+        onConfirm={handleLogout}
+        title="¿Cerrar sesión?"
+        subtitle="Vas a salir de tu cuenta en WePadel."
+        confirmLabel="Cerrar sesión"
+        confirmColor="primary"
+      />
     </>
   );
 };

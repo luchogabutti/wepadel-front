@@ -1,68 +1,75 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { AdminCatalogToolbar } from '../../components/admin/catalog/AdminCatalogToolbar/AdminCatalogToolbar';
-import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
+import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { AdminCatalogSection } from '../../components/admin/catalog/AdminCatalogSection/AdminCatalogSection';
 import { AdminProductModal } from '../../components/admin/catalog/AdminProductModal/AdminProductModal';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
-import { adminProducts, adminSectionContent } from '../../data/adminProductsData';
+import { adminSectionContent } from '../../data/adminProductsData';
+import { useAdminProducts } from '../../hooks/useAdminProducts';
+import {
+  createProducto,
+  updateProducto,
+  deleteProducto,
+  buildProductoRequest,
+} from '../../services/productsService';
+import { updateStock } from '../../services/stocksService';
 
 export const AdminCatalogPage = () => {
   const navigate = useNavigate();
+  const { products, loading, refresh } = useAdminProducts();
+  const { notifySuccess, notifyError } = useAppSnackbar();
   const [searchTerm, setSearchTerm] = useState('');
-  const [products, setProducts] = useState(adminProducts);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-    key: 0,
-  });
 
-  const showSnackbar = (message, severity = 'success') => {
-    setSnackbar((prev) => ({
-      open: true,
-      message,
-      severity,
-      key: prev.key + 1,
-    }));
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
-
-  const handleToggleProductEnabled = (productId) => {
+  const handleToggleProductEnabled = async (productId) => {
     const product = products.find((p) => p.id === productId);
-    const nextEnabled = !product?.enabled;
-
-    setProducts((current) =>
-      current.map((p) => (p.id === productId ? { ...p, enabled: nextEnabled } : p))
-    );
-
-    showSnackbar(nextEnabled ? 'Producto habilitado.' : 'Producto deshabilitado.');
+    if (!product) return;
+    const nextEnabled = !product.enabled;
+    try {
+      await updateProducto(productId, buildProductoRequest(product, { estaHabilitado: nextEnabled }));
+      await refresh();
+      notifySuccess(nextEnabled ? 'Producto habilitado.' : 'Producto deshabilitado.');
+    } catch (error) {
+      notifyError(error.message || 'No se pudo actualizar el producto.');
+    }
   };
 
   const handleRequestEditProduct = (product) => {
     navigate(`/admin/catalogo/editar/${product.id}`);
   };
 
-  const handleSaveProduct = () => {
-    setIsProductModalOpen(false);
-    showSnackbar('¡Producto creado con éxito!');
+  const handleSaveProduct = async (savedProduct) => {
+    try {
+      const creado = await createProducto(buildProductoRequest(savedProduct));
+      if (savedProduct.stock) {
+        await updateStock(creado.id, Number(savedProduct.stock));
+      }
+      await refresh();
+      setIsProductModalOpen(false);
+      notifySuccess('¡Producto creado con éxito!');
+    } catch (error) {
+      notifyError(error.message || 'No se pudo crear el producto.');
+    }
   };
 
   const handleCloseDeleteModal = () => {
     setProductToDelete(null);
   };
 
-  const handleConfirmDelete = () => {
-    if (productToDelete) {
-      setProducts((current) => current.filter((p) => p.id !== productToDelete.id));
+  const handleConfirmDelete = async () => {
+    if (!productToDelete) return;
+    try {
+      await deleteProducto(productToDelete.id);
+      await refresh();
+      notifySuccess('¡Producto eliminado con éxito!');
+    } catch (error) {
+      notifyError(error.message || 'No se pudo eliminar el producto.');
+    } finally {
+      setProductToDelete(null);
     }
-    setProductToDelete(null);
-    showSnackbar('¡Producto eliminado con éxito!');
   };
 
   return (
@@ -74,13 +81,18 @@ export const AdminCatalogPage = () => {
         onSearchChange={setSearchTerm}
         onCreateProduct={() => setIsProductModalOpen(true)}
       />
-      <AdminCatalogSection
-        searchTerm={searchTerm}
-        products={products}
-        onRequestEdit={handleRequestEditProduct}
-        onRequestDelete={setProductToDelete}
-        onToggleEnabled={handleToggleProductEnabled}
-      />
+
+      {loading ? (
+        <LoadingState message="Cargando catálogo..." />
+      ) : (
+        <AdminCatalogSection
+          searchTerm={searchTerm}
+          products={products}
+          onRequestEdit={handleRequestEditProduct}
+          onRequestDelete={setProductToDelete}
+          onToggleEnabled={handleToggleProductEnabled}
+        />
+      )}
 
       <AdminProductModal
         open={isProductModalOpen}
@@ -100,8 +112,6 @@ export const AdminCatalogPage = () => {
         confirmColor="error"
         center
       />
-
-      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

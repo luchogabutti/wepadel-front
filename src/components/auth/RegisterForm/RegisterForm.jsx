@@ -1,20 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, TextField, Alert } from '@mui/material';
+import { Box, Typography, Button, TextField } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
 import { isRegisterFormValid } from '../../../utils/authValidation';
 import { useAuth } from '../../../context/AuthContext';
+import { useAppSnackbar } from '../../../hooks/useAppSnackbar';
 import './styles.scss';
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { notifyError } = useAppSnackbar();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const canSubmit = isRegisterFormValid({ firstName, lastName, email, password });
@@ -23,7 +24,6 @@ export const RegisterForm = () => {
     e.preventDefault();
     if (!canSubmit || submitting) return;
 
-    setError('');
     setSubmitting(true);
     try {
       await register({
@@ -33,7 +33,8 @@ export const RegisterForm = () => {
       });
       navigate('/');
     } catch (err) {
-      setError(err.message || 'No se pudo crear la cuenta. Intentá de nuevo.');
+      const message = err.message || 'No se pudo crear la cuenta. Intentá de nuevo.';
+      notifyError(message);
     } finally {
       setSubmitting(false);
     }
@@ -49,12 +50,6 @@ export const RegisterForm = () => {
       footerActionTo="/login"
       maxWidth="450px"
     >
-      {error && (
-        <Alert severity="error" sx={{ mb: 1 }}>
-          {error}
-        </Alert>
-      )}
-
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
         <Box className="form-field" sx={{ flex: 1 }}>
           <Typography variant="caption" className="field-label">

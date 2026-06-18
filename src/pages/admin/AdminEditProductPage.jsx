@@ -1,33 +1,22 @@
-import { useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { AdminEditProductSection } from '../../components/admin/catalog/AdminEditProductSection/AdminEditProductSection';
-import { PageSnackbar } from '../../components/general/PageSnackbar/PageSnackbar';
-import { adminProducts } from '../../data/adminProductsData';
+import { useAppSnackbar } from '../../hooks/useAppSnackbar';
+import { useAdminProducts } from '../../hooks/useAdminProducts';
+import { updateProducto, buildProductoRequest } from '../../services/productsService';
+import { updateStock } from '../../services/stocksService';
 
 export const AdminEditProductPage = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-    key: 0,
-  });
+  const { products, loading, refresh } = useAdminProducts();
+  const { notifySuccess, notifyError } = useAppSnackbar();
 
-  const showSnackbar = (message, severity = 'success') => {
-    setSnackbar((prev) => ({
-      open: true,
-      message,
-      severity,
-      key: prev.key + 1,
-    }));
-  };
+  if (loading) {
+    return <LoadingState message="Cargando producto..." />;
+  }
 
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
-
-  const product = adminProducts.find((item) => String(item.id) === String(productId));
+  const product = products.find((item) => String(item.id) === String(productId));
 
   if (!product) {
     return <Navigate to="/admin/catalogo" replace />;
@@ -37,16 +26,21 @@ export const AdminEditProductPage = () => {
     navigate('/admin/catalogo');
   };
 
-  const handleSave = () => {
-    showSnackbar('¡Producto actualizado con éxito!');
-    window.setTimeout(() => navigate('/admin/catalogo'), 1200);
+  const handleSave = async (updatedProduct) => {
+    try {
+      await updateProducto(updatedProduct.id, buildProductoRequest(updatedProduct));
+      await updateStock(updatedProduct.id, Number(updatedProduct.stock));
+      await refresh();
+      notifySuccess('¡Producto actualizado con éxito!');
+      window.setTimeout(() => navigate('/admin/catalogo'), 1000);
+    } catch (error) {
+      notifyError(error.message || 'No se pudo actualizar el producto.');
+    }
   };
 
   return (
     <>
       <AdminEditProductSection product={product} onCancel={handleCancel} onSave={handleSave} />
-
-      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };

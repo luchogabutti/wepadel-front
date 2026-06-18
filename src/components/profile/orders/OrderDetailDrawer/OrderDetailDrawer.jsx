@@ -66,9 +66,14 @@ export const OrderDetailDrawer = ({ open, onClose, order }) => {
           {order.items.map((item, index) => (
             <Box key={index} className="order-detail-item">
               <img src={item.image} alt={item.name} className="order-detail-item-image" />
-              <Typography variant="body2" className="order-detail-item-name">
-                {item.name}
-              </Typography>
+              <Box className="order-detail-item-info">
+                <Typography variant="body2" className="order-detail-item-name">
+                  {item.name}
+                </Typography>
+                <Typography variant="caption" className="order-detail-item-meta">
+                  x{item.quantity} · ${item.unitPrice.toFixed(2)}
+                </Typography>
+              </Box>
             </Box>
           ))}
         </Box>

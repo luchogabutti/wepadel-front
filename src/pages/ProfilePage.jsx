@@ -1,31 +1,65 @@
-import { useState } from 'react';
-import { Alert, Grid } from '@mui/material';
-import { PageSnackbar } from '../components/general/PageSnackbar/PageSnackbar';
+import { useState, useEffect, useMemo } from 'react';
+import { Grid } from '@mui/material';
+import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { PageHeader } from '../components/layout/PageHeader';
 import { ProfileDataCard } from '../components/profile/ProfileDataCard/ProfileDataCard';
 import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/ProfileBenefitsGrid';
 import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
+import { useAuth } from '../context/AuthContext';
+import { useAppSnackbar } from '../hooks/useAppSnackbar';
+import { getUsuarioById, updateUsuario } from '../services/usuariosService';
+import { getPuntos } from '../services/puntosService';
+
+const splitNombre = (nombreApellido = '') => {
+  const parts = nombreApellido.trim().split(/\s+/);
+  return {
+    firstName: parts[0] ?? '',
+    lastName: parts.slice(1).join(' '),
+  };
+};
 
 export const ProfilePage = () => {
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-    key: 0,
-  });
+  const { user, updateUser } = useAuth();
+  const { notifySuccess } = useAppSnackbar();
+  const usuarioId = user?.id;
 
-  const showSnackbar = (message) => {
-    setSnackbar((prev) => ({
-      open: true,
-      message,
-      severity: 'success',
-      key: prev.key + 1,
-    }));
+  const [usuario, setUsuario] = useState(null);
+  const [points, setPoints] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!usuarioId) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    Promise.all([
+      getUsuarioById(usuarioId).then(setUsuario),
+      getPuntos(usuarioId).then((data) => setPoints(data?.cantidad ?? 0)),
+    ])
+      .catch((err) => console.error('Error al cargar el perfil:', err))
+      .finally(() => setLoading(false));
+  }, [usuarioId]);
+
+  const datos = useMemo(() => {
+    const fuente = usuario ?? user ?? {};
+    const { firstName, lastName } = splitNombre(fuente.nombreApellido);
+    return { firstName, lastName, email: fuente.mail ?? '' };
+  }, [usuario, user]);
+
+  const handleSave = async (form) => {
+    const nombreApellido = `${form.firstName} ${form.lastName}`.trim();
+    const actualizado = await updateUsuario(usuarioId, {
+      nombreApellido,
+      mail: form.email,
+    });
+    setUsuario(actualizado);
+    updateUser({ nombreApellido, mail: form.email });
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
+  if (loading) {
+    return <LoadingState message="Cargando tu perfil..." />;
+  }
 
   return (
     <>
@@ -37,21 +71,21 @@ export const ProfilePage = () => {
 
       <Grid container spacing={3} className="profile-section">
         <Grid size={{ xs: 12, lg: 8 }}>
-          <ProfileDataCard onSaved={() => showSnackbar('Datos guardados.')} />
+          <ProfileDataCard
+            key={`${datos.firstName}-${datos.lastName}-${datos.email}`}
+            firstName={datos.firstName}
+            lastName={datos.lastName}
+            email={datos.email}
+            onSave={handleSave}
+            onSaved={() => notifySuccess('Datos guardados.')}
+          />
         </Grid>
         <Grid size={{ xs: 12, lg: 4 }}>
-          <PointsBadge pointsValue={500} />
+          <PointsBadge pointsValue={points} />
         </Grid>
       </Grid>
 
       <ProfileBenefitsGrid />
-
-      <Alert severity="info" sx={{ mt: 3 }}>
-        El botón &quot;Panel Admin&quot; es solo para esta demo y en producción se quitará del
-        perfil del cliente.
-      </Alert>
-
-      <PageSnackbar snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );
 };
