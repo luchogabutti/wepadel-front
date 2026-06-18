@@ -62,7 +62,7 @@ export const UserLogin = () => {
                 <ListItemText>Mi perfil</ListItemText>
               </MenuItem>,
               <MenuItem key="ordenes" onClick={() => handleNavigate('/perfil/ordenes')}>
-                <ListItemText>Mis pedidos</ListItemText>
+                <ListItemText>Mis órdenes</ListItemText>
               </MenuItem>,
             ]}
 

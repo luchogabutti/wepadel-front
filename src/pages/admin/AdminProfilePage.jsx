@@ -4,6 +4,7 @@ import { adminSectionContent } from '../../data/adminProductsData';
 import { useAuth } from '../../context/AuthContext';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { getUsuarioById, updateUsuario } from '../../services/usuariosService';
+import { useNavigate } from 'react-router-dom';
 
 const splitNombre = (nombreApellido = '') => {
   const parts = nombreApellido.trim().split(/\s+/);
@@ -11,9 +12,10 @@ const splitNombre = (nombreApellido = '') => {
 };
 
 export const AdminProfilePage = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
   const { notifySuccess } = useAppSnackbar();
   const usuarioId = user?.id;
+  const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState(null);
 
@@ -32,12 +34,24 @@ export const AdminProfilePage = () => {
 
   const handleSave = async (form) => {
     const nombreApellido = `${form.firstName} ${form.lastName}`.trim();
+    const emailChanged =
+      form.email.trim().toLowerCase() !== (datos.email ?? '').trim().toLowerCase();
+
     const actualizado = await updateUsuario(usuarioId, {
       nombreApellido,
-      mail: form.email,
+      mail: form.email.trim(),
     });
     setUsuario(actualizado);
-    updateUser({ nombreApellido, mail: form.email });
+    updateUser({ nombreApellido, mail: form.email.trim() });
+
+    if (emailChanged) {
+      notifySuccess('Email actualizado. Iniciá sesión con tu nuevo email.');
+      logout();
+      navigate('/login');
+      return;
+    }
+
+    notifySuccess('Datos guardados.');
   };
 
   return (
@@ -48,7 +62,6 @@ export const AdminProfilePage = () => {
       lastName={datos.lastName}
       email={datos.email}
       onSave={handleSave}
-      onProfileSaved={() => notifySuccess('Datos guardados.')}
     />
   );
 };
