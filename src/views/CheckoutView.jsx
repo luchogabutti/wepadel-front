@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Stack, Alert } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { CheckoutProductSummary } from '../components/checkout/CheckoutProductSummary/CheckoutProductSummary';
@@ -50,7 +50,6 @@ export const CheckoutView = () => {
 
   const [puntos, setPuntos] = useState({ cantidad: 0, conversion: 5 });
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!usuarioId) return;
@@ -114,7 +113,6 @@ export const CheckoutView = () => {
     }
 
     setSubmitting(true);
-    setError('');
 
     try {
       const payload = {
@@ -133,7 +131,6 @@ export const CheckoutView = () => {
       });
     } catch (err) {
       const message = err.message || 'No se pudo confirmar la compra. Intentá nuevamente.';
-      setError(message);
       notifyError(message);
     } finally {
       setSubmitting(false);
@@ -146,12 +143,6 @@ export const CheckoutView = () => {
         title="Checkout"
         subtitle="Revisá tu pedido y completá tu envio antes de finalizar la compra."
       />
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>
-      )}
 
       <Grid container spacing={4} alignItems="flex-start">
         <Grid size={{ xs: 12, lg: 8 }}>

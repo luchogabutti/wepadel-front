@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Typography, Button, TextField, Grid, Alert } from '@mui/material';
+import { Typography, Button, TextField, Grid } from '@mui/material';
 import { getProfileFieldError, isProfileFormValid } from '../../../utils/profileValidation';
+import { useAppSnackbar } from '../../../hooks/useAppSnackbar';
 import './styles.scss';
 
 export const ProfileDataCard = ({
@@ -13,9 +14,9 @@ export const ProfileDataCard = ({
   const [isEditing, setIsEditing] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
   const [form, setForm] = useState({ firstName, lastName, email });
   const [saved, setSaved] = useState({ firstName, lastName, email });
+  const { notifyError } = useAppSnackbar();
 
   useEffect(() => {
     if (!isEditing) {
@@ -40,7 +41,6 @@ export const ProfileDataCard = ({
   const handleCancel = () => {
     setForm({ ...saved });
     setShowErrors(false);
-    setError('');
     setIsEditing(false);
   };
 
@@ -51,7 +51,6 @@ export const ProfileDataCard = ({
     }
 
     setSaving(true);
-    setError('');
     try {
       await onSave?.(form);
       setSaved({ ...form });
@@ -59,7 +58,7 @@ export const ProfileDataCard = ({
       setIsEditing(false);
       onSaved?.();
     } catch (err) {
-      setError(err.message || 'No se pudieron guardar los datos.');
+      notifyError(err.message || 'No se pudieron guardar los datos.');
     } finally {
       setSaving(false);
     }
@@ -94,12 +93,6 @@ export const ProfileDataCard = ({
           </Button>
         )}
       </div>
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, sm: 6 }}>
