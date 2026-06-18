@@ -1,7 +1,9 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { getProducts, getImagenesByProductoId } from '../services/productsService';
 import { getStockByProducto } from '../services/stocksService';
+import { getDescuentosByProducto } from '../services/descuentosService';
 import { mapProducto } from '../services/productMapper';
+import { enrichProductoConDescuento } from '../utils/discountUtils';
 
 const ProductsContext = createContext(null);
 
@@ -17,13 +19,17 @@ export const ProductsProvider = ({ children }) => {
       const list = await getProducts();
       const withDetails = await Promise.all(
         list.map(async (producto) => {
-          const [imagenes, stock] = await Promise.all([
+          const [imagenes, stock, descuentos] = await Promise.all([
             getImagenesByProductoId(producto.id).catch(() => []),
             getStockByProducto(producto.id)
-              .then((s) => s?.cantidad)
-              .catch(() => undefined),
+              .then((s) => s?.cantidad ?? 0)
+              .catch(() => 0),
+            getDescuentosByProducto(producto.id).catch(() => []),
           ]);
-          return { ...mapProducto(producto, imagenes), stock };
+          return enrichProductoConDescuento(
+            { ...mapProducto(producto, imagenes), stock },
+            descuentos
+          );
         })
       );
       setProducts(withDetails);

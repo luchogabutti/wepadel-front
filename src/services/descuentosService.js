@@ -1,7 +1,7 @@
 import { apiRequest } from './apiClient';
 
 export const getDescuentosByProducto = (productoId) =>
-  apiRequest(`/descuentos/producto/${productoId}`, { auth: true });
+  apiRequest(`/descuentos/producto/${productoId}`);
 
 export const getDescuentoById = (id) => apiRequest(`/descuentos/${id}`, { auth: true });
 

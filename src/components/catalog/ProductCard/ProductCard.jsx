@@ -2,13 +2,14 @@ import { Typography, IconButton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
+import { ProductPrice } from '../ProductPrice/ProductPrice';
 import './styles.scss';
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
 
-  const inStock = (product.stock ?? 1) > 0;
+  const inStock = Number(product.stock) > 0;
 
   const handleCardClick = () => {
     navigate(`/producto/${product.id}`);
@@ -72,22 +73,7 @@ export const ProductCard = ({ product }) => {
         </div>
 
         <div className="price-row">
-          <Typography
-            variant="h5"
-            className="price"
-            sx={{ fontWeight: 800, fontSize: '20px' }}
-          >
-            ${product.precio.toFixed(2)}
-          </Typography>
-          {product.precioAnterior && ( // TODO: agregar data en backend/revisar — campo `precioAnterior`
-            <Typography
-              variant="body2"
-              className="old-price"
-              sx={{ fontSize: '12px' }}
-            >
-              ${product.precioAnterior.toFixed(2)}
-            </Typography>
-          )}
+          <ProductPrice product={product} />
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -15,14 +15,10 @@ import {
   InputLabel,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
-import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
+import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
 import '../../styles.scss'
 import './styles.scss'
-
-const DEFAULT_PRODUCT_IMAGE =
-  'https://placehold.co/240x240/2a2b36/f4f4fb?text=WP'
 
 export const AdminProductModal = ({
   open,
@@ -32,6 +28,15 @@ export const AdminProductModal = ({
 }) => {
   const isEditing = Boolean(productToEdit)
   const [categoryId, setCategoryId] = useState('paletas')
+  const [imageFile, setImageFile] = useState(null)
+  const [imageError, setImageError] = useState('')
+
+  useEffect(() => {
+    if (open) {
+      setImageFile(null)
+      setImageError('')
+    }
+  }, [open])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -40,8 +45,6 @@ export const AdminProductModal = ({
 
     const savedProduct = {
       id: productToEdit?.id ?? Date.now(),
-      img: productToEdit?.img ?? DEFAULT_PRODUCT_IMAGE,
-      image: productToEdit?.img ?? DEFAULT_PRODUCT_IMAGE,
       title: formData.get('title'),
       name: formData.get('title'),
       sku: formData.get('sku'),
@@ -51,15 +54,22 @@ export const AdminProductModal = ({
       price: Number(formData.get('price')),
       stock: Number(formData.get('stock')),
       enabled: productToEdit?.enabled ?? true,
+      imageFile,
     }
 
     onSave(savedProduct)
   }
 
+  const handleClose = () => {
+    setImageFile(null)
+    setImageError('')
+    onClose()
+  }
+
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       className="admin-product-dialog-root"
       slotProps={{
         paper: {
@@ -83,7 +93,7 @@ export const AdminProductModal = ({
               </Typography>
             </Box>
             <IconButton
-              onClick={onClose}
+              onClick={handleClose}
               aria-label="Cerrar modal"
               className="admin-icon-btn"
             >
@@ -99,26 +109,19 @@ export const AdminProductModal = ({
           <Box className="admin-product-dialog-grid">
             <Box className="admin-product-images-column">
               <Typography variant="caption" className="admin-product-images-caption">
-                IMAGEN DEL PRODUCTO
-              </Typography>
+              IMAGEN DEL PRODUCTO
+            </Typography>
 
-              <Box className="admin-product-upload-box">
-                <CloudUploadOutlinedIcon />
-                <Typography variant="body2" className="admin-product-upload-title">
-                  Arrastra o sube una imagen
+              <AdminProductImageUpload
+                currentImage={productToEdit?.img}
+                onFileChange={setImageFile}
+                onError={setImageError}
+              />
+              {imageError && (
+                <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
+                  {imageError}
                 </Typography>
-                <Typography variant="caption" className="admin-product-upload-hint">
-                  Formatos: JPG, PNG, WEBP (Máx 5MB)
-                </Typography>
-              </Box>
-
-              <Box className="admin-product-thumbnails">
-                <Button variant="outlined" className="thumbnail-btn thumbnail-btn--dashed">
-                  <PhotoCameraOutlinedIcon />
-                </Button>
-                <Box className="thumbnail-placeholder" />
-                <Box className="thumbnail-placeholder" />
-              </Box>
+              )}
             </Box>
 
             <Box className="admin-product-form-column">
@@ -199,7 +202,7 @@ export const AdminProductModal = ({
         </DialogContent>
 
         <DialogActions className="admin-product-dialog-footer">
-          <Button onClick={onClose} variant="text" className="admin-btn-ghost">
+          <Button onClick={handleClose} variant="text" className="admin-btn-ghost">
             Cancelar
           </Button>
 

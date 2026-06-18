@@ -5,7 +5,7 @@ import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined
 import { formatCartPrice } from '../../../data/cartData';
 import './styles.scss';
 
-export const CartSummary = ({ subtotal, total }) => {
+export const CartSummary = ({ subtotal, discountTotal = 0, total }) => {
   return (
     <div className="surface-card surface-card--dark cart-summary">
       <Typography variant="h6" className="summary-title">
@@ -15,8 +15,14 @@ export const CartSummary = ({ subtotal, total }) => {
       <div className="summary-rows">
         <div className="summary-row">
           <Typography className="summary-label">Subtotal</Typography>
-          <Typography className="summary-value">{formatCartPrice(subtotal)}</Typography>
+          <Typography className="summary-value">{formatCartPrice(subtotal + discountTotal)}</Typography>
         </div>
+        {discountTotal > 0 && (
+          <div className="summary-row">
+            <Typography className="summary-label">Descuentos</Typography>
+            <Typography className="summary-discount">-{formatCartPrice(discountTotal)}</Typography>
+          </div>
+        )}
         <div className="summary-row">
           <Typography className="summary-label">Envío</Typography>
           <Typography className="summary-shipping">Gratis</Typography>

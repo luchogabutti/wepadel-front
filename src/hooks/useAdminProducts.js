@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useProducts } from '../context/ProductsContext';
+import { getProducts, getImagenesByProductoId } from '../services/productsService';
 import { getStockByProducto } from '../services/stocksService';
+import { getDescuentosByProducto } from '../services/descuentosService';
+import { mapProducto } from '../services/productMapper';
+import { enrichProductoConDescuento } from '../utils/discountUtils';
 
 const toCategoryId = (categoria) => (categoria || '').toLowerCase();
 
@@ -16,48 +19,55 @@ const mapAdminProduct = (producto, stock) => ({
   enabled: producto.estaHabilitado !== false,
   img: producto.imagen,
   image: producto.imagen,
+  imagenId: producto.imagenId ?? null,
   description: producto.descripcion ?? '',
 });
 
 export const useAdminProducts = () => {
-  const { products, loading: productsLoading, refresh: refreshProducts } = useProducts();
-  const [stockMap, setStockMap] = useState({});
-  const [stockLoading, setStockLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const loadStocks = useCallback(async () => {
-    if (products.length === 0) {
-      setStockMap({});
-      setStockLoading(false);
-      return;
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const list = await getProducts({ auth: true });
+      const withDetails = await Promise.all(
+        list.map(async (producto) => {
+          const [imagenes, stock, descuentos] = await Promise.all([
+            getImagenesByProductoId(producto.id).catch(() => []),
+            getStockByProducto(producto.id)
+              .then((s) => s?.cantidad ?? 0)
+              .catch(() => 0),
+            getDescuentosByProducto(producto.id).catch(() => []),
+          ]);
+          return enrichProductoConDescuento(
+            { ...mapProducto(producto, imagenes), stock },
+            descuentos
+          );
+        })
+      );
+      setProducts(withDetails);
+    } catch (error) {
+      console.error('Error al cargar productos admin:', error);
+      setProducts([]);
+    } finally {
+      setLoading(false);
     }
-    setStockLoading(true);
-    const entries = await Promise.all(
-      products.map(async (producto) => {
-        try {
-          const stock = await getStockByProducto(producto.id);
-          return [producto.id, stock?.cantidad ?? 0];
-        } catch {
-          return [producto.id, 0];
-        }
-      })
-    );
-    setStockMap(Object.fromEntries(entries));
-    setStockLoading(false);
-  }, [products]);
+  }, []);
 
   useEffect(() => {
-    loadStocks();
-  }, [loadStocks]);
+    load();
+  }, [load]);
 
   const adminProducts = useMemo(
-    () => products.map((producto) => mapAdminProduct(producto, stockMap[producto.id])),
-    [products, stockMap]
+    () => products.map((producto) => mapAdminProduct(producto, producto.stock)),
+    [products]
   );
 
   return {
     products: adminProducts,
-    loading: productsLoading || stockLoading,
-    refresh: refreshProducts,
-    refreshStocks: loadStocks,
+    loading,
+    refresh: load,
+    refreshStocks: load,
   };
 };

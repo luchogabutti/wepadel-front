@@ -1,0 +1,34 @@
+.product-price-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+
+  &--lg {
+    gap: 16px;
+  }
+}
+
+.product-price {
+  color: var(--mui-palette-primary-main);
+  font-weight: 800;
+
+  &--lg {
+    font-size: 2rem;
+  }
+}
+
+.product-price-old {
+  color: var(--mui-palette-text-secondary);
+  text-decoration: line-through;
+}
+
+.product-price-badge {
+  background-color: var(--mui-palette-success-main);
+  color: var(--mui-palette-success-contrastText);
+  font-weight: 700;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.04em;
+}

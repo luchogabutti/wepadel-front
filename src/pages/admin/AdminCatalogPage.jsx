@@ -8,6 +8,7 @@ import { AdminProductModal } from '../../components/admin/catalog/AdminProductMo
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
 import { adminSectionContent } from '../../data/adminProductsData';
 import { useAdminProducts } from '../../hooks/useAdminProducts';
+import { useProducts } from '../../context/ProductsContext';
 import {
   createProducto,
   updateProducto,
@@ -15,10 +16,12 @@ import {
   buildProductoRequest,
 } from '../../services/productsService';
 import { updateStock } from '../../services/stocksService';
+import { saveProductImage } from '../../services/imagenesService';
 
 export const AdminCatalogPage = () => {
   const navigate = useNavigate();
   const { products, loading, refresh } = useAdminProducts();
+  const { refresh: refreshCatalog } = useProducts();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [searchTerm, setSearchTerm] = useState('');
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -34,6 +37,7 @@ export const AdminCatalogPage = () => {
     try {
       await updateProducto(productId, buildProductoRequest(product, { estaHabilitado: nextEnabled }));
       await refresh();
+      await refreshCatalog();
       notifySuccess(nextEnabled ? 'Producto habilitado.' : 'Producto deshabilitado.');
     } catch (error) {
       notifyError(error.message || 'No se pudo actualizar el producto.');
@@ -50,7 +54,11 @@ export const AdminCatalogPage = () => {
       if (savedProduct.stock) {
         await updateStock(creado.id, Number(savedProduct.stock));
       }
+      if (savedProduct.imageFile) {
+        await saveProductImage(savedProduct.imageFile, { productoId: creado.id });
+      }
       await refresh();
+      await refreshCatalog();
       setIsProductModalOpen(false);
       notifySuccess('¡Producto creado con éxito!');
     } catch (error) {
@@ -67,6 +75,7 @@ export const AdminCatalogPage = () => {
     try {
       await deleteProducto(productToDelete.id);
       await refresh();
+      await refreshCatalog();
       notifySuccess('¡Producto eliminado con éxito!');
     } catch (error) {
       notifyError(error.message || 'No se pudo eliminar el producto.');

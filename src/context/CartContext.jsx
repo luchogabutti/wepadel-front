@@ -10,11 +10,15 @@ const CartContext = createContext(null);
 
 const mapItem = (carritoItem, imageById) => {
   const producto = carritoItem.producto ?? {};
+  const originalUnitPrice = Number(producto.precio ?? 0);
+  const unitPrice = Number(carritoItem.precioUnitarioConDescuento ?? producto.precio ?? 0);
   return {
     id: producto.id,
     name: producto.nombre,
     description: producto.categoria,
-    unitPrice: Number(carritoItem.precioUnitarioConDescuento ?? producto.precio ?? 0),
+    unitPrice,
+    originalUnitPrice,
+    hasDiscount: originalUnitPrice > unitPrice,
     quantity: carritoItem.cantidad,
     image: imageById.get(producto.id) || PLACEHOLDER_IMG,
   };
@@ -43,6 +47,13 @@ export const CartProvider = ({ children }) => {
 
   const subtotal = Number(carrito?.subtotal ?? 0);
   const itemCount = items.length;
+
+  const subtotalOriginal = useMemo(
+    () => items.reduce((sum, item) => sum + item.originalUnitPrice * item.quantity, 0),
+    [items]
+  );
+
+  const discountTotal = Math.max(0, subtotalOriginal - subtotal);
 
   const refresh = useCallback(async () => {
     if (!isCliente || !usuarioId) {
@@ -76,7 +87,7 @@ export const CartProvider = ({ children }) => {
         notifySuccess(`${product.nombre} Agregado al carrito exitosamente.`);
       } catch (error) {
         console.error('Error al agregar al carrito:', error);
-        notifyError('No se pudo agregar el producto al carrito.');
+        notifyError(error.message || 'No se pudo agregar el producto al carrito.');
       }
     },
     [isAuthenticated, isCliente, usuarioId, navigate, refresh]
@@ -125,6 +136,8 @@ export const CartProvider = ({ children }) => {
     items,
     itemCount,
     subtotal,
+    subtotalOriginal,
+    discountTotal,
     addItem,
     updateQuantity,
     removeItem,

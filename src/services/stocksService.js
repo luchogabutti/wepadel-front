@@ -1,7 +1,7 @@
 import { apiRequest } from './apiClient';
 
 export const getStockByProducto = (productoId) =>
-  apiRequest(`/stocks/producto/${productoId}`, { auth: true });
+  apiRequest(`/stocks/producto/${productoId}`);
 
 export const updateStock = (productoId, cantidad) =>
   apiRequest(`/stocks/producto/${productoId}`, {

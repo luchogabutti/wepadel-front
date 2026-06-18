@@ -3,6 +3,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
+import { ProductPrice } from '../../catalog/ProductPrice/ProductPrice';
 import './styles.scss';
 
 export const FeaturedProducts = ({ products }) => {
@@ -86,14 +87,7 @@ export const FeaturedProducts = ({ products }) => {
                 {product.nombre}
               </Typography>
               <div className="product-price-container">
-                <Typography variant="body1" className="product-price">
-                  ${product.precio.toFixed(2)}
-                </Typography>
-                {product.precioAnterior && ( // TODO: agregar data en backend/revisar — campo `precioAnterior`
-                  <Typography variant="body2" className="product-old-price">
-                    ${product.precioAnterior.toFixed(2)}
-                  </Typography>
-                )}
+                <ProductPrice product={product} />
               </div>
             </div>
           </div>

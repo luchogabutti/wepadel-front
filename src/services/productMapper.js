@@ -16,11 +16,13 @@ const toDataUrl = (imagen) => {
 };
 
 export const mapProducto = (producto, imagenes = []) => {
-  const urls = imagenes.map(toDataUrl).filter(Boolean);
+  const primary = imagenes[0];
+  const url = primary ? toDataUrl(primary) : null;
 
   return {
     ...producto,
-    imagen: urls[0] || PLACEHOLDER_IMG,
-    imagenes: urls,
+    imagenId: primary?.id ?? null,
+    imagen: url || PLACEHOLDER_IMG,
+    imagenes: url ? [url] : [],
   };
 };

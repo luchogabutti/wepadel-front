@@ -1,6 +1,7 @@
 import { apiRequest } from './apiClient';
 
-export const getProducts = () => apiRequest('/productos');
+export const getProducts = ({ auth = false } = {}) =>
+  apiRequest('/productos', auth ? { auth: true } : {});
 
 export const getProductoById = (id) => apiRequest(`/productos/${id}`);
 

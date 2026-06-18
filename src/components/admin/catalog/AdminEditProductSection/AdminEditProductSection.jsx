@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
-import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
 import {
   Box,
@@ -16,6 +15,7 @@ import {
   FormControlLabel,
 } from '@mui/material'
 import { PageHeader } from '../../../layout/PageHeader'
+import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -25,6 +25,8 @@ export const AdminEditProductSection = ({
   onSave,
 }) => {
   const [enabled, setEnabled] = useState(product.enabled)
+  const [imageFile, setImageFile] = useState(null)
+  const [imageError, setImageError] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -42,6 +44,8 @@ export const AdminEditProductSection = ({
       price: Number(formData.get('price')),
       stock: Number(formData.get('stock')),
       enabled,
+      imagenId: product.imagenId,
+      imageFile,
     }
 
     onSave(updatedProduct)
@@ -171,20 +175,18 @@ export const AdminEditProductSection = ({
             </Typography>
 
             <Box className="admin-edit-image-stack">
-              <img
-                className="admin-edit-product-image"
-                src={product.img}
-                alt={product.title}
+              <AdminProductImageUpload
+                currentImage={product.img}
+                onFileChange={setImageFile}
+                onError={setImageError}
+                uploadBoxClassName="admin-edit-upload-box"
+                previewClassName="admin-edit-product-image"
               />
-
-              <Button
-                variant="outlined"
-                fullWidth
-                startIcon={<CloudUploadOutlinedIcon />}
-                className="admin-edit-upload-btn admin-btn-upload-dashed"
-              >
-                Reemplazar Imagen
-              </Button>
+              {imageError && (
+                <Typography variant="caption" color="error">
+                  {imageError}
+                </Typography>
+              )}
             </Box>
 
             <Box className="admin-edit-publication-box">

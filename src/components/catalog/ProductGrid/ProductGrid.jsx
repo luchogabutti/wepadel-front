@@ -14,13 +14,14 @@ import { ProductCard } from '../ProductCard/ProductCard';
 import { TablePaginationFooter } from '../../general/TablePaginationFooter/TablePaginationFooter';
 import { buildShowingLabel } from '../../../utils/paginationLabels';
 import { usePagination } from '../../../hooks/usePagination';
+import { getPrecioEfectivo } from '../../../utils/discountUtils';
 import './styles.scss';
 
 const STEP_FALLBACK = 500;
 
 const getMaxPrice = (products) => {
   if (!products.length) return STEP_FALLBACK;
-  const max = Math.max(...products.map((p) => Number(p.precio) || 0));
+  const max = Math.max(...products.map((p) => getPrecioEfectivo(p)));
   return Math.max(Math.ceil(max), 1);
 };
 
@@ -37,14 +38,15 @@ export const ProductGrid = ({ products, activeCategory }) => {
   }, [activeCategory, maxPrice]);
 
   const filteredAndSorted = useMemo(() => {
-    let result = products.filter(
-      (p) => p.precio >= priceRange[0] && p.precio <= priceRange[1]
-    );
+    let result = products.filter((p) => {
+      const precio = getPrecioEfectivo(p);
+      return precio >= priceRange[0] && precio <= priceRange[1];
+    });
 
     if (sortOrder === 'asc') {
-      result.sort((a, b) => a.precio - b.precio);
+      result.sort((a, b) => getPrecioEfectivo(a) - getPrecioEfectivo(b));
     } else if (sortOrder === 'desc') {
-      result.sort((a, b) => b.precio - a.precio);
+      result.sort((a, b) => getPrecioEfectivo(b) - getPrecioEfectivo(a));
     }
 
     return result;

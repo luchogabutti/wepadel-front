@@ -54,8 +54,19 @@
 
     .item-unit-price {
       color: var(--mui-palette-primary-light);
-      margin-top: 4px;
       font-weight: 600;
+    }
+
+    .item-pricing {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .item-unit-price-old {
+      color: var(--mui-palette-text-secondary);
+      text-decoration: line-through;
     }
   }
 

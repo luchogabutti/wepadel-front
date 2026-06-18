@@ -9,6 +9,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
+import { ProductPrice } from '../ProductPrice/ProductPrice';
 import './styles.scss';
 
 export const ProductDetail = ({ product }) => {
@@ -20,7 +21,7 @@ export const ProductDetail = ({ product }) => {
   const categoriaSlug = product.categoria?.toLowerCase() || '';
   const imagen = product.imagen || 'https://placehold.co/400x400?text=WePadel';
   const imagenes = product.imagenes?.length ? product.imagenes : [imagen];
-  const inStock = (product.stock ?? 1) > 0;
+  const inStock = Number(product.stock) > 0;
 
   const descripcionParrafos = (product.descripcion || '')
     .split(/\n+/)
@@ -37,6 +38,8 @@ export const ProductDetail = ({ product }) => {
   };
 
   const handleIncrease = () => {
+    const maxStock = Number(product.stock);
+    if (Number.isFinite(maxStock) && maxStock > 0 && quantity >= maxStock) return;
     setQuantity(quantity + 1);
   };
 
@@ -113,14 +116,7 @@ export const ProductDetail = ({ product }) => {
           </div>
 
           <div className="price-row">
-            <Typography variant="h2" className="current-price">
-              ${product.precio.toFixed(2)}
-            </Typography>
-            {product.precioAnterior && ( // TODO: agregar data en backend/revisar — campo `precioAnterior`
-              <Typography variant="body1" className="old-price">
-                ${product.precioAnterior.toFixed(2)}
-              </Typography>
-            )}
+            <ProductPrice product={product} size="lg" />
           </div>
 
           <div className="stock-row">

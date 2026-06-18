@@ -6,7 +6,7 @@ import { CartSummary } from '../components/cart/CartSummary/CartSummary';
 import { CartEmptyState } from '../components/cart/CartEmptyState/CartEmptyState';
 import { useCart } from '../context/CartContext';
 export const CartPage = () => {
-  const { items, subtotal, updateQuantity, removeItem } = useCart();
+  const { items, subtotal, discountTotal, updateQuantity, removeItem } = useCart();
   const total = subtotal;
 
   return (
@@ -30,7 +30,7 @@ export const CartPage = () => {
             </Stack>
           </Grid>
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CartSummary subtotal={subtotal} total={total} />
+            <CartSummary subtotal={subtotal} discountTotal={discountTotal} total={total} />
           </Grid>
         </Grid>
       )}
