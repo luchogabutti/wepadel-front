@@ -14,6 +14,24 @@ export const getStoredAuth = () => {
 
 const getStoredToken = () => getStoredAuth()?.token ?? null;
 
+const isNetworkFailure = (error) => {
+  if (!error || error.name !== 'TypeError') return false;
+  const message = error.message || '';
+  return (
+    message === 'Failed to fetch' ||
+    message === 'NetworkError when attempting to fetch resource.' ||
+    message === 'Load failed' ||
+    message.includes('NetworkError')
+  );
+};
+
+export const getApiErrorMessage = (error, fallback = 'Ocurrió un error inesperado.') => {
+  if (isNetworkFailure(error)) {
+    return 'No se pudo conectar con el servidor.';
+  }
+  return error?.message || fallback;
+};
+
 export const apiRequest = async (path, { method = 'GET', body, auth = false, headers = {} } = {}) => {
   const finalHeaders = { ...headers };
   const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
@@ -29,11 +47,17 @@ export const apiRequest = async (path, { method = 'GET', body, auth = false, hea
     }
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers: finalHeaders,
-    body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
-  });
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers: finalHeaders,
+      body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
+    });
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error));
+  }
 
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json().catch(() => null) : null;
