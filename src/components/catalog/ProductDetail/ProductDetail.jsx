@@ -7,7 +7,9 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
 import './styles.scss';
@@ -15,6 +17,7 @@ import './styles.scss';
 export const ProductDetail = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const { addItem } = useCart();
 
   const nombre = product.nombre;
@@ -145,28 +148,44 @@ export const ProductDetail = ({ product }) => {
           </div>
 
           <div className="purchase-actions">
-            <div className="quantity-selector">
-              <IconButton onClick={handleDecrease} className="qty-btn" disabled={!inStock}>
-                <RemoveIcon fontSize="small" />
-              </IconButton>
-              <span className="qty-value">{quantity}</span>
-              <IconButton onClick={handleIncrease} className="qty-btn" disabled={!inStock}>
-                <AddIcon fontSize="small" />
-              </IconButton>
-            </div>
+            {isAdmin ? (
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                startIcon={<DashboardOutlinedIcon />}
+                className="add-to-cart-btn"
+                onClick={() => navigate('/admin/catalogo')}
+                sx={{ fontWeight: 'bold', textTransform: 'none' }}
+              >
+                Administrar desde el panel
+              </Button>
+            ) : (
+              <>
+                <div className="quantity-selector">
+                  <IconButton onClick={handleDecrease} className="qty-btn" disabled={!inStock}>
+                    <RemoveIcon fontSize="small" />
+                  </IconButton>
+                  <span className="qty-value">{quantity}</span>
+                  <IconButton onClick={handleIncrease} className="qty-btn" disabled={!inStock}>
+                    <AddIcon fontSize="small" />
+                  </IconButton>
+                </div>
 
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              startIcon={<AddShoppingCartIcon />}
-              className="add-to-cart-btn"
-              disabled={!inStock}
-              onClick={handleAddToCart}
-              sx={{ fontWeight: 'bold', textTransform: 'none' }}
-            >
-              Agregar al carrito
-            </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  startIcon={<AddShoppingCartIcon />}
+                  className="add-to-cart-btn"
+                  disabled={!inStock}
+                  onClick={handleAddToCart}
+                  sx={{ fontWeight: 'bold', textTransform: 'none' }}
+                >
+                  Agregar al carrito
+                </Button>
+              </>
+            )}
           </div>
 
           <div className="highlights-section">
