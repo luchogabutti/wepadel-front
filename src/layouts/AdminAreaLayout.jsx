@@ -1,24 +1,24 @@
 import { Outlet } from 'react-router-dom';
-import { Alert, Box } from '@mui/material';
+import {Box } from '@mui/material';
 import { Sidebar } from '../components/general/Sidebar/Sidebar';
 import { PageContainer } from '../components/layout/PageContainer';
-import { accountUser } from '../config/accountUser';
 import { adminSidebarItems } from '../config/sidebarItems';
+import { useAuth } from '../context/AuthContext';
 import '../components/admin/styles.scss';
 
-export const AdminAreaLayout = () => (
+export const AdminAreaLayout = () => {
+  const { user } = useAuth();
+
+  return (
   <Box sx={{ display: 'flex', alignItems: 'flex-start', bgcolor: 'background.default' }}>
-    <Sidebar user={accountUser} items={adminSidebarItems} />
+    <Sidebar user={user} items={adminSidebarItems} />
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0 }}>
       <PageContainer maxWidth={false} py={5}>
         <Box className="admin-main-inner">
-          <Alert severity="info" sx={{ mb: 3 }}>
-            El administrador podrá acceder directamente al panel desde el botón del navbar una vez
-            se haya logueado correctamente.
-          </Alert>
           <Outlet />
         </Box>
       </PageContainer>
     </Box>
   </Box>
-);
+  )
+};
