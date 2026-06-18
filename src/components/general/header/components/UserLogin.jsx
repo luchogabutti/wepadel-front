@@ -10,6 +10,7 @@ export const UserLogin = () => {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const iconSx = {
     color: 'primary.light',
