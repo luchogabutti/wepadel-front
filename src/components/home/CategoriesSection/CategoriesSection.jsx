@@ -1,12 +1,12 @@
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { buildCategoriasParaHome } from '../../../constants/categorias';
-import { useProducts } from '../../../context/ProductsContext';
+import { useCategorias } from '../../../context/CategoriesContext';
 import { LoadingState } from '../../../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../../../components/general/ApiErrorState/ApiErrorState';
 import './styles.scss';
 
 export const CategoriesSection = () => {
-  const { products, loading, error } = useProducts();
+  const { categorias, loading, error, refresh } = useCategorias();
 
   if (loading) {
     return (
@@ -17,10 +17,16 @@ export const CategoriesSection = () => {
   }
 
   if (error) {
-    return null;
+    return (
+      <section className="categories-section">
+        <ApiErrorState
+          error={error}
+          fallback="No se pudieron cargar las categorías."
+          onRetry={refresh}
+        />
+      </section>
+    );
   }
-
-  const categorias = buildCategoriasParaHome(products);
 
   if (categorias.length === 0) {
     return null;
@@ -33,26 +39,31 @@ export const CategoriesSection = () => {
       </Typography>
 
       <div className="categories-grid">
-        {categorias.map((cat) => (
-          <Link
-            key={cat.id}
-            to={cat.path}
-            className={`category-card${cat.cover ? '' : ' category-card--no-image'}`}
-          >
-            {cat.cover && (
-              <img src={cat.cover} alt={cat.label} className="cat-image" />
-            )}
-            <div className="cat-overlay" />
-            <div className="cat-content">
-              <Typography variant="h5" className="cat-title">
-                {cat.label}
-              </Typography>
-              <Typography className="cat-text" variant="button">
-                DESCUBRIR
-              </Typography>
-            </div>
-          </Link>
-        ))}
+        {categorias.map((cat) => {
+          const IconComponent = cat.icon;
+
+          return (
+            <Link
+              key={cat.id}
+              to={cat.path}
+              className={`category-card${cat.img ? '' : ' category-card--no-image'}`}
+            >
+              {cat.img && (
+                <img src={cat.img} alt={cat.label} className="cat-image" />
+              )}
+              <div className="cat-overlay" />
+              <div className="cat-content">
+                <IconComponent className="cat-icon" />
+                <Typography variant="h5" className="cat-title">
+                  {cat.label}
+                </Typography>
+                <Typography className="cat-text" variant="button">
+                  DESCUBRIR
+                </Typography>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

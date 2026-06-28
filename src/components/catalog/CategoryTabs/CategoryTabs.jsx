@@ -1,9 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import { CATEGORIAS } from '../../../constants/categorias';
+import { useCategorias } from '../../../context/CategoriesContext';
 import './styles.scss';
 
 export const CategoryTabs = ({ activeCategory }) => {
   const navigate = useNavigate();
+  const { categorias, loading } = useCategorias();
+
+  if (loading || categorias.length === 0) {
+    return null;
+  }
 
   const handleTabClick = (path) => {
     navigate(path);
@@ -11,7 +16,7 @@ export const CategoryTabs = ({ activeCategory }) => {
 
   return (
     <nav className="category-tabs">
-      {CATEGORIAS.map((cat) => {
+      {categorias.map((cat) => {
         const isActive = activeCategory === cat.id;
         return (
           <button

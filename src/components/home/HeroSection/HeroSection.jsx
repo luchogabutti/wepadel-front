@@ -1,32 +1,32 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { HERO_SLIDES, HERO_SLIDE_INTERVAL_MS } from '../../../constants/heroSlides';
-import { getCategoriaCoverFromProducts, getCatalogPath } from '../../../constants/categorias';
-import { useProducts } from '../../../context/ProductsContext';
+import { HERO_SLIDES, HERO_SLIDE_INTERVAL_MS } from '../../../config/heroSlides';
+import { useCategorias } from '../../../context/CategoriesContext';
 import { useAuth } from '../../../context/AuthContext';
 import './styles.scss';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { products } = useProducts();
+  const { categorias, defaultCatalogPath } = useCategorias();
   const [activeSlide, setActiveSlide] = useState(0);
 
   const slides = useMemo(() => {
     const list = [...HERO_SLIDES];
-    const paletasCover = getCategoriaCoverFromProducts(products, 'PALETAS');
+    const paletas = categorias.find((cat) => cat.id === 'paletas');
+    const paletasImg = paletas?.img;
 
-    if (paletasCover) {
+    if (paletasImg) {
       list.push({
-        src: paletasCover,
+        src: paletasImg,
         alt: 'PALETAS',
         position: 'center center',
       });
     }
 
     return list;
-  }, [products]);
+  }, [categorias]);
 
   useEffect(() => {
     setActiveSlide(0);
@@ -78,7 +78,7 @@ export const HeroSection = () => {
             variant="contained"
             color="primary"
             sx={{ px: 4, py: 2 }}
-            onClick={() => navigate(getCatalogPath('PALETAS'))}
+            onClick={() => navigate(defaultCatalogPath)}
           >
             Ver catálogo
           </Button>

@@ -7,26 +7,27 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
 import { ProductGrid } from '../components/catalog/ProductGrid/ProductGrid';
-import { slugToCategoriaEnum, DEFAULT_CATEGORIA_SLUG } from '../constants/categorias';
+import { useCategorias } from '../context/CategoriesContext';
 import { useProducts } from '../context/ProductsContext';
 
 export const CatalogView = () => {
   const { categoria } = useParams();
-  const activeCategory = categoria ?? DEFAULT_CATEGORIA_SLUG;
-  const activeEnum = slugToCategoriaEnum(activeCategory);
+  const { getCategoriaById } = useCategorias();
+  const activeCategory = getCategoriaById(categoria);
+  const activeSlug = activeCategory?.id ?? categoria;
 
   const { products, loading, error, refresh } = useProducts();
 
-  const title = activeEnum;
+  const title = activeCategory?.label ?? '';
 
   const categoryProducts = useMemo(
     () =>
       products.filter(
         (p) =>
           p.estaHabilitado !== false &&
-          p.categoria?.toUpperCase() === activeEnum
+          p.categoria?.toUpperCase() === activeCategory?.label
       ),
-    [activeEnum, products]
+    [activeCategory, products]
   );
 
   const renderContent = () => {
@@ -52,12 +53,12 @@ export const CatalogView = () => {
       );
     }
 
-    return <ProductGrid products={categoryProducts} activeCategory={activeCategory} />;
+    return <ProductGrid products={categoryProducts} activeCategory={activeSlug} />;
   };
 
   return (
     <>
-      <CategoryTabs activeCategory={activeCategory} />
+      <CategoryTabs activeCategory={activeSlug} />
       <PageContainer>
         <PageHeader
           title={title}

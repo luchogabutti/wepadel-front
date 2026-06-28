@@ -12,6 +12,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
+import { PLACEHOLDER_IMG } from '../../../services/productMapper';
 import './styles.scss';
 
 export const ProductDetail = ({ product }) => {
@@ -22,7 +23,7 @@ export const ProductDetail = ({ product }) => {
 
   const nombre = product.nombre;
   const categoriaSlug = product.categoria?.toLowerCase() || '';
-  const imagen = product.imagen || 'https://placehold.co/400x400?text=WePadel';
+  const imagen = product.imagen || PLACEHOLDER_IMG;
   const imagenes = product.imagenes?.length ? product.imagenes : [imagen];
   const inStock = Number(product.stock) > 0;
 
@@ -81,9 +82,6 @@ export const ProductDetail = ({ product }) => {
         <div className="detail-gallery">
           <div className="main-image-wrapper">
             <img src={displayImg} alt={nombre} className="main-image" />
-            {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
-              <span className="detail-badge">{product.badge}</span>
-            )}
           </div>
           {imagenes.length > 1 && (
             <div className="thumbnail-list">

@@ -73,20 +73,6 @@
         transform: scale(1.05);
       }
     }
-
-    .detail-badge {
-      position: absolute;
-      top: 24px;
-      left: 24px;
-      background-color: var(--mui-palette-primary-main);
-      color: var(--mui-palette-primary-contrastText);
-      padding: 6px 14px;
-      border-radius: 99px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      box-shadow: 0 4px 12px color-mix(in srgb, var(--mui-palette-primary-main) 30%, transparent);
-    }
   }
 
   .thumbnail-list {

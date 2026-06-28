@@ -6,13 +6,14 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { ProductDetail } from '../components/catalog/ProductDetail/ProductDetail';
 import { useProducts } from '../context/ProductsContext';
-import { getCatalogPath } from '../constants/categorias';
+import { useCategorias } from '../context/CategoriesContext';
 import './styles.scss';
 
 export const ProductDetailView = () => {
   const { id } = useParams();
   const productId = parseInt(id, 10);
   const { products, loading, error, refresh } = useProducts();
+  const { defaultCatalogPath } = useCategorias();
 
   const product =
     products.find((p) => p.id === productId && p.estaHabilitado !== false) ?? null;
@@ -51,7 +52,7 @@ export const ProductDetailView = () => {
             variant="contained"
             color="primary"
             component={RouterLink}
-            to={getCatalogPath('PALETAS')}
+            to={defaultCatalogPath}
             startIcon={<ArrowBackIcon />}
             className="product-not-found__btn"
           >

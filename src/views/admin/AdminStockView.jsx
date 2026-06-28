@@ -8,7 +8,7 @@ import { useAdminProducts } from '../../hooks/useAdminProducts';
 import { updateStock } from '../../services/stocksService';
 
 export const AdminStockView = () => {
-  const { products, loading, error, refreshStocks } = useAdminProducts();
+  const { products, loading, error, refresh } = useAdminProducts();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [pendingStockSave, setPendingStockSave] = useState(null);
 
@@ -26,7 +26,7 @@ export const AdminStockView = () => {
     const changed = pendingStockSave.filter((p) => currentById.get(p.id) !== p.stock);
     try {
       await Promise.all(changed.map((p) => updateStock(p.id, Number(p.stock))));
-      await refreshStocks();
+      await refresh();
       notifySuccess('Stock guardado con éxito');
     } catch (error) {
       notifyError(error.message || 'No se pudo guardar el stock.');
@@ -43,7 +43,7 @@ export const AdminStockView = () => {
         <ApiErrorState
           error={error}
           fallback="No se pudo cargar el inventario."
-          onRetry={refreshStocks}
+          onRetry={refresh}
         />
       ) : (
         <AdminStockSection

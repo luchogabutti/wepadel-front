@@ -3,6 +3,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
+import { PLACEHOLDER_IMG } from '../../../services/productMapper';
 import './styles.scss';
 
 export const ProductCard = ({ product }) => {
@@ -24,14 +25,10 @@ export const ProductCard = ({ product }) => {
     <div className="product-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="image">
         <img
-          src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
+          src={product.imagen || PLACEHOLDER_IMG}
           alt={product.nombre}
           className="img"
         />
-
-        {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
-          <span className="badge">{product.badge}</span>
-        )}
 
         <IconButton
           className="cart-btn"

@@ -71,6 +71,5 @@ export const useAdminProducts = () => {
     loading,
     error,
     refresh: load,
-    refreshStocks: load,
   };
 };

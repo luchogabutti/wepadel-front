@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 import { PageHeader } from '../../../layout/PageHeader'
 import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
-import { CATEGORIAS } from '../../../../constants/categorias'
+import { useCategorias } from '../../../../context/CategoriesContext'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -25,6 +25,7 @@ export const AdminEditProductSection = ({
   onCancel,
   onSave,
 }) => {
+  const { categorias } = useCategorias()
   const [enabled, setEnabled] = useState(product.enabled)
   const [imageFile, setImageFile] = useState(null)
   const [imageError, setImageError] = useState('')
@@ -129,7 +130,7 @@ export const AdminEditProductSection = ({
                     defaultValue={product.categoryId ?? 'paletas'}
                     label="Categoría"
                   >
-                    {CATEGORIAS.map((cat) => (
+                    {categorias.map((cat) => (
                       <MenuItem key={cat.id} value={cat.id}>
                         {cat.label}
                       </MenuItem>
