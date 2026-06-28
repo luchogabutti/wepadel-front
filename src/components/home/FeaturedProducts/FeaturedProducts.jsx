@@ -4,6 +4,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../../catalog/ProductPrice/ProductPrice';
+import { getCatalogPath } from '../../../constants/categorias';
 import './styles.scss';
 
 export const FeaturedProducts = ({ products }) => {
@@ -32,7 +33,7 @@ export const FeaturedProducts = ({ products }) => {
         </div>
         <Button
           component={Link}
-          to="/catalogo"
+          to={getCatalogPath('PALETAS')}
           endIcon={<ArrowForwardIcon sx={{ fontSize: '16px' }} />}
           className="view-all-btn"
           sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}

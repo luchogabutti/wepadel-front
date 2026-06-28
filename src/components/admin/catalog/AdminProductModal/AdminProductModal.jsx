@@ -17,6 +17,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
+import { CATEGORIAS } from '../../../../constants/categorias'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -155,9 +156,11 @@ export const AdminProductModal = ({
                     label="Categoría"
                     onChange={(e) => setCategoryId(e.target.value)}
                   >
-                    <MenuItem value="paletas">Paletas</MenuItem>
-                    <MenuItem value="pelotas">Pelotas</MenuItem>
-                    <MenuItem value="accesorios">Accesorios</MenuItem>
+                    {CATEGORIAS.map((cat) => (
+                      <MenuItem key={cat.id} value={cat.id}>
+                        {cat.label}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>

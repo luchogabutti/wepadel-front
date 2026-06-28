@@ -3,7 +3,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import ContactlessOutlinedIcon from '@mui/icons-material/ContactlessOutlined';
-import { formatCheckoutPrice } from '../../../data/cartData';
+import { formatCheckoutPrice } from '../../../utils/formatPrice';
 import './styles.scss';
 
 export const CheckoutPaymentDetail = ({

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
 import { PageHeader } from '../components/layout/PageHeader';
 import { OrderCard } from '../components/profile/orders/OrderCard/OrderCard';
 import {
@@ -23,6 +24,7 @@ export const OrdersView = () => {
 
   const [ordersRaw, setOrdersRaw] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const imageById = useMemo(() => {
     const map = new Map();
@@ -33,11 +35,13 @@ export const OrdersView = () => {
   const load = useCallback(async () => {
     if (!usuarioId) return;
     setLoading(true);
+    setError(null);
     try {
       const data = await getOrdenes(usuarioId);
       setOrdersRaw(data ?? []);
-    } catch (error) {
-      console.error('Error al obtener las órdenes:', error);
+    } catch (err) {
+      setError(err);
+      setOrdersRaw([]);
     } finally {
       setLoading(false);
     }
@@ -86,6 +90,23 @@ export const OrdersView = () => {
           subtitle="Revisa y gestiona tus pedidos recientes de equipo de alto rendimiento."
         />
         <LoadingState message="Cargando tus pedidos..." />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <PageHeader
+          variant="profile"
+          title="Historial de Órdenes"
+          subtitle="Revisa y gestiona tus pedidos recientes de equipo de alto rendimiento."
+        />
+        <ApiErrorState
+          error={error}
+          fallback="No se pudieron cargar tus pedidos."
+          onRetry={load}
+        />
       </>
     );
   }

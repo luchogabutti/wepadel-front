@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
 import { ConfirmationDialog } from '../../../general/ConfirmationDialog/ConfirmationDialog';
+import { getCatalogPath } from '../../../../constants/categorias';
 import './styles.scss';
 
 export const PointsBadge = ({ pointsValue = 500 }) => {
@@ -51,7 +52,7 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
       <ConfirmationDialog
         open={usePointsDialogOpen}
         onClose={() => setUsePointsDialogOpen(false)}
-        onConfirm={() => navigate('/catalogo')}
+        onConfirm={() => navigate(getCatalogPath('PALETAS'))}
         title="Usar mis puntos"
         subtitle="Seras redirigido al cátalogo de productos para poder utilizar tus puntos en la compra de un producto."
         confirmLabel="Ir al catálogo"

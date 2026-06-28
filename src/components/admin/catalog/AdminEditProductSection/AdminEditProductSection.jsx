@@ -16,6 +16,7 @@ import {
 } from '@mui/material'
 import { PageHeader } from '../../../layout/PageHeader'
 import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
+import { CATEGORIAS } from '../../../../constants/categorias'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -128,9 +129,11 @@ export const AdminEditProductSection = ({
                     defaultValue={product.categoryId ?? 'paletas'}
                     label="Categoría"
                   >
-                    <MenuItem value="paletas">Paletas</MenuItem>
-                    <MenuItem value="pelotas">Pelotas</MenuItem>
-                    <MenuItem value="accesorios">Accesorios</MenuItem>
+                    {CATEGORIAS.map((cat) => (
+                      <MenuItem key={cat.id} value={cat.id}>
+                        {cat.label}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>

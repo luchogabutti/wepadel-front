@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Typography, Button, IconButton, Rating, Breadcrumbs, Link as MuiLink } from '@mui/material';
+import { Typography, Button, IconButton, Breadcrumbs, Link as MuiLink } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -110,13 +110,6 @@ export const ProductDetail = ({ product }) => {
           <Typography variant="h1" className="product-title">
             {nombre}
           </Typography>
-
-          <div className="rating-row">
-            <Rating name="read-only" value={4.8} precision={0.1} readOnly size="small" />
-            <Typography variant="body2" className="rating-count">
-              4.8 (42 valoraciones de clientes)
-            </Typography>
-          </div>
 
           <div className="price-row">
             <ProductPrice product={product} size="lg" />

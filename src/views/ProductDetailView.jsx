@@ -1,16 +1,18 @@
 import { Typography, Button } from '@mui/material';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { ProductDetail } from '../components/catalog/ProductDetail/ProductDetail';
 import { useProducts } from '../context/ProductsContext';
+import { getCatalogPath } from '../constants/categorias';
 import './styles.scss';
 
 export const ProductDetailView = () => {
   const { id } = useParams();
   const productId = parseInt(id, 10);
-  const { products, loading } = useProducts();
+  const { products, loading, error, refresh } = useProducts();
 
   const product =
     products.find((p) => p.id === productId && p.estaHabilitado !== false) ?? null;
@@ -19,6 +21,18 @@ export const ProductDetailView = () => {
     return (
       <CenteredPage>
         <LoadingState message="Cargando producto..." />
+      </CenteredPage>
+    );
+  }
+
+  if (error) {
+    return (
+      <CenteredPage>
+        <ApiErrorState
+          error={error}
+          fallback="No se pudo cargar la información del producto."
+          onRetry={refresh}
+        />
       </CenteredPage>
     );
   }
@@ -37,7 +51,7 @@ export const ProductDetailView = () => {
             variant="contained"
             color="primary"
             component={RouterLink}
-            to="/catalogo"
+            to={getCatalogPath('PALETAS')}
             startIcon={<ArrowBackIcon />}
             className="product-not-found__btn"
           >

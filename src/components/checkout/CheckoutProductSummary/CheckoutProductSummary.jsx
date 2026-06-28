@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
-import { formatCheckoutPrice } from '../../../data/cartData';
+import { formatCheckoutPrice } from '../../../utils/formatPrice';
 import './styles.scss';
 
 export const CheckoutProductSummary = ({ items }) => {
