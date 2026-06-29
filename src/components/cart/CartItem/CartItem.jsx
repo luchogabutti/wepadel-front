@@ -1,7 +1,7 @@
 import { Typography, Button } from '@mui/material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { QuantityPicker } from '../QuantityPicker/QuantityPicker';
-import { formatCartPrice } from '../../../data/cartData';
+import { formatCartPrice } from '../../../utils/formatPrice';
 import './styles.scss';
 import { ConfirmationDialog } from '../../general/ConfirmationDialog/ConfirmationDialog';
 import { useState } from 'react';

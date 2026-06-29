@@ -1,29 +1,51 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { heroSlides, HERO_SLIDE_INTERVAL_MS } from '../../../data/heroSlides';
+import { HERO_SLIDES, HERO_SLIDE_INTERVAL_MS } from '../../../config/heroSlides';
+import { useCategorias } from '../../../context/CategoriesContext';
 import { useAuth } from '../../../context/AuthContext';
 import './styles.scss';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { categorias, defaultCatalogPath } = useCategorias();
   const [activeSlide, setActiveSlide] = useState(0);
 
+  const slides = useMemo(() => {
+    const list = [...HERO_SLIDES];
+    const paletas = categorias.find((cat) => cat.id === 'paletas');
+    const paletasImg = paletas?.img;
+
+    if (paletasImg) {
+      list.push({
+        src: paletasImg,
+        alt: 'PALETAS',
+        position: 'center center',
+      });
+    }
+
+    return list;
+  }, [categorias]);
+
   useEffect(() => {
-    if (heroSlides.length <= 1) return undefined;
+    setActiveSlide(0);
+  }, [slides.length]);
+
+  useEffect(() => {
+    if (slides.length <= 1) return undefined;
 
     const timer = window.setInterval(() => {
-      setActiveSlide((current) => (current + 1) % heroSlides.length);
+      setActiveSlide((current) => (current + 1) % slides.length);
     }, HERO_SLIDE_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   return (
     <section className="hero-section">
       <div className="hero-background" aria-hidden="true">
-        {heroSlides.map((slide, index) => (
+        {slides.map((slide, index) => (
           <img
             key={slide.src}
             src={slide.src}
@@ -56,7 +78,7 @@ export const HeroSection = () => {
             variant="contained"
             color="primary"
             sx={{ px: 4, py: 2 }}
-            onClick={() => navigate('/catalogo')}
+            onClick={() => navigate(defaultCatalogPath)}
           >
             Ver catálogo
           </Button>

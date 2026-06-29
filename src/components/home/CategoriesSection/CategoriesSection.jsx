@@ -1,9 +1,28 @@
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { categories } from '../../../data/categoriesData';
+import { useCategorias } from '../../../context/CategoriesContext';
+import { LoadingState } from '../../../components/general/LoadingState/LoadingState';
 import './styles.scss';
 
 export const CategoriesSection = () => {
+  const { categorias, loading, error } = useCategorias();
+
+  if (loading) {
+    return (
+      <section className="categories-section">
+        <LoadingState message="Cargando categorías..." />
+      </section>
+    );
+  }
+
+  if (error) {
+    return null;
+  }
+
+  if (categorias.length === 0) {
+    return null;
+  }
+
   return (
     <section className="categories-section">
       <Typography variant="h4" className="section-title">
@@ -11,30 +30,25 @@ export const CategoriesSection = () => {
       </Typography>
 
       <div className="categories-grid">
-        {categories.map((cat) => {
+        {categorias.map((cat) => {
           const IconComponent = cat.icon;
 
           return (
             <Link
               key={cat.id}
               to={cat.path}
-              className="category-card"
+              className={`category-card${cat.img ? '' : ' category-card--no-image'}`}
             >
-              <img
-                src={cat.img}
-                alt={cat.label}
-                className="cat-image"
-              />
+              {cat.img && (
+                <img src={cat.img} alt={cat.label} className="cat-image" />
+              )}
               <div className="cat-overlay" />
               <div className="cat-content">
                 <IconComponent className="cat-icon" />
                 <Typography variant="h5" className="cat-title">
                   {cat.label}
                 </Typography>
-                <Typography
-                  className="cat-text"
-                  variant="button"
-                >
+                <Typography className="cat-text" variant="button">
                   DESCUBRIR
                 </Typography>
               </div>

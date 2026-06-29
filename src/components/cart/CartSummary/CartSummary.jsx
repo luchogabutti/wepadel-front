@@ -2,7 +2,7 @@ import { Typography, Button } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
-import { formatCartPrice } from '../../../data/cartData';
+import { formatCartPrice } from '../../../utils/formatPrice';
 import './styles.scss';
 
 export const CartSummary = ({ subtotal, discountTotal = 0, total }) => {

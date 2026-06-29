@@ -1,27 +1,28 @@
 import { useNavigate } from 'react-router-dom';
-import { categories } from '../../../data/categoriesData';
+import { useCategorias } from '../../../context/CategoriesContext';
 import './styles.scss';
 
 export const CategoryTabs = ({ activeCategory }) => {
   const navigate = useNavigate();
+  const { categorias, loading } = useCategorias();
 
-  const handleTabClick = (categoryId) => {
-    if (categoryId === 'paletas') {
-      navigate('/catalogo');
-    } else {
-      navigate(`/catalogo/${categoryId}`);
-    }
+  if (loading || categorias.length === 0) {
+    return null;
   }
+
+  const handleTabClick = (path) => {
+    navigate(path);
+  };
 
   return (
     <nav className="category-tabs">
-      {categories.map((cat) => {
+      {categorias.map((cat) => {
         const isActive = activeCategory === cat.id;
         return (
           <button
             key={cat.id}
             className={`tab${isActive ? ' active' : ''}`}
-            onClick={() => handleTabClick(cat.id)}
+            onClick={() => handleTabClick(cat.path)}
           >
             {cat.label}
           </button>

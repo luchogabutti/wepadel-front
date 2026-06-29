@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AdminProfileSection } from '../../components/admin/profile/AdminProfileSection/AdminProfileSection';
-import { adminSectionContent } from '../../data/adminProductsData';
 import { useAuth } from '../../context/AuthContext';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { getUsuarioById, updateUsuario } from '../../services/usuariosService';
@@ -56,8 +55,8 @@ export const AdminProfileView = () => {
 
   return (
     <AdminProfileSection
-      title={adminSectionContent.profile.title}
-      subtitle={adminSectionContent.profile.subtitle}
+      title="Perfil Administrador"
+      subtitle="Datos de la cuenta con acceso al panel de administración."
       firstName={datos.firstName}
       lastName={datos.lastName}
       email={datos.email}

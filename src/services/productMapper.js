@@ -8,7 +8,7 @@ const EXT_MIME = {
   gif: 'image/gif',
 };
 
-const toDataUrl = (imagen) => {
+export const imagenToDataUrl = (imagen) => {
   if (!imagen?.archivoBase64) return null;
   const ext = imagen.nombre?.split('.').pop()?.toLowerCase();
   const mime = EXT_MIME[ext] || 'image/jpeg';
@@ -17,7 +17,7 @@ const toDataUrl = (imagen) => {
 
 export const mapProducto = (producto, imagenes = []) => {
   const primary = imagenes[0];
-  const url = primary ? toDataUrl(primary) : null;
+  const url = primary ? imagenToDataUrl(primary) : null;
 
   return {
     ...producto,

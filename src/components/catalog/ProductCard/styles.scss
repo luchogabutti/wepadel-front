@@ -38,19 +38,6 @@
     transition: transform 0.6s ease;
   }
 
-  .badge {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background-color: var(--mui-palette-success-main);
-    color: var(--mui-palette-success-contrastText);
-    font-weight: 700;
-    font-size: 11px;
-    padding: 4px 12px;
-    border-radius: 99px;
-    letter-spacing: 0.05em;
-  }
-
   .cart-btn {
     position: absolute !important;
     bottom: 16px !important;

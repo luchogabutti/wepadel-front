@@ -26,9 +26,11 @@ const mapAdminProduct = (producto, stock) => ({
 export const useAdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const list = await getProducts({ auth: true });
       const withDetails = await Promise.all(
@@ -47,8 +49,8 @@ export const useAdminProducts = () => {
         })
       );
       setProducts(withDetails);
-    } catch (error) {
-      console.error('Error al cargar productos admin:', error);
+    } catch (err) {
+      setError(err);
       setProducts([]);
     } finally {
       setLoading(false);
@@ -67,7 +69,7 @@ export const useAdminProducts = () => {
   return {
     products: adminProducts,
     loading,
+    error,
     refresh: load,
-    refreshStocks: load,
   };
 };

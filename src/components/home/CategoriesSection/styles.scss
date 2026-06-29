@@ -67,6 +67,19 @@
     );
   }
 
+  .category-card--no-image {
+    background-color: var(--mui-palette-background-paper);
+    border: 1px solid var(--mui-palette-divider);
+
+    .cat-overlay {
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.75) 10%,
+        transparent 60%
+      );
+    }
+  }
+
   .cat-content {
     position: relative;
     z-index: 1;

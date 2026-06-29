@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
 import { AdminCatalogToolbar } from '../../components/admin/catalog/AdminCatalogToolbar/AdminCatalogToolbar';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { AdminCatalogSection } from '../../components/admin/catalog/AdminCatalogSection/AdminCatalogSection';
 import { AdminProductModal } from '../../components/admin/catalog/AdminProductModal/AdminProductModal';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
-import { adminSectionContent } from '../../data/adminProductsData';
 import { useAdminProducts } from '../../hooks/useAdminProducts';
 import { useProducts } from '../../context/ProductsContext';
 import {
@@ -20,7 +20,7 @@ import { saveProductImage } from '../../services/imagenesService';
 
 export const AdminCatalogView = () => {
   const navigate = useNavigate();
-  const { products, loading, refresh } = useAdminProducts();
+  const { products, loading, error, refresh } = useAdminProducts();
   const { refresh: refreshCatalog } = useProducts();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [searchTerm, setSearchTerm] = useState('');
@@ -87,8 +87,8 @@ export const AdminCatalogView = () => {
   return (
     <>
       <AdminCatalogToolbar
-        title={adminSectionContent.catalog.title}
-        subtitle={adminSectionContent.catalog.subtitle}
+        title="Catálogo"
+        subtitle="Administra productos, precios y visibilidad en la tienda."
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onCreateProduct={() => setIsProductModalOpen(true)}
@@ -96,6 +96,12 @@ export const AdminCatalogView = () => {
 
       {loading ? (
         <LoadingState message="Cargando catálogo..." />
+      ) : error ? (
+        <ApiErrorState
+          error={error}
+          fallback="No se pudo cargar el catálogo."
+          onRetry={refresh}
+        />
       ) : (
         <AdminCatalogSection
           searchTerm={searchTerm}

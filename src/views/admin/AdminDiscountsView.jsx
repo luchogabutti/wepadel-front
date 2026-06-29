@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
 import { AdminDiscountsSection } from '../../components/admin/discount/AdminDiscountsSection/AdminDiscountsSection';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
-import { adminSectionContent } from '../../data/adminProductsData';
 import { useAdminProducts } from '../../hooks/useAdminProducts';
 import {
   getDescuentosByProducto,
@@ -22,10 +22,11 @@ const toRequest = (discount, overrides = {}) => ({
 });
 
 export const AdminDiscountsView = () => {
-  const { products, loading: productsLoading } = useAdminProducts();
+  const { products, loading: productsLoading, error: productsError, refresh } = useAdminProducts();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [discounts, setDiscounts] = useState([]);
   const [loadingDiscounts, setLoadingDiscounts] = useState(true);
+  const [discountsError, setDiscountsError] = useState(null);
 
   const imageById = useMemo(() => {
     const map = new Map();
@@ -55,9 +56,11 @@ export const AdminDiscountsView = () => {
     if (products.length === 0) {
       setDiscounts([]);
       setLoadingDiscounts(false);
+      setDiscountsError(null);
       return;
     }
     setLoadingDiscounts(true);
+    setDiscountsError(null);
     try {
       const lists = await Promise.all(
         products.map(async (product) => {
@@ -69,8 +72,9 @@ export const AdminDiscountsView = () => {
         })
       );
       setDiscounts(lists.flat().map(mapDescuento));
-    } catch (error) {
-      console.error('Error al cargar descuentos:', error);
+    } catch (err) {
+      setDiscountsError(err);
+      setDiscounts([]);
     } finally {
       setLoadingDiscounts(false);
     }
@@ -124,15 +128,29 @@ export const AdminDiscountsView = () => {
   };
 
   const loading = productsLoading || loadingDiscounts;
+  const error = productsError || discountsError;
+  const handleRetry = () => {
+    if (productsError) {
+      refresh();
+    } else {
+      loadDiscounts();
+    }
+  };
 
   return (
     <>
       {loading ? (
         <LoadingState message="Cargando descuentos..." />
+      ) : error ? (
+        <ApiErrorState
+          error={error}
+          fallback="No se pudieron cargar los descuentos."
+          onRetry={handleRetry}
+        />
       ) : (
         <AdminDiscountsSection
-          title={adminSectionContent.discounts.title}
-          subtitle={adminSectionContent.discounts.subtitle}
+          title="Gestión de Descuentos"
+          subtitle="Configura promociones temporales para tus productos de alto rendimiento."
           products={products}
           discounts={discounts}
           onAddDiscount={handleAddDiscount}

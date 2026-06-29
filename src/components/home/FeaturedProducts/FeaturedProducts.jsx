@@ -4,11 +4,14 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../../catalog/ProductPrice/ProductPrice';
+import { PLACEHOLDER_IMG } from '../../../services/productMapper';
+import { useCategorias } from '../../../context/CategoriesContext';
 import './styles.scss';
 
 export const FeaturedProducts = ({ products }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const { defaultCatalogPath } = useCategorias();
 
   const handleCardClick = (productId) => {
     navigate(`/producto/${productId}`);
@@ -32,7 +35,7 @@ export const FeaturedProducts = ({ products }) => {
         </div>
         <Button
           component={Link}
-          to="/catalogo"
+          to={defaultCatalogPath}
           endIcon={<ArrowForwardIcon sx={{ fontSize: '16px' }} />}
           className="view-all-btn"
           sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}
@@ -50,15 +53,10 @@ export const FeaturedProducts = ({ products }) => {
           >
             <div className="product-image-container">
               <img
-                src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
+                src={product.imagen || PLACEHOLDER_IMG}
                 alt={product.nombre}
                 className="product-image"
               />
-              {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
-                <span className="product-badge">
-                  {product.badge}
-                </span>
-              )}
               <IconButton
                 className="cart-button"
                 onClick={(e) => handleCartClick(e, product)}

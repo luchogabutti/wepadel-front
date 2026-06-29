@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { InputBase, Paper, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useProducts } from '../../../../context/ProductsContext';
+import { PLACEHOLDER_IMG } from '../../../../services/productMapper';
 
 export const ProductSearch = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export const ProductSearch = () => {
         .filter(
           (product) =>
             product.estaHabilitado !== false &&
-            ((product.nombre || product.descripcion || '')
+            ((product.nombre || '')
               .toLowerCase()
               .includes(normalizedQuery) ||
               (product.categoria || '').toLowerCase().includes(normalizedQuery))
@@ -62,10 +63,7 @@ export const ProductSearch = () => {
                 className="product-search-option"
                 onMouseDown={() => handleSelect(product.id)}
               >
-                <img
-                  src={product.imagen || 'https://placehold.co/400x400?text=WePadel'} // TODO: agregar data en backend/revisar — campo `imagen`
-                  alt=""
-                />
+                <img src={product.imagen || PLACEHOLDER_IMG} alt="" />
                 <span>{product.nombre}</span>
               </button>
             ))

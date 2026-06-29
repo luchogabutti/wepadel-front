@@ -6,7 +6,6 @@ import { HomeView } from './views/HomeView'
 import { CartView } from './views/CartView'
 import { CheckoutView } from './views/CheckoutView'
 import { CheckoutSuccessView } from './views/CheckoutSuccessView'
-import { PlaceholderView } from './views/PlaceholderView'
 import { CatalogView } from './views/CatalogView'
 import { ProductDetailView } from './views/ProductDetailView'
 import { ForgotPasswordView } from './views/ForgotPasswordView'
@@ -32,13 +31,13 @@ const App = () => {
         <Route path="carrito" element={<CartView />} />
         <Route path="checkout" element={<CheckoutView />} />
         <Route path="checkout/confirmacion/:orderId" element={<CheckoutSuccessView />} />
-        <Route path="catalogo" element={<CatalogView />} />
+        <Route path="catalogo" element={<Navigate to="/catalogo/paletas" replace />} />
         <Route path="catalogo/:categoria" element={<CatalogView />} />
         <Route path="producto/:id" element={<ProductDetailView />} />
         <Route path="login" element={<AuthView />} />
         <Route path="registro" element={<AuthView />} />
         <Route path="recuperar-contrasena" element={<ForgotPasswordView />} />
-        <Route path="mis-pedidos" element={<PlaceholderView title="Mis pedidos" />} />
+        <Route path="mis-pedidos" element={<Navigate to="/perfil/ordenes" replace />} />
         <Route path="sobre-nosotros" element={<AboutUsView />} />
         <Route path="politica-de-privacidad" element={<PrivacyPolicyView />} />
         <Route path="terminos-de-servicio" element={<TermsOfServiceView />} />

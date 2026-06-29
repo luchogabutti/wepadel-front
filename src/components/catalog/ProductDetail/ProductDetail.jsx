@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Typography, Button, IconButton, Rating, Breadcrumbs, Link as MuiLink } from '@mui/material';
+import { Typography, Button, IconButton, Breadcrumbs, Link as MuiLink } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -12,6 +12,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
+import { PLACEHOLDER_IMG } from '../../../services/productMapper';
 import './styles.scss';
 
 export const ProductDetail = ({ product }) => {
@@ -22,7 +23,7 @@ export const ProductDetail = ({ product }) => {
 
   const nombre = product.nombre;
   const categoriaSlug = product.categoria?.toLowerCase() || '';
-  const imagen = product.imagen || 'https://placehold.co/400x400?text=WePadel';
+  const imagen = product.imagen || PLACEHOLDER_IMG;
   const imagenes = product.imagenes?.length ? product.imagenes : [imagen];
   const inStock = Number(product.stock) > 0;
 
@@ -81,9 +82,6 @@ export const ProductDetail = ({ product }) => {
         <div className="detail-gallery">
           <div className="main-image-wrapper">
             <img src={displayImg} alt={nombre} className="main-image" />
-            {product.badge && ( // TODO: agregar data en backend/revisar — campo `badge`
-              <span className="detail-badge">{product.badge}</span>
-            )}
           </div>
           {imagenes.length > 1 && (
             <div className="thumbnail-list">
@@ -110,13 +108,6 @@ export const ProductDetail = ({ product }) => {
           <Typography variant="h1" className="product-title">
             {nombre}
           </Typography>
-
-          <div className="rating-row">
-            <Rating name="read-only" value={4.8} precision={0.1} readOnly size="small" />
-            <Typography variant="body2" className="rating-count">
-              4.8 (42 valoraciones de clientes)
-            </Typography>
-          </div>
 
           <div className="price-row">
             <ProductPrice product={product} size="lg" />

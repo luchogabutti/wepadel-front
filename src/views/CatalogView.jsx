@@ -1,28 +1,31 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, Alert } from '@mui/material';
+import { Typography } from '@mui/material';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
 import { ProductGrid } from '../components/catalog/ProductGrid/ProductGrid';
-import { categories } from '../data/categoriesData';
+import { useCategorias } from '../context/CategoriesContext';
 import { useProducts } from '../context/ProductsContext';
 
 export const CatalogView = () => {
   const { categoria } = useParams();
-  const activeCategory = categoria ?? 'paletas';
+  const { getCategoriaById } = useCategorias();
+  const activeCategory = getCategoriaById(categoria);
+  const activeSlug = activeCategory?.id ?? categoria;
 
-  const { products, loading, error } = useProducts();
+  const { products, loading, error, refresh } = useProducts();
 
-  const title = categories.find((cat) => cat.id === activeCategory)?.label;
+  const title = activeCategory?.label ?? '';
 
   const categoryProducts = useMemo(
     () =>
       products.filter(
         (p) =>
           p.estaHabilitado !== false &&
-          p.categoria?.toLowerCase() === activeCategory
+          p.categoria?.toUpperCase() === activeCategory?.label
       ),
     [activeCategory, products]
   );
@@ -34,9 +37,11 @@ export const CatalogView = () => {
 
     if (error) {
       return (
-        <Alert severity="error" sx={{ my: 4 }}>
-          No se pudieron cargar los productos. Intentá nuevamente más tarde.
-        </Alert>
+        <ApiErrorState
+          error={error}
+          fallback="No se pudieron cargar los productos."
+          onRetry={refresh}
+        />
       );
     }
 
@@ -48,12 +53,12 @@ export const CatalogView = () => {
       );
     }
 
-    return <ProductGrid products={categoryProducts} activeCategory={activeCategory} />;
+    return <ProductGrid products={categoryProducts} activeCategory={activeSlug} />;
   };
 
   return (
     <>
-      <CategoryTabs activeCategory={activeCategory} />
+      <CategoryTabs activeCategory={activeSlug} />
       <PageContainer>
         <PageHeader
           title={title}

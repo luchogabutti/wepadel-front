@@ -17,6 +17,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
+import { useCategorias } from '../../../../context/CategoriesContext'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -26,8 +27,8 @@ export const AdminProductModal = ({
   onClose,
   onSave,
 }) => {
+  const { categorias } = useCategorias()
   const isEditing = Boolean(productToEdit)
-  const [categoryId, setCategoryId] = useState('paletas')
   const [imageFile, setImageFile] = useState(null)
   const [imageError, setImageError] = useState('')
 
@@ -153,11 +154,12 @@ export const AdminProductModal = ({
                     name="categoryId"
                     defaultValue={productToEdit?.categoryId ?? 'paletas'}
                     label="Categoría"
-                    onChange={(e) => setCategoryId(e.target.value)}
                   >
-                    <MenuItem value="paletas">Paletas</MenuItem>
-                    <MenuItem value="pelotas">Pelotas</MenuItem>
-                    <MenuItem value="accesorios">Accesorios</MenuItem>
+                    {categorias.map((cat) => (
+                      <MenuItem key={cat.id} value={cat.id}>
+                        {cat.label}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>

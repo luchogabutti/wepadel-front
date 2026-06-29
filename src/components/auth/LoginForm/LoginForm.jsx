@@ -9,9 +9,11 @@ import {
   Checkbox,
   Link,
   InputAdornment,
+  IconButton,
 } from '@mui/material';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
-import LockIcon from '@mui/icons-material/Lock';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
 import { isLoginFormValid } from '../../../utils/authValidation';
@@ -25,6 +27,7 @@ export const LoginForm = () => {
   const { notifyError } = useAppSnackbar();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -94,14 +97,26 @@ export const LoginForm = () => {
           required
           variant="outlined"
           placeholder="••••••••"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           slotProps={{
             input: {
               endAdornment: (
                 <InputAdornment position="end">
-                  <LockIcon className="field-icon" />
+                  <IconButton
+                    type="button"
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                    size="small"
+                  >
+                    {showPassword ? (
+                      <VisibilityOffIcon className="field-icon" />
+                    ) : (
+                      <VisibilityIcon className="field-icon" />
+                    )}
+                  </IconButton>
                 </InputAdornment>
               ),
             },

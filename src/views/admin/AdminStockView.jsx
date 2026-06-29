@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
 import { AdminStockSection } from '../../components/admin/stock/AdminStockSection/AdminStockSection';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
-import { adminSectionContent } from '../../data/adminProductsData';
 import { useAdminProducts } from '../../hooks/useAdminProducts';
 import { updateStock } from '../../services/stocksService';
 
 export const AdminStockView = () => {
-  const { products, loading, refreshStocks } = useAdminProducts();
+  const { products, loading, error, refresh } = useAdminProducts();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [pendingStockSave, setPendingStockSave] = useState(null);
 
@@ -26,7 +26,7 @@ export const AdminStockView = () => {
     const changed = pendingStockSave.filter((p) => currentById.get(p.id) !== p.stock);
     try {
       await Promise.all(changed.map((p) => updateStock(p.id, Number(p.stock))));
-      await refreshStocks();
+      await refresh();
       notifySuccess('Stock guardado con éxito');
     } catch (error) {
       notifyError(error.message || 'No se pudo guardar el stock.');
@@ -39,10 +39,16 @@ export const AdminStockView = () => {
     <>
       {loading ? (
         <LoadingState message="Cargando stock..." />
+      ) : error ? (
+        <ApiErrorState
+          error={error}
+          fallback="No se pudo cargar el inventario."
+          onRetry={refresh}
+        />
       ) : (
         <AdminStockSection
-          title={adminSectionContent.stock.title}
-          subtitle={adminSectionContent.stock.subtitle}
+          title="Control de Inventario"
+          subtitle="Gestiona de forma masiva los niveles de disponibilidad de la tienda."
           products={products}
           onRequestSaveStock={handleRequestSaveStock}
         />
