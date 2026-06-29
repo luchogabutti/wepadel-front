@@ -27,7 +27,7 @@ export const HomeView = () => {
           error={error}
           fallback="No se pudieron cargar los productos destacados."
           onRetry={refresh}
-          sx={{ mx: 3 }}
+          sx={{ m: 8 }}
         />
       );
     }

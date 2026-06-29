@@ -2,11 +2,10 @@ import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useCategorias } from '../../../context/CategoriesContext';
 import { LoadingState } from '../../../components/general/LoadingState/LoadingState';
-import { ApiErrorState } from '../../../components/general/ApiErrorState/ApiErrorState';
 import './styles.scss';
 
 export const CategoriesSection = () => {
-  const { categorias, loading, error, refresh } = useCategorias();
+  const { categorias, loading, error } = useCategorias();
 
   if (loading) {
     return (
@@ -17,15 +16,7 @@ export const CategoriesSection = () => {
   }
 
   if (error) {
-    return (
-      <section className="categories-section">
-        <ApiErrorState
-          error={error}
-          fallback="No se pudieron cargar las categorías."
-          onRetry={refresh}
-        />
-      </section>
-    );
+    return null;
   }
 
   if (categorias.length === 0) {
