@@ -6,14 +6,16 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { ProductDetail } from '../components/catalog/ProductDetail/ProductDetail';
 import { useProducts } from '../context/ProductsContext';
-import { useCategorias } from '../context/CategoriesContext';
+import { useSelector } from 'react-redux';
+import { getDefaultCatalogPath } from '../Redux/categoriesSlice';
 import './styles.scss';
 
 export const ProductDetailView = () => {
   const { id } = useParams();
   const productId = parseInt(id, 10);
   const { products, loading, error, refresh } = useProducts();
-  const { defaultCatalogPath } = useCategorias();
+  const categorias = useSelector((state) => state.categories.items);
+  const defaultCatalogPath = getDefaultCatalogPath(categorias);
 
   const product =
     products.find((p) => p.id === productId && p.estaHabilitado !== false) ?? null;

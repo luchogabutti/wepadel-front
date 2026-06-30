@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AdminProfileSection } from '../../components/admin/profile/AdminProfileSection/AdminProfileSection';
-import { useAuth } from '../../context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout as logoutAction, updateUser } from '../../Redux/authSlice';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { getUsuarioById, updateUsuario } from '../../services/usuariosService';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +12,8 @@ const splitNombre = (nombreApellido = '') => {
 };
 
 export const AdminProfileView = () => {
-  const { user, updateUser, logout } = useAuth();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const { notifySuccess } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
@@ -41,11 +43,11 @@ export const AdminProfileView = () => {
       mail: form.email.trim(),
     });
     setUsuario(actualizado);
-    updateUser({ nombreApellido, mail: form.email.trim() });
+    dispatch(updateUser({ nombreApellido, mail: form.email.trim() }));
 
     if (emailChanged) {
       notifySuccess('Email actualizado. Iniciá sesión con tu nuevo email.');
-      logout();
+      dispatch(logoutAction());
       navigate('/login');
       return;
     }

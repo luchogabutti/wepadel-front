@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
 import { ConfirmationDialog } from '../../../general/ConfirmationDialog/ConfirmationDialog';
-import { useCategorias } from '../../../../context/CategoriesContext';
+import { useSelector } from 'react-redux';
+import { getDefaultCatalogPath } from '../../../../Redux/categoriesSlice';
 import './styles.scss';
 
 export const PointsBadge = ({ pointsValue = 500 }) => {
   const [usePointsDialogOpen, setUsePointsDialogOpen] = useState(false);
   const navigate = useNavigate();
-  const { defaultCatalogPath } = useCategorias();
+  const categorias = useSelector((state) => state.categories.items);
+  const defaultCatalogPath = getDefaultCatalogPath(categorias);
 
   const handleUsePoints = () => {
     setUsePointsDialogOpen(true);

@@ -7,13 +7,14 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
 import { ProductGrid } from '../components/catalog/ProductGrid/ProductGrid';
-import { useCategorias } from '../context/CategoriesContext';
+import { useSelector } from 'react-redux';
 import { useProducts } from '../context/ProductsContext';
 
 export const CatalogView = () => {
   const { categoria } = useParams();
-  const { getCategoriaById } = useCategorias();
-  const activeCategory = getCategoriaById(categoria);
+  const categorias = useSelector((state) => state.categories.items);
+  const activeCategory =
+    categorias.find((cat) => cat.id === categoria) ?? categorias[0] ?? null;
   const activeSlug = activeCategory?.id ?? categoria;
 
   const { products, loading, error, refresh } = useProducts();

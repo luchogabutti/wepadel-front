@@ -9,7 +9,7 @@ import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/
 import { CheckoutPointsCard } from '../components/checkout/CheckoutPointsCard/CheckoutPointsCard';
 import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDetail/CheckoutPaymentDetail';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { getPuntos } from '../services/puntosService';
 import { createOrden } from '../services/ordenesService';
@@ -24,7 +24,7 @@ const MONTO_ENVIO = 0;
 
 export const CheckoutView = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const user = useSelector((state) => state.auth.user);
   const { items, subtotal, refresh } = useCart();
   const { notifyError } = useAppSnackbar();
   const usuarioId = user?.id;

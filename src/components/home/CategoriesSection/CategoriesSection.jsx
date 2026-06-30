@@ -1,11 +1,13 @@
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useCategorias } from '../../../context/CategoriesContext';
+import { useSelector } from 'react-redux';
 import { LoadingState } from '../../../components/general/LoadingState/LoadingState';
 import './styles.scss';
 
 export const CategoriesSection = () => {
-  const { categorias, loading, error } = useCategorias();
+  const categorias = useSelector((state) => state.categories.items);
+  const loading = useSelector((state) => state.categories.loading);
+  const error = useSelector((state) => state.categories.error);
 
   if (loading) {
     return (

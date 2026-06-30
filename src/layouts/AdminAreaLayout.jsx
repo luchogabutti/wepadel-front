@@ -3,11 +3,11 @@ import {Box } from '@mui/material';
 import { Sidebar } from '../components/general/Sidebar/Sidebar';
 import { PageContainer } from '../components/layout/PageContainer';
 import { adminSidebarItems } from '../config/sidebarItems';
-import { useAuth } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
 import '../components/admin/styles.scss';
 
 export const AdminAreaLayout = () => {
-  const { user } = useAuth();
+  const user = useSelector((state) => state.auth.user);
 
   return (
   <Box sx={{ display: 'flex', alignItems: 'flex-start', bgcolor: 'background.default' }}>

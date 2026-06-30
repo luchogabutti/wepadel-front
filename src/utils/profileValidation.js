@@ -1,4 +1,4 @@
-import { isValidEmail } from './authValidation';
+import { isValidEmail } from './auth';
 
 const NAME_PATTERN = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,}$/;
 

@@ -17,7 +17,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
-import { useCategorias } from '../../../../context/CategoriesContext'
+import { useSelector } from 'react-redux'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -27,7 +27,7 @@ export const AdminProductModal = ({
   onClose,
   onSave,
 }) => {
-  const { categorias } = useCategorias()
+  const categorias = useSelector((state) => state.categories.items)
   const isEditing = Boolean(productToEdit)
   const [imageFile, setImageFile] = useState(null)
   const [imageError, setImageError] = useState('')

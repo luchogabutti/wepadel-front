@@ -3,14 +3,14 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { UserLogin } from './components/UserLogin';
 import { ShoppingCart } from './components/ShoppingCart';
 import { ProductSearch } from './components/ProductSearch';
-import { useAuth } from '../../../context/AuthContext';
+import { useSelector } from 'react-redux';
 import './styles.scss';
 
 const AUTH_ROUTES = ['/login', '/registro'];
 
 export const Header = () => {
   const { pathname } = useLocation();
-  const { isAdmin } = useAuth();
+  const isAdmin = useSelector((state) => state.auth.user?.rol === 'ADMINISTRADOR');
   const isAuthPage = AUTH_ROUTES.includes(pathname);
   const isAdminView = isAdmin || pathname.startsWith('/admin');
 

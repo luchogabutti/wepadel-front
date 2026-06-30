@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 import { PageHeader } from '../../../layout/PageHeader'
 import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
-import { useCategorias } from '../../../../context/CategoriesContext'
+import { useSelector } from 'react-redux'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -25,7 +25,7 @@ export const AdminEditProductSection = ({
   onCancel,
   onSave,
 }) => {
-  const { categorias } = useCategorias()
+  const categorias = useSelector((state) => state.categories.items)
   const [enabled, setEnabled] = useState(product.enabled)
   const [imageFile, setImageFile] = useState(null)
   const [imageError, setImageError] = useState('')

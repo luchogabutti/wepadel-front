@@ -4,14 +4,14 @@ import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { PageContainer } from '../components/layout/PageContainer';
 import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard/CheckoutSuccessCard';
-import { useAuth } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
 import { useProducts } from '../context/ProductsContext';
 import { getOrdenById } from '../services/ordenesService';
 import { PLACEHOLDER_IMG } from '../services/productMapper';
 
 export const CheckoutSuccessView = () => {
   const { orderId } = useParams();
-  const { user } = useAuth();
+  const user = useSelector((state) => state.auth.user);
   const { products } = useProducts();
   const [orden, setOrden] = useState(null);
   const [loading, setLoading] = useState(true);

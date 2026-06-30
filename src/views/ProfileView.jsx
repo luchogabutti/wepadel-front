@@ -5,7 +5,8 @@ import { PageHeader } from '../components/layout/PageHeader';
 import { ProfileDataCard } from '../components/profile/ProfileDataCard/ProfileDataCard';
 import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/ProfileBenefitsGrid';
 import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
-import { useAuth } from '../context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout as logoutAction, updateUser } from '../Redux/authSlice';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { getUsuarioById, updateUsuario } from '../services/usuariosService';
 import { getPuntos } from '../services/puntosService';
@@ -20,7 +21,8 @@ const splitNombre = (nombreApellido = '') => {
 };
 
 export const ProfileView = () => {
-  const { user, updateUser, logout } = useAuth();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const { notifySuccess } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
@@ -58,11 +60,11 @@ export const ProfileView = () => {
       mail: form.email.trim(),
     });
     setUsuario(actualizado);
-    updateUser({ nombreApellido, mail: form.email.trim() });
+    dispatch(updateUser({ nombreApellido, mail: form.email.trim() }));
 
     if (emailChanged) {
       notifySuccess('Email actualizado. Iniciá sesión con tu nuevo email.');
-      logout();
+      dispatch(logoutAction());
       navigate('/login');
       return;
     }

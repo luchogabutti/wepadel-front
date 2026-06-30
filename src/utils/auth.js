@@ -14,3 +14,11 @@ export const isRegisterFormValid = ({ firstName, lastName, email, password }) =>
   lastName.trim().length >= 2 &&
   isValidEmail(email) &&
   isRegisterPasswordValid(password);
+
+export const mapAuthResponse = (data) => ({
+  id: data.id,
+  nombreApellido: data.nombreApellido,
+  mail: data.mail,
+  rol: data.rol,
+  token: data.access_token,
+});

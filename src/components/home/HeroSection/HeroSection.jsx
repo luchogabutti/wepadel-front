@@ -2,14 +2,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { HERO_SLIDES, HERO_SLIDE_INTERVAL_MS } from '../../../config/heroSlides';
-import { useCategorias } from '../../../context/CategoriesContext';
-import { useAuth } from '../../../context/AuthContext';
+import { useSelector } from 'react-redux';
+import { getDefaultCatalogPath } from '../../../Redux/categoriesSlice';
 import './styles.scss';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  const { categorias, defaultCatalogPath } = useCategorias();
+  const isAuthenticated = useSelector((state) => Boolean(state.auth.user?.token));
+  const categorias = useSelector((state) => state.categories.items);
+  const defaultCatalogPath = getDefaultCatalogPath(categorias);
   const [activeSlide, setActiveSlide] = useState(0);
 
   const slides = useMemo(() => {

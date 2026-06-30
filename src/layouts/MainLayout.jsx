@@ -1,15 +1,21 @@
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from '../components/general/header/Header';
 import { CartProvider } from '../context/CartContext';
 import { ProductsProvider } from '../context/ProductsContext';
-import { CategoriesProvider } from '../context/CategoriesContext';
 import { ProductsErrorBanner } from '../components/general/ProductsErrorBanner/ProductsErrorBanner';
+import { fetchCategorias } from '../Redux/categoriesSlice';
 import { Box } from '@mui/material';
 import { Footer } from '../components/general/footer/Footer';
 
 export const MainLayout = () => {
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    dispatch(fetchCategorias());
+  }, [dispatch]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -17,7 +23,6 @@ export const MainLayout = () => {
 
   return (
     <ProductsProvider>
-      <CategoriesProvider>
       <CartProvider>
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', bgcolor: 'background.default' }}>
           <Header />
@@ -28,7 +33,6 @@ export const MainLayout = () => {
           <Footer />
         </Box>
       </CartProvider>
-      </CategoriesProvider>
     </ProductsProvider>
   );
 }

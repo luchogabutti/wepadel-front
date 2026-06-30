@@ -11,9 +11,10 @@ E-commerce de productos de pádel desarrollado como proyecto universitario en **
 - **React Router DOM** — navegación y rutas
 - **Sass (SCSS)** — estilos por componente y clases globales
 - **notistack** — notificaciones toast (éxito/error)
-- **Context API** — estado global (`AuthContext`, `ProductsContext`, `CartContext`)
+- **Redux Toolkit** + **React Redux** + **Axios** — estado global (`src/Redux/`: auth, categorías; en migración)
+- **Context API** — estado global pendiente de migrar (`ProductsContext`, `CartContext`)
 
-La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, admin). Algunos datos de UI siguen en `src/data/` (categorías, hero, textos del panel).
+La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, admin). Algunos datos de UI siguen en `src/data/` (hero, textos del panel).
 
 ## Estructura del proyecto
 
@@ -33,7 +34,8 @@ src/
 │   ├── layout/           # Wrappers de página reutilizables (PageContainer, etc.)
 │   └── profile/          # Datos de usuario y órdenes
 ├── config/               # Configuración de UI (sidebar)
-├── context/              # Estado global (auth, productos, carrito)
+├── Redux/                # Store y slices (auth, categories, ...)
+├── context/              # Estado global pendiente (productos, carrito)
 ├── services/             # Cliente HTTP y llamadas a la API
 ├── hooks/                # Hooks reutilizables (snackbar, paginación)
 ├── data/                 # Datos estáticos de UI (no reemplazan la API)
@@ -43,21 +45,31 @@ src/
     └── globals.scss      # Clases reutilizables (.surface-card, etc.)
 ```
 
-### Estado global (`src/context/`)
+### Estado global
+
+#### Redux (`src/Redux/`)
+
+| Slice | Rol |
+|-------|-----|
+| `authSlice` | Sesión del usuario, login/registro/logout (`useSelector` / `useDispatch`) |
+| `categoriesSlice` | Categorías desde `GET /categorias` |
+
+`Provider` de Redux en `main.jsx`. Ver [`src/Redux/README.md`](src/Redux/README.md) para el patrón de nuevos slices.
+
+#### Context API (`src/context/`) — pendiente de migrar
 
 | Contexto | Rol |
 |----------|-----|
-| `AuthContext` | Sesión del usuario, login/registro, token en `localStorage` o `sessionStorage` |
 | `ProductsContext` | Catálogo precargado desde la API (productos + imágenes + stock + descuentos) |
 | `CartContext` | Carrito del usuario autenticado (cliente) |
 
-`MainLayout` monta `ProductsProvider` y `CartProvider`. `AuthProvider` envuelve la app en `main.jsx`.
+`MainLayout` monta `ProductsProvider` y `CartProvider`.
 
 ### Datos estáticos (`src/data/`)
 
 | Archivo | Uso actual |
 |---------|------------|
-| `categoriesData.js` | Tabs y secciones de categorías en home/catálogo |
+| `categoriesData.js` | Legacy — las categorías vienen de la API vía `categoriesSlice` |
 | `heroSlides.js` | Imágenes del carrusel del hero |
 | `cartData.js` | Helpers de formato de precio (`formatCartPrice`, `formatCheckoutPrice`) |
 | `adminProductsData.js` | Títulos y subtítulos de secciones del panel admin (`adminSectionContent`) |
@@ -265,7 +277,7 @@ Cliente HTTP: `src/services/apiClient.js`.
 
 - Base URL desde `VITE_API_URL`.
 - Header `Authorization: Bearer <token>` cuando la llamada usa `auth: true`.
-- Token persistido en `localStorage` o `sessionStorage` bajo la clave `wepadel_auth`.
+- El token se lee desde el store de Redux (`state.auth.user.token`). Las llamadas HTTP de auth y categorías se hacen en los slices con Axios; el resto sigue en `services/` mientras se migra.
 
 Notificaciones de éxito/error: **notistack** (`SnackbarProvider` en `main.jsx`, hook `useAppSnackbar`).
 
@@ -280,12 +292,18 @@ Los datos quedan en memoria. Navegar entre home, catálogo y detalle **no vuelve
 
 ### Endpoints (`src/services/`)
 
-#### Auth — `authService.js`
+#### Auth — `src/Redux/authSlice.js`
 
 | Método | Endpoint | Auth |
 |--------|----------|------|
 | POST | `/api/v1/auth/authenticate` | No |
 | POST | `/api/v1/auth/register` | No |
+
+#### Categorías — `src/Redux/categoriesSlice.js`
+
+| Método | Endpoint | Auth |
+|--------|----------|------|
+| GET | `/categorias` | No |
 
 #### Productos — `productsService.js`
 

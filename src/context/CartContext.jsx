@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useSelector } from 'react-redux';
 import { useProducts } from './ProductsContext';
 import * as carritoService from '../services/carritoService';
 import { PLACEHOLDER_IMG } from '../services/productMapper';
@@ -27,7 +27,9 @@ const mapItem = (carritoItem, imageById) => {
 
 export const CartProvider = ({ children }) => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = Boolean(user?.token);
+  const isAdmin = user?.rol === 'ADMINISTRADOR';
   const { products } = useProducts();
 
   const usuarioId = user?.id;

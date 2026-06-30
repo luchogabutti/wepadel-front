@@ -1,18 +1,8 @@
+import { store } from '../Redux/store';
+
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-export const AUTH_STORAGE_KEY = 'wepadel_auth';
-
-export const getStoredAuth = () => {
-  try {
-    const raw =
-      localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-};
-
-const getStoredToken = () => getStoredAuth()?.token ?? null;
+const getStoredToken = () => store.getState()?.auth?.user?.token ?? null;
 
 const isNetworkFailure = (error) => {
   if (!error || error.name !== 'TypeError') return false;

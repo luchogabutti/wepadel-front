@@ -9,7 +9,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+import { useSelector } from 'react-redux';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
 import { PLACEHOLDER_IMG } from '../../../services/productMapper';
@@ -18,7 +18,7 @@ import './styles.scss';
 export const ProductDetail = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const isAdmin = useSelector((state) => state.auth.user?.rol === 'ADMINISTRADOR');
   const { addItem } = useCart();
 
   const nombre = product.nombre;

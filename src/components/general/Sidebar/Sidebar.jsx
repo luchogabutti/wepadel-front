@@ -3,7 +3,8 @@ import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, Box, Link, Typography } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { ConfirmationDialog } from '../ConfirmationDialog/ConfirmationDialog';
-import { useAuth } from '../../../context/AuthContext';
+import { useDispatch } from 'react-redux';
+import { logout as logoutAction } from '../../../Redux/authSlice';
 import './styles.scss';
 
 const isItemActive = (pathname, item) => {
@@ -17,11 +18,11 @@ const isItemActive = (pathname, item) => {
 export const Sidebar = ({ user, items }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const dispatch = useDispatch();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const handleLogout = () => {
-    logout();
+    dispatch(logoutAction());
     navigate('/login');
   };
 
