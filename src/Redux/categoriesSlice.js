@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { mapCategorias } from '../utils/categories';
 
-const URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const URL = 'http://localhost:8080';
 
 export const DEFAULT_CATEGORIA_ID = 'paletas';
 export const DEFAULT_CATALOG_PATH = '/catalogo/paletas';

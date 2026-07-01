@@ -9,9 +9,9 @@ import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/
 import { CheckoutPointsCard } from '../components/checkout/CheckoutPointsCard/CheckoutPointsCard';
 import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDetail/CheckoutPaymentDetail';
 import { useCart } from '../context/CartContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPoints } from '../Redux/profileSlice';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
-import { getPuntos } from '../services/puntosService';
 import { createOrden } from '../services/ordenesService';
 import {
   isCheckoutReady,
@@ -24,7 +24,9 @@ const MONTO_ENVIO = 0;
 
 export const CheckoutView = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const { points, pointsConversion } = useSelector((state) => state.profile);
   const { items, subtotal, refresh } = useCart();
   const { notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
@@ -48,23 +50,15 @@ export const CheckoutView = () => {
   const [manualPoints, setManualPoints] = useState('');
   const [showPaymentValidation, setShowPaymentValidation] = useState(false);
 
-  const [puntos, setPuntos] = useState({ cantidad: 0, conversion: 5 });
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!usuarioId) return;
-    getPuntos(usuarioId)
-      .then((data) => {
-        setPuntos({
-          cantidad: data?.cantidad ?? 0,
-          conversion: data?.conversion ?? 5,
-        });
-      })
-      .catch((err) => console.error('Error al obtener puntos:', err));
-  }, [usuarioId]);
+    dispatch(fetchPoints(usuarioId));
+  }, [dispatch, usuarioId]);
 
-  const availablePoints = puntos.cantidad;
-  const conversion = puntos.conversion || 1;
+  const availablePoints = points;
+  const conversion = pointsConversion || 1;
 
   const pointsState = {
     usePoints,

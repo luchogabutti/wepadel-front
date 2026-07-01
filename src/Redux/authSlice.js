@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { mapAuthResponse } from '../utils/auth';
 
-const URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const URL = 'http://localhost:8080';
 
 export const loginUser = createAsyncThunk('auth/loginUser', async ({ email, password }) => {
   const { data } = await axios.post(`${URL}/api/v1/auth/authenticate`, { email, password });
