@@ -1,9 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { AdminProfileSection } from '../../components/admin/profile/AdminProfileSection/AdminProfileSection';
+import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutAction, updateUser } from '../../Redux/authSlice';
+import { fetchProfile, updateProfile } from '../../Redux/profileSlice';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
-import { getUsuarioById, updateUsuario } from '../../services/usuariosService';
 import { useNavigate } from 'react-router-dom';
 
 const splitNombre = (nombreApellido = '') => {
@@ -14,18 +15,15 @@ const splitNombre = (nombreApellido = '') => {
 export const AdminProfileView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { notifySuccess } = useAppSnackbar();
+  const { usuario, loading } = useSelector((state) => state.profile);
+  const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
 
-  const [usuario, setUsuario] = useState(null);
-
   useEffect(() => {
     if (!usuarioId) return;
-    getUsuarioById(usuarioId)
-      .then(setUsuario)
-      .catch((err) => console.error('Error al obtener el perfil:', err));
-  }, [usuarioId]);
+    dispatch(fetchProfile(usuarioId));
+  }, [dispatch, usuarioId]);
 
   const datos = useMemo(() => {
     const fuente = usuario ?? user ?? {};
@@ -38,11 +36,19 @@ export const AdminProfileView = () => {
     const emailChanged =
       form.email.trim().toLowerCase() !== (datos.email ?? '').trim().toLowerCase();
 
-    const actualizado = await updateUsuario(usuarioId, {
-      nombreApellido,
-      mail: form.email.trim(),
-    });
-    setUsuario(actualizado);
+    const result = await dispatch(
+      updateProfile({
+        id: usuarioId,
+        nombreApellido,
+        mail: form.email.trim(),
+      })
+    );
+
+    if (updateProfile.rejected.match(result)) {
+      notifyError(result.error?.message || 'No se pudieron guardar los datos.');
+      return;
+    }
+
     dispatch(updateUser({ nombreApellido, mail: form.email.trim() }));
 
     if (emailChanged) {
@@ -54,6 +60,10 @@ export const AdminProfileView = () => {
 
     notifySuccess('Datos guardados.');
   };
+
+  if (loading) {
+    return <LoadingState message="Cargando perfil..." />;
+  }
 
   return (
     <AdminProfileSection

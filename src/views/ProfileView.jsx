@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Grid } from '@mui/material';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { PageHeader } from '../components/layout/PageHeader';
@@ -7,9 +7,8 @@ import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/P
 import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutAction, updateUser } from '../Redux/authSlice';
+import { fetchProfile, fetchPoints, updateProfile } from '../Redux/profileSlice';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
-import { getUsuarioById, updateUsuario } from '../services/usuariosService';
-import { getPuntos } from '../services/puntosService';
 import { useNavigate } from 'react-router-dom';
 
 const splitNombre = (nombreApellido = '') => {
@@ -23,26 +22,16 @@ const splitNombre = (nombreApellido = '') => {
 export const ProfileView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { notifySuccess } = useAppSnackbar();
+  const { usuario, points, loading, pointsLoading } = useSelector((state) => state.profile);
+  const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
-  const [usuario, setUsuario] = useState(null);
-  const [points, setPoints] = useState(0);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!usuarioId) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    Promise.all([
-      getUsuarioById(usuarioId).then(setUsuario),
-      getPuntos(usuarioId).then((data) => setPoints(data?.cantidad ?? 0)),
-    ])
-      .catch((err) => console.error('Error al cargar el perfil:', err))
-      .finally(() => setLoading(false));
-  }, [usuarioId]);
+    if (!usuarioId) return;
+    dispatch(fetchProfile(usuarioId));
+    dispatch(fetchPoints(usuarioId));
+  }, [dispatch, usuarioId]);
 
   const datos = useMemo(() => {
     const fuente = usuario ?? user ?? {};
@@ -55,11 +44,19 @@ export const ProfileView = () => {
     const emailChanged =
       form.email.trim().toLowerCase() !== (datos.email ?? '').trim().toLowerCase();
 
-    const actualizado = await updateUsuario(usuarioId, {
-      nombreApellido,
-      mail: form.email.trim(),
-    });
-    setUsuario(actualizado);
+    const result = await dispatch(
+      updateProfile({
+        id: usuarioId,
+        nombreApellido,
+        mail: form.email.trim(),
+      })
+    );
+
+    if (updateProfile.rejected.match(result)) {
+      notifyError(result.error?.message || 'No se pudieron guardar los datos.');
+      return;
+    }
+
     dispatch(updateUser({ nombreApellido, mail: form.email.trim() }));
 
     if (emailChanged) {
@@ -72,7 +69,7 @@ export const ProfileView = () => {
     notifySuccess('Datos guardados.');
   };
 
-  if (loading) {
+  if (loading || pointsLoading) {
     return <LoadingState message="Cargando tu perfil..." />;
   }
 

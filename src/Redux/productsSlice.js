@@ -8,7 +8,7 @@ import {
   getProductImagenId,
 } from '../utils/products';
 
-const URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const URL = 'http://localhost:8080';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
