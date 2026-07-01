@@ -1,7 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
 import { Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { HERO_SLIDES, HERO_SLIDE_INTERVAL_MS } from '../../../config/heroSlides';
 import { useSelector } from 'react-redux';
 import { getDefaultCatalogPath } from '../../../Redux/categoriesSlice';
 import './styles.scss';
@@ -11,52 +9,18 @@ export const HeroSection = () => {
   const isAuthenticated = useSelector((state) => Boolean(state.auth.user?.token));
   const categorias = useSelector((state) => state.categories.items);
   const defaultCatalogPath = getDefaultCatalogPath(categorias);
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  const slides = useMemo(() => {
-    const list = [...HERO_SLIDES];
-    const paletas = categorias.find((cat) => cat.id === 'paletas');
-    const paletasImg = paletas?.img;
-
-    if (paletasImg) {
-      list.push({
-        src: paletasImg,
-        alt: 'PALETAS',
-        position: 'center center',
-      });
-    }
-
-    return list;
-  }, [categorias]);
-
-  useEffect(() => {
-    setActiveSlide(0);
-  }, [slides.length]);
-
-  useEffect(() => {
-    if (slides.length <= 1) return undefined;
-
-    const timer = window.setInterval(() => {
-      setActiveSlide((current) => (current + 1) % slides.length);
-    }, HERO_SLIDE_INTERVAL_MS);
-
-    return () => window.clearInterval(timer);
-  }, [slides.length]);
 
   return (
     <section className="hero-section">
       <div className="hero-background" aria-hidden="true">
-        {slides.map((slide, index) => (
-          <img
-            key={slide.src}
-            src={slide.src}
-            alt={slide.alt}
-            className={`bg-img ${index === activeSlide ? 'bg-img--active' : ''}`}
-            style={{ objectPosition: slide.position }}
-            loading={index === 0 ? 'eager' : 'lazy'}
-            decoding="async"
-          />
-        ))}
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkpV-sAwDj0oBQJZ8X4mNOhR83zaLbVnI-sI5e2WidNmiV8VlWXxY6gQ-SwrcNu95WqvqhwfQPM42S4ExmfLmoiocD6T9_UP2HY2LOpfEsSLftBe_MVc5t7eSWd6EhYjKIEmZY5Frc6Gm5D1iBzYHvO5ESlTcg6uut1bXSSfNLD0wHIIlnrJssQFIHyivG-rxc0kY4j9p3f8f7v-zhcPSh8iomyNIqtaHl7y4VwWHcad7LP1a24L1vuocUVshz8HOxuYh9Ndre-JIA"
+          alt="Jugador de pádel en acción"
+          className="bg-img"
+          style={{ objectPosition: 'center 30%' }}
+          loading="eager"
+          decoding="async"
+        />
         <div className="bg-overlay" />
       </div>
 
