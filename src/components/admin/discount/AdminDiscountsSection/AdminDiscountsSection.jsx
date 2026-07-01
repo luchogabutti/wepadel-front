@@ -29,6 +29,7 @@ import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
 import { TablePaginationFooter } from '../../../general/TablePaginationFooter/TablePaginationFooter'
 import { buildShowingLabel } from '../../../../utils/paginationLabels'
 import { usePagination } from '../../../../hooks/usePagination'
+import { getProductImageUrl } from '../../../../utils/products'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -93,9 +94,9 @@ export const AdminDiscountsSection = ({
 
     const discountData = {
       productId,
-      productTitle: product.title,
-      productImg: product.img,
-      productCategory: product.categoryId.toUpperCase(),
+      productTitle: product.nombre,
+      productImg: getProductImageUrl(product),
+      productCategory: product.categoria,
       percentage: Number(form.percentage),
       startDate: form.startDate,
       endDate: form.endDate,
@@ -294,7 +295,7 @@ export const AdminDiscountsSection = ({
               >
                 {products.map((p) => (
                   <MenuItem key={p.id} value={p.id}>
-                    {p.title}
+                    {p.nombre}
                   </MenuItem>
                 ))}
               </Select>

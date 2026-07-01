@@ -12,7 +12,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
-import { PLACEHOLDER_IMG } from '../../../services/productMapper';
+import { getProductImageUrl } from '../../../utils/products';
 import './styles.scss';
 
 export const ProductDetail = ({ product }) => {
@@ -23,8 +23,8 @@ export const ProductDetail = ({ product }) => {
 
   const nombre = product.nombre;
   const categoriaSlug = product.categoria?.toLowerCase() || '';
-  const imagen = product.imagen || PLACEHOLDER_IMG;
-  const imagenes = product.imagenes?.length ? product.imagenes : [imagen];
+  const imagen = getProductImageUrl(product);
+  const imagenes = [imagen];
   const inStock = Number(product.stock) > 0;
 
   const descripcionParrafos = (product.descripcion || '')

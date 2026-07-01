@@ -4,7 +4,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import { ProductPrice } from '../../catalog/ProductPrice/ProductPrice';
-import { PLACEHOLDER_IMG } from '../../../services/productMapper';
+import { getProductImageUrl } from '../../../utils/products';
 import { useSelector } from 'react-redux';
 import { getDefaultCatalogPath } from '../../../Redux/categoriesSlice';
 import './styles.scss';
@@ -55,7 +55,7 @@ export const FeaturedProducts = ({ products }) => {
           >
             <div className="product-image-container">
               <img
-                src={product.imagen || PLACEHOLDER_IMG}
+                src={getProductImageUrl(product)}
                 alt={product.nombre}
                 className="product-image"
               />

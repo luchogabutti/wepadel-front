@@ -1,16 +1,17 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
 import { AdminDiscountsSection } from '../../components/admin/discount/AdminDiscountsSection/AdminDiscountsSection';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
-import { useAdminProducts } from '../../hooks/useAdminProducts';
+import { getProductImageUrl, PLACEHOLDER_IMG } from '../../utils/products';
+import { fetchAdminProducts } from '../../Redux/productsSlice';
 import {
   getDescuentosByProducto,
   createDescuento,
   updateDescuento,
   deleteDescuento,
 } from '../../services/descuentosService';
-import { PLACEHOLDER_IMG } from '../../services/productMapper';
 
 const toRequest = (discount, overrides = {}) => ({
   productoId: discount.productId,
@@ -22,7 +23,11 @@ const toRequest = (discount, overrides = {}) => ({
 });
 
 export const AdminDiscountsView = () => {
-  const { products, loading: productsLoading, error: productsError, refresh } = useAdminProducts();
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.products.items);
+  const productsLoading = useSelector((state) => state.products.loading);
+  const productsError = useSelector((state) => state.products.error);
+  const products = items;
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [discounts, setDiscounts] = useState([]);
   const [loadingDiscounts, setLoadingDiscounts] = useState(true);
@@ -30,7 +35,7 @@ export const AdminDiscountsView = () => {
 
   const imageById = useMemo(() => {
     const map = new Map();
-    products.forEach((p) => map.set(p.id, p.img));
+    products.forEach((p) => map.set(p.id, getProductImageUrl(p)));
     return map;
   }, [products]);
 
@@ -79,6 +84,10 @@ export const AdminDiscountsView = () => {
       setLoadingDiscounts(false);
     }
   }, [products, mapDescuento]);
+
+  useEffect(() => {
+    dispatch(fetchAdminProducts());
+  }, [dispatch]);
 
   useEffect(() => {
     loadDiscounts();
@@ -131,7 +140,7 @@ export const AdminDiscountsView = () => {
   const error = productsError || discountsError;
   const handleRetry = () => {
     if (productsError) {
-      refresh();
+      dispatch(fetchAdminProducts());
     } else {
       loadDiscounts();
     }

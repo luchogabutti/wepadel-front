@@ -12,11 +12,11 @@ import {
   FormControl,
   InputLabel,
   Switch,
-  FormControlLabel,
 } from '@mui/material'
 import { PageHeader } from '../../../layout/PageHeader'
 import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
 import { useSelector } from 'react-redux'
+import { getProductImageUrl, PLACEHOLDER_IMG } from '../../../../utils/products'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -26,7 +26,7 @@ export const AdminEditProductSection = ({
   onSave,
 }) => {
   const categorias = useSelector((state) => state.categories.items)
-  const [enabled, setEnabled] = useState(product.enabled)
+  const [estaHabilitado, setEstaHabilitado] = useState(product.estaHabilitado !== false)
   const [imageFile, setImageFile] = useState(null)
   const [imageError, setImageError] = useState('')
 
@@ -37,16 +37,12 @@ export const AdminEditProductSection = ({
 
     const updatedProduct = {
       ...product,
-      title: formData.get('title'),
-      name: formData.get('title'),
-      description: formData.get('description'),
-      sku: formData.get('sku'),
-      categoryId: formData.get('categoryId'),
-      category: formData.get('categoryId').toUpperCase(),
-      price: Number(formData.get('price')),
+      nombre: formData.get('nombre'),
+      descripcion: formData.get('descripcion'),
+      categoria: formData.get('categoria').toUpperCase(),
+      precio: Number(formData.get('precio')),
       stock: Number(formData.get('stock')),
-      enabled,
-      imagenId: product.imagenId,
+      estaHabilitado,
       imageFile,
     }
 
@@ -61,7 +57,7 @@ export const AdminEditProductSection = ({
         subtitle={
           <>
             Actualiza los detalles técnicos y disponibilidad de{' '}
-            <strong>{product.title}</strong>.
+            <strong>{product.nombre}</strong>.
           </>
         }
         alignActions="center"
@@ -92,21 +88,21 @@ export const AdminEditProductSection = ({
 
             <Box className="admin-form-fields-stack">
               <TextField
-                name="title"
+                name="nombre"
                 label="Nombre del Producto"
-                defaultValue={product.title}
+                defaultValue={product.nombre}
                 fullWidth
                 required
                 variant="outlined"
               />
 
               <TextField
-                name="description"
+                name="descripcion"
                 label="Descripción"
                 multiline
                 rows={4}
                 defaultValue={
-                  product.description ||
+                  product.descripcion ||
                   'Diseñada para jugadores avanzados que buscan potencia máxima sin perder el control.'
                 }
                 fullWidth
@@ -115,10 +111,9 @@ export const AdminEditProductSection = ({
 
               <Box className="admin-form-grid-2--responsive">
                 <TextField
-                  name="sku"
-                  label="SKU"
-                  defaultValue={product.sku}
-                  required
+                  label="ID"
+                  value={product.id}
+                  disabled
                   variant="outlined"
                 />
 
@@ -126,8 +121,8 @@ export const AdminEditProductSection = ({
                   <InputLabel id="edit-category-label">Categoría</InputLabel>
                   <Select
                     labelId="edit-category-label"
-                    name="categoryId"
-                    defaultValue={product.categoryId ?? 'paletas'}
+                    name="categoria"
+                    defaultValue={(product.categoria || 'PALETAS').toLowerCase()}
                     label="Categoría"
                   >
                     {categorias.map((cat) => (
@@ -149,10 +144,10 @@ export const AdminEditProductSection = ({
 
             <Box className="admin-form-grid-2--responsive admin-form-grid-2--responsive--spaced-top">
               <TextField
-                name="price"
+                name="precio"
                 label="Precio ($)"
                 type="number"
-                defaultValue={product.price}
+                defaultValue={product.precio}
                 required
                 variant="outlined"
                 slotProps={{ htmlInput: { min: 0, step: 0.01 } }}
@@ -180,7 +175,7 @@ export const AdminEditProductSection = ({
 
             <Box className="admin-edit-image-stack">
               <AdminProductImageUpload
-                currentImage={product.img}
+                currentImage={getProductImageUrl(product)}
                 onFileChange={setImageFile}
                 onError={setImageError}
                 uploadBoxClassName="admin-edit-upload-box"
@@ -203,8 +198,8 @@ export const AdminEditProductSection = ({
                   Visible en Tienda
                 </Typography>
                 <Switch
-                  checked={enabled}
-                  onChange={(e) => setEnabled(e.target.checked)}
+                  checked={estaHabilitado}
+                  onChange={(e) => setEstaHabilitado(e.target.checked)}
                   color="success"
                 />
               </Box>

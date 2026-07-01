@@ -5,14 +5,13 @@ import { CenteredPage } from '../components/layout/CenteredPage';
 import { PageContainer } from '../components/layout/PageContainer';
 import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard/CheckoutSuccessCard';
 import { useSelector } from 'react-redux';
-import { useProducts } from '../context/ProductsContext';
 import { getOrdenById } from '../services/ordenesService';
-import { PLACEHOLDER_IMG } from '../services/productMapper';
+import { getProductImageUrl, PLACEHOLDER_IMG } from '../utils/products';
 
 export const CheckoutSuccessView = () => {
   const { orderId } = useParams();
   const user = useSelector((state) => state.auth.user);
-  const { products } = useProducts();
+  const products = useSelector((state) => state.products.items);
   const [orden, setOrden] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +28,7 @@ export const CheckoutSuccessView = () => {
 
   const imageById = useMemo(() => {
     const map = new Map();
-    products.forEach((producto) => map.set(producto.id, producto.imagen));
+    products.forEach((producto) => map.set(producto.id, getProductImageUrl(producto)));
     return map;
   }, [products]);
 

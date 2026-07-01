@@ -2,6 +2,8 @@ import { store } from '../Redux/store';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
+export const PLACEHOLDER_IMG = 'https://placehold.co/400x400?text=WePadel';
+
 const getStoredToken = () => store.getState()?.auth?.user?.token ?? null;
 
 const isNetworkFailure = (error) => {

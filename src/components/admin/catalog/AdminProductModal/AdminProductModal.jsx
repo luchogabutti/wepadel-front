@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import { AdminProductImageUpload } from '../AdminProductImageUpload/AdminProductImageUpload'
 import { useSelector } from 'react-redux'
+import { getProductImageUrl } from '../../../../utils/products'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -45,16 +46,13 @@ export const AdminProductModal = ({
     const formData = new FormData(event.currentTarget)
 
     const savedProduct = {
-      id: productToEdit?.id ?? Date.now(),
-      title: formData.get('title'),
-      name: formData.get('title'),
-      sku: formData.get('sku'),
-      categoryId: formData.get('categoryId'),
-      category: formData.get('categoryId').toUpperCase(),
-      description: formData.get('description'),
-      price: Number(formData.get('price')),
+      ...productToEdit,
+      nombre: formData.get('nombre'),
+      categoria: formData.get('categoria').toUpperCase(),
+      descripcion: formData.get('descripcion'),
+      precio: Number(formData.get('precio')),
       stock: Number(formData.get('stock')),
-      enabled: productToEdit?.enabled ?? true,
+      estaHabilitado: productToEdit?.estaHabilitado ?? true,
       imageFile,
     }
 
@@ -114,7 +112,7 @@ export const AdminProductModal = ({
             </Typography>
 
               <AdminProductImageUpload
-                currentImage={productToEdit?.img}
+                currentImage={productToEdit ? getProductImageUrl(productToEdit) : undefined}
                 onFileChange={setImageFile}
                 onError={setImageError}
               />
@@ -127,48 +125,37 @@ export const AdminProductModal = ({
 
             <Box className="admin-product-form-column">
               <TextField
-                name="title"
+                name="nombre"
                 label="Nombre del Producto"
                 placeholder="Ej: Wilson Carbon Force Pro"
-                defaultValue={productToEdit?.title ?? ''}
+                defaultValue={productToEdit?.nombre ?? ''}
                 fullWidth
                 required
                 variant="outlined"
                 margin="normal"
               />
 
-              <Box className="admin-form-grid-2 admin-form-grid-2--spaced-y">
-                <TextField
-                  name="sku"
-                  label="SKU"
-                  placeholder="WP-CAN-001"
-                  defaultValue={productToEdit?.sku ?? ''}
-                  required
-                  variant="outlined"
-                />
-
-                <FormControl fullWidth>
-                  <InputLabel id="category-select-label">Categoría</InputLabel>
-                  <Select
-                    labelId="category-select-label"
-                    name="categoryId"
-                    defaultValue={productToEdit?.categoryId ?? 'paletas'}
-                    label="Categoría"
-                  >
-                    {categorias.map((cat) => (
-                      <MenuItem key={cat.id} value={cat.id}>
-                        {cat.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="category-select-label">Categoría</InputLabel>
+                <Select
+                  labelId="category-select-label"
+                  name="categoria"
+                  defaultValue={(productToEdit?.categoria || 'PALETAS').toLowerCase()}
+                  label="Categoría"
+                >
+                  {categorias.map((cat) => (
+                    <MenuItem key={cat.id} value={cat.id}>
+                      {cat.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
               <TextField
-                name="description"
+                name="descripcion"
                 label="Descripción"
                 placeholder="Describe las características técnicas y materiales..."
-                defaultValue={productToEdit?.description ?? ''}
+                defaultValue={productToEdit?.descripcion ?? ''}
                 multiline
                 rows={3}
                 fullWidth
@@ -178,11 +165,11 @@ export const AdminProductModal = ({
 
               <Box className="admin-form-grid-2 admin-form-grid-2--spaced-top-sm">
                 <TextField
-                  name="price"
+                  name="precio"
                   label="Precio ($)"
                   type="number"
                   placeholder="0.00"
-                  defaultValue={productToEdit?.price ?? ''}
+                  defaultValue={productToEdit?.precio ?? ''}
                   required
                   variant="outlined"
                   slotProps={{ htmlInput: { min: 0, step: 0.01 } }}

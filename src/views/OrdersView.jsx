@@ -10,14 +10,13 @@ import {
 import { buildShowingLabel } from '../utils/paginationLabels';
 import { useSelector } from 'react-redux';
 import { useCart } from '../context/CartContext';
-import { useProducts } from '../context/ProductsContext';
 import { usePagination } from '../hooks/usePagination';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { getOrdenes, cancelarOrden, mapOrden } from '../services/ordenesService';
 
 export const OrdersView = () => {
   const user = useSelector((state) => state.auth.user);
-  const { products } = useProducts();
+  const products = useSelector((state) => state.products.items);
   const { addItem } = useCart();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;

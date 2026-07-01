@@ -23,6 +23,7 @@ src/Redux/
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../Redux/authSlice';
 import { fetchCategorias } from '../Redux/categoriesSlice';
+import { fetchProducts } from '../Redux/productsSlice';
 
 const user = useSelector((state) => state.auth.user);
 const dispatch = useDispatch();
@@ -35,7 +36,7 @@ dispatch(loginUser({ email, password }));
 |-------|--------|
 | auth | Listo |
 | categories | Listo |
-| products | Pendiente (Juani) |
+| products | Listo |
 | cart | Pendiente (Fran) |
 | profile | Pendiente (Tino) |
 | discounts | Pendiente (Palo) |

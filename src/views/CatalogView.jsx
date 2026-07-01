@@ -1,23 +1,25 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { CategoryTabs } from '../components/catalog/CategoryTabs/CategoryTabs';
 import { ProductGrid } from '../components/catalog/ProductGrid/ProductGrid';
-import { useSelector } from 'react-redux';
-import { useProducts } from '../context/ProductsContext';
+import { fetchProducts } from '../Redux/productsSlice';
 
 export const CatalogView = () => {
+  const dispatch = useDispatch();
   const { categoria } = useParams();
   const categorias = useSelector((state) => state.categories.items);
+  const products = useSelector((state) => state.products.items);
+  const loading = useSelector((state) => state.products.loading);
+  const error = useSelector((state) => state.products.error);
   const activeCategory =
     categorias.find((cat) => cat.id === categoria) ?? categorias[0] ?? null;
   const activeSlug = activeCategory?.id ?? categoria;
-
-  const { products, loading, error, refresh } = useProducts();
 
   const title = activeCategory?.label ?? '';
 
@@ -41,7 +43,7 @@ export const CatalogView = () => {
         <ApiErrorState
           error={error}
           fallback="No se pudieron cargar los productos."
-          onRetry={refresh}
+          onRetry={() => dispatch(fetchProducts())}
         />
       );
     }
