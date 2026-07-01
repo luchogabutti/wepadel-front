@@ -1,15 +1,19 @@
 import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { HeroSection } from '../components/home/HeroSection/HeroSection';
 import { FeaturedProducts } from '../components/home/FeaturedProducts/FeaturedProducts';
 import { CategoriesSection } from '../components/home/CategoriesSection/CategoriesSection';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
-import { useProducts } from '../context/ProductsContext';
+import { fetchProducts } from '../Redux/productsSlice';
 
 const FEATURED_COUNT = 4;
 
 export const HomeView = () => {
-  const { products, loading, error, refresh } = useProducts();
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.items);
+  const loading = useSelector((state) => state.products.loading);
+  const error = useSelector((state) => state.products.error);
 
   const featured = useMemo(
     () => products.filter((p) => p.estaHabilitado !== false).slice(0, FEATURED_COUNT),
@@ -26,7 +30,7 @@ export const HomeView = () => {
         <ApiErrorState
           error={error}
           fallback="No se pudieron cargar los productos destacados."
-          onRetry={refresh}
+          onRetry={() => dispatch(fetchProducts())}
           sx={{ m: 8 }}
         />
       );

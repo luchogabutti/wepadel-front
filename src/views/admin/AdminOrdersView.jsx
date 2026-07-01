@@ -6,12 +6,12 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { OrderCard } from '../../components/profile/orders/OrderCard/OrderCard';
 import { TablePaginationFooter } from '../../components/general/TablePaginationFooter/TablePaginationFooter';
 import { buildShowingLabel } from '../../utils/paginationLabels';
-import { useProducts } from '../../context/ProductsContext';
+import { useSelector } from 'react-redux';
 import { usePagination } from '../../hooks/usePagination';
 import { getAllOrdenes, mapOrden } from '../../services/ordenesService';
 
 export const AdminOrdersView = () => {
-  const { products } = useProducts();
+  const products = useSelector((state) => state.products.items);
   const [ordersRaw, setOrdersRaw] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

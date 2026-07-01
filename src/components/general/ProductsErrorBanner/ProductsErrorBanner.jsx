@@ -1,10 +1,13 @@
 import { Alert, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { useProducts } from '../../../context/ProductsContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from '../../../Redux/productsSlice';
 import { getApiErrorMessage } from '../../../services/apiClient';
 
 export const ProductsErrorBanner = () => {
-  const { error, loading, refresh } = useProducts();
+  const dispatch = useDispatch();
+  const error = useSelector((state) => state.products.error);
+  const loading = useSelector((state) => state.products.loading);
 
   if (loading || !error) {
     return null;
@@ -15,7 +18,7 @@ export const ProductsErrorBanner = () => {
       severity="warning"
       sx={{ borderRadius: 0 }}
       action={
-        <Button color="inherit" size="small" startIcon={<RefreshIcon />} onClick={refresh}>
+        <Button color="inherit" size="small" startIcon={<RefreshIcon />} onClick={() => dispatch(fetchProducts())}>
           Reintentar
         </Button>
       }

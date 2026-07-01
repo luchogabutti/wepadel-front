@@ -1,5 +1,5 @@
 import { apiRequest } from './apiClient';
-import { PLACEHOLDER_IMG } from './productMapper';
+import { PLACEHOLDER_IMG } from './apiClient';
 
 const base = (usuarioId) => `/usuarios/${usuarioId}/ordenes`;
 

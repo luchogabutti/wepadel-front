@@ -16,6 +16,7 @@ import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
 import { TablePaginationFooter } from '../../../general/TablePaginationFooter/TablePaginationFooter'
 import { buildShowingLabel } from '../../../../utils/paginationLabels'
 import { usePagination } from '../../../../hooks/usePagination'
+import { getProductImageUrl } from '../../../../utils/products'
 import '../../styles.scss'
 import './styles.scss'
 
@@ -173,23 +174,23 @@ export const AdminStockSection = ({
                   <td>
                     <img
                       className="admin-product-image"
-                      src={product.img}
-                      alt={product.title}
+                      src={getProductImageUrl(product)}
+                      alt={product.nombre}
                     />
                   </td>
                   <td>
                     <Box className="admin-product-info">
-                      <strong>{product.title}</strong>
-                      <span>SKU: {product.sku}</span>
+                      <strong>{product.nombre}</strong>
+                      <span>ID: {product.id}</span>
                     </Box>
                   </td>
                   <td>
                     <span className="admin-category-badge">
-                      {product.categoryId.toUpperCase()}
+                      {product.categoria}
                     </span>
                   </td>
                   <td className="admin-price" style={{ textAlign: 'right' }}>
-                    ${product.price.toFixed(2)}
+                    ${Number(product.precio).toFixed(2)}
                   </td>
                   <td>
                     <Box className="admin-stock-stepper">

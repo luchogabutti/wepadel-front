@@ -1,9 +1,8 @@
 import { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useProducts } from './ProductsContext';
 import * as carritoService from '../services/carritoService';
-import { PLACEHOLDER_IMG } from '../services/productMapper';
+import { getProductImageUrl, PLACEHOLDER_IMG } from '../utils/products';
 import { notifySuccess, notifyError } from '../utils/appSnackbar';
 import { getApiErrorMessage } from '../services/apiClient';
 
@@ -30,7 +29,7 @@ export const CartProvider = ({ children }) => {
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = Boolean(user?.token);
   const isAdmin = user?.rol === 'ADMINISTRADOR';
-  const { products } = useProducts();
+  const products = useSelector((state) => state.products.items);
 
   const usuarioId = user?.id;
   const isCliente = isAuthenticated && !isAdmin;
@@ -41,7 +40,7 @@ export const CartProvider = ({ children }) => {
 
   const imageById = useMemo(() => {
     const map = new Map();
-    products.forEach((producto) => map.set(producto.id, producto.imagen));
+    products.forEach((producto) => map.set(producto.id, getProductImageUrl(producto)));
     return map;
   }, [products]);
 

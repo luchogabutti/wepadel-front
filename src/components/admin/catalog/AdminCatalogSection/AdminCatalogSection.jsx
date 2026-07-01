@@ -7,6 +7,7 @@ import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
 import { TablePaginationFooter } from '../../../general/TablePaginationFooter/TablePaginationFooter'
 import { buildShowingLabel } from '../../../../utils/paginationLabels'
 import { usePagination } from '../../../../hooks/usePagination'
+import { getProductImageUrl, PLACEHOLDER_IMG } from '../../../../utils/products'
 import '../../styles.scss'
 
 export const AdminCatalogSection = ({
@@ -20,9 +21,9 @@ export const AdminCatalogSection = ({
 
   const filteredProducts = products.filter((product) => {
     return (
-      product.title.toLowerCase().includes(normalizedSearch) ||
-      product.sku.toLowerCase().includes(normalizedSearch) ||
-      product.categoryId.toLowerCase().includes(normalizedSearch)
+      product.nombre.toLowerCase().includes(normalizedSearch) ||
+      String(product.id).includes(normalizedSearch) ||
+      (product.categoria || '').toLowerCase().includes(normalizedSearch)
     )
   })
 
@@ -30,8 +31,8 @@ export const AdminCatalogSection = ({
     usePagination(filteredProducts, 10)
 
   const totalProducts = products.length
-  const activeProducts = products.filter((product) => product.enabled).length
-  const categoriesCount = products.map((product) => product.category).length
+  const activeProducts = products.filter((product) => product.estaHabilitado !== false).length
+  const categoriesCount = new Set(products.map((product) => product.categoria)).size
 
   const catalogStats = [
     {
@@ -87,30 +88,30 @@ export const AdminCatalogSection = ({
                 <td>
                   <img
                     className="admin-product-image"
-                    src={product.img}
-                    alt={product.title}
+                    src={getProductImageUrl(product)}
+                    alt={product.nombre}
                   />
                 </td>
 
                 <td>
                   <Box className="admin-product-info">
                     <Typography variant="body2" className="admin-product-info__title">
-                      {product.title}
+                      {product.nombre}
                     </Typography>
                     <Typography variant="caption" className="admin-product-info__sku">
-                      SKU: {product.sku}
+                      ID: {product.id}
                     </Typography>
                   </Box>
                 </td>
 
                 <td>
                   <span className="admin-category-badge">
-                    {product.category}
+                    {product.categoria}
                   </span>
                 </td>
 
                 <td className="admin-price">
-                  ${Number(product.price).toFixed(2)}
+                  ${Number(product.precio).toFixed(2)}
                 </td>
 
                 <td>
@@ -130,7 +131,7 @@ export const AdminCatalogSection = ({
 
                 <td style={{ textAlign: 'center' }}>
                   <Switch
-                    checked={product.enabled}
+                    checked={product.estaHabilitado !== false}
                     onChange={() => onRequestToggleEnabled(product)}
                     color="success"
                     size="small"
