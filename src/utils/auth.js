@@ -15,6 +15,11 @@ export const isRegisterFormValid = ({ firstName, lastName, email, password }) =>
   isValidEmail(email) &&
   isRegisterPasswordValid(password);
 
+export const isResetPasswordFormValid = ({ password, confirmPassword }) =>
+  isRegisterPasswordValid(password) && password === confirmPassword;
+
+export const isForgotPasswordFormValid = ({ email }) => isValidEmail(email);
+
 export const mapAuthResponse = (data) => ({
   id: data.id,
   nombreApellido: data.nombreApellido,
