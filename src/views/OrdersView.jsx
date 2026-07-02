@@ -37,21 +37,26 @@ export const OrdersView = () => {
 
   const handleCancelOrder = async (orderId) => {
     const result = await dispatch(cancelOrder({ usuarioId, ordenId: orderId }));
+
     if (cancelOrder.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudo cancelar la orden.');
+      notifyError(result.payload || 'No se pudo cancelar la orden.');
       return;
     }
+
     const reload = await dispatch(fetchUserOrders(usuarioId));
+
     if (fetchUserOrders.rejected.match(reload)) {
       notifyError('La orden se canceló pero no se pudo actualizar la lista.');
       return;
     }
+
     notifySuccess('Orden cancelada.');
   };
 
   const handleReorder = async (orderId) => {
     const order = ordersList.find((item) => item.id === orderId);
     if (!order) return;
+
     try {
       for (const item of order.items) {
         await addItem({ id: item.productId, nombre: item.name }, item.quantity);

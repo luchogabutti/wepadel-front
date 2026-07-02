@@ -33,13 +33,17 @@ export const AdminCatalogView = () => {
   const handleToggleProductEnabled = async (productId) => {
     const product = products.find((p) => p.id === productId);
     if (!product) return;
+
     const nextEnabled = !product.estaHabilitado;
+
     try {
       const result = await dispatch(toggleProductEnabled({ product, nextEnabled }));
+
       if (toggleProductEnabled.rejected.match(result)) {
-        notifyError(result.error?.message || 'No se pudo actualizar el producto.');
+        notifyError(result.payload || 'No se pudo actualizar el producto.');
         return;
       }
+
       notifySuccess(nextEnabled ? 'Producto habilitado.' : 'Producto deshabilitado.');
     } catch (error) {
       notifyError(error.message || 'No se pudo actualizar el producto.');
@@ -53,10 +57,12 @@ export const AdminCatalogView = () => {
   const handleSaveProduct = async (savedProduct) => {
     try {
       const result = await dispatch(createProductWithDetails(savedProduct));
+
       if (createProductWithDetails.rejected.match(result)) {
-        notifyError(result.error?.message || 'No se pudo crear el producto.');
+        notifyError(result.payload || 'No se pudo crear el producto.');
         return;
       }
+
       setIsProductModalOpen(false);
       notifySuccess('¡Producto creado con éxito!');
     } catch (error) {
@@ -70,12 +76,15 @@ export const AdminCatalogView = () => {
 
   const handleConfirmDelete = async () => {
     if (!productToDelete) return;
+
     try {
       const result = await dispatch(deleteProducto(productToDelete.id));
+
       if (deleteProducto.rejected.match(result)) {
-        notifyError(result.error?.message || 'No se pudo eliminar el producto.');
+        notifyError(result.payload || 'No se pudo eliminar el producto.');
         return;
       }
+
       notifySuccess('¡Producto eliminado con éxito!');
     } catch (error) {
       notifyError(error.message || 'No se pudo eliminar el producto.');

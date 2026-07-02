@@ -7,7 +7,11 @@ export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/authenticate`, { email, password });
+      const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/authenticate`, {
+        email,
+        password,
+      });
+
       return mapAuthResponse(data);
     } catch (error) {
       return rejectWithValue(
@@ -27,6 +31,7 @@ export const registerUser = createAsyncThunk(
         password,
         role,
       });
+
       return mapAuthResponse(data);
     } catch (error) {
       return rejectWithValue(
@@ -67,8 +72,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload ?? action.error.message;
+        state.error = action.payload || 'No se pudo iniciar sesión.';
       })
+
       .addCase(registerUser.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -80,7 +86,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload ?? action.error.message;
+        state.error = action.payload || 'No se pudo crear la cuenta.';
       });
   },
 });

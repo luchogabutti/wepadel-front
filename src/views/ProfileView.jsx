@@ -53,7 +53,7 @@ export const ProfileView = () => {
     );
 
     if (updateProfile.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudieron guardar los datos.');
+      notifyError(result.payload || 'No se pudieron guardar los datos.');
       return;
     }
 

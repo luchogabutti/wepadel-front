@@ -31,10 +31,12 @@ export const AdminEditProductView = () => {
   const handleSave = async (updatedProduct) => {
     try {
       const result = await dispatch(updateProductWithDetails(updatedProduct));
+
       if (updateProductWithDetails.rejected.match(result)) {
-        notifyError(result.error?.message || 'No se pudo actualizar el producto.');
+        notifyError(result.payload || 'No se pudo actualizar el producto.');
         return;
       }
+
       notifySuccess('¡Producto actualizado con éxito!');
       navigate('/admin/catalogo');
     } catch (error) {

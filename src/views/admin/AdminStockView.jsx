@@ -26,16 +26,21 @@ export const AdminStockView = () => {
 
   const handleConfirmSaveStock = async () => {
     if (!pendingStockSave) return;
+
     const currentById = new Map(products.map((p) => [p.id, p.stock]));
+
     const changed = pendingStockSave
       .filter((p) => currentById.get(p.id) !== p.stock)
       .map((p) => ({ id: p.id, stock: p.stock }));
+
     try {
       const result = await dispatch(updateProductStock(changed));
+
       if (updateProductStock.rejected.match(result)) {
-        notifyError(result.error?.message || 'No se pudo guardar el stock.');
+        notifyError(result.payload || 'No se pudo guardar el stock.');
         return;
       }
+
       notifySuccess('Stock guardado con éxito');
     } catch (error) {
       notifyError(error.message || 'No se pudo guardar el stock.');
@@ -73,7 +78,6 @@ export const AdminStockView = () => {
         cancelLabel="Cancelar"
         center
       />
-
     </>
   );
 };

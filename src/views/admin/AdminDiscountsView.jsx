@@ -34,42 +34,52 @@ export const AdminDiscountsView = () => {
 
   const handleAddDiscount = async (descuento) => {
     const result = await dispatch(createDescuento(descuento));
+
     if (createDescuento.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudo aplicar el descuento.');
+      notifyError(result.payload || 'No se pudo aplicar el descuento.');
       return;
     }
+
     notifySuccess('¡Descuento aplicado con éxito!');
   };
 
   const handleDeleteDiscount = async (discountId) => {
     const result = await dispatch(deleteDescuento(discountId));
+
     if (deleteDescuento.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudo eliminar el descuento.');
+      notifyError(result.payload || 'No se pudo eliminar el descuento.');
       return;
     }
+
     notifySuccess('¡Descuento eliminado con éxito!');
   };
 
   const handleToggleStatus = async (discountId) => {
     const descuento = discounts.find((item) => item.id === discountId);
     if (!descuento) return;
+
     const nextActivo = !descuento.activo;
+
     const result = await dispatch(
       updateDescuento({ id: discountId, descuento, overrides: { activo: nextActivo } })
     );
+
     if (updateDescuento.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudo actualizar el descuento.');
+      notifyError(result.payload || 'No se pudo actualizar el descuento.');
       return;
     }
+
     notifySuccess(nextActivo ? 'Descuento activado.' : 'Descuento desactivado.');
   };
 
   const handleEditDiscount = async (descuento) => {
     const result = await dispatch(updateDescuento({ id: descuento.id, descuento }));
+
     if (updateDescuento.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudo actualizar el descuento.');
+      notifyError(result.payload || 'No se pudo actualizar el descuento.');
       return;
     }
+
     notifySuccess('Descuento actualizado con éxito.');
   };
 

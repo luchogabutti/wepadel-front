@@ -120,7 +120,7 @@ export const CheckoutView = () => {
     );
 
     if (createOrder.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudo confirmar la compra. Intentá nuevamente.');
+      notifyError(result.payload || 'No se pudo confirmar la compra. Intentá nuevamente.');
       return;
     }
 

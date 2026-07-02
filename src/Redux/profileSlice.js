@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
@@ -10,33 +10,51 @@ const getAuthHeaders = (getState) => {
 
 export const fetchProfile = createAsyncThunk(
   'profile/fetchProfile',
-  async (usuarioId, { getState }) => {
-    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}`, {
-      headers: getAuthHeaders(getState),
-    });
-    return data;
+  async (usuarioId, { getState, rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}`, {
+        headers: getAuthHeaders(getState),
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo cargar el perfil.')
+      );
+    }
   }
 );
 
 export const fetchPoints = createAsyncThunk(
   'profile/fetchPoints',
-  async (usuarioId, { getState }) => {
-    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/puntos`, {
-      headers: getAuthHeaders(getState),
-    });
-    return data;
+  async (usuarioId, { getState, rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/puntos`, {
+        headers: getAuthHeaders(getState),
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudieron cargar los puntos.')
+      );
+    }
   }
 );
 
 export const updateProfile = createAsyncThunk(
   'profile/updateProfile',
-  async ({ id, nombreApellido, mail }, { getState }) => {
-    const { data } = await axios.put(
-      `${API_BASE_URL}/usuarios/${id}`,
-      { nombreApellido, mail },
-      { headers: getAuthHeaders(getState) }
-    );
-    return data;
+  async ({ id, nombreApellido, mail }, { getState, rejectWithValue }) => {
+    try {
+      const { data } = await axios.put(
+        `${API_BASE_URL}/usuarios/${id}`,
+        { nombreApellido, mail },
+        { headers: getAuthHeaders(getState) }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo actualizar el perfil.')
+      );
+    }
   }
 );
 
@@ -75,9 +93,10 @@ const profileSlice = createSlice({
       })
       .addCase(fetchProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || 'No se pudo cargar el perfil.';
         state.usuario = null;
       })
+
       .addCase(fetchPoints.pending, (state) => {
         state.pointsLoading = true;
       })
@@ -86,10 +105,12 @@ const profileSlice = createSlice({
         state.points = action.payload?.cantidad ?? 0;
         state.pointsConversion = action.payload?.conversion ?? 5;
       })
-      .addCase(fetchPoints.rejected, (state) => {
+      .addCase(fetchPoints.rejected, (state, action) => {
         state.pointsLoading = false;
         state.points = 0;
+        state.error = action.payload || 'No se pudieron cargar los puntos.';
       })
+
       .addCase(updateProfile.pending, (state) => {
         state.updating = true;
         state.error = null;
@@ -101,8 +122,9 @@ const profileSlice = createSlice({
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.updating = false;
-        state.error = action.error.message;
+        state.error = action.payload || 'No se pudo actualizar el perfil.';
       })
+
       .addCase(logout, (state) => {
         state.usuario = null;
         state.points = 0;
