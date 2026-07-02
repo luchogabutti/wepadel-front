@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrderCard } from '../components/profile/orders/OrderCard/OrderCard';
 import { OrdersListSection } from '../components/profile/orders/OrdersListSection/OrdersListSection';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../hooks/useCart';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { fetchUserOrders, cancelOrder } from '../Redux/ordersSlice';
 import { buildImageById, mapOrden } from '../utils/orders';

@@ -2,7 +2,7 @@ import { Typography, Button, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from '../../../context/CartContext';
+import { useCart } from '../../../hooks/useCart';
 import { ProductPrice } from '../../catalog/ProductPrice/ProductPrice';
 import { getProductImageUrl } from '../../../utils/products';
 import { useSelector } from 'react-redux';

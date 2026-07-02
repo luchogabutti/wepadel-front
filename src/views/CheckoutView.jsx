@@ -8,7 +8,7 @@ import { CheckoutShippingCard } from '../components/checkout/CheckoutShippingCar
 import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/CheckoutPaymentForm';
 import { CheckoutPointsCard } from '../components/checkout/CheckoutPointsCard/CheckoutPointsCard';
 import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDetail/CheckoutPaymentDetail';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../hooks/useCart';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPoints } from '../Redux/profileSlice';
 import { createOrder } from '../Redux/ordersSlice';

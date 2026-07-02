@@ -10,7 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useCart } from '../../../context/CartContext';
+import { useCart } from '../../../hooks/useCart';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
 import { getProductImageUrl } from '../../../utils/products';
 import './styles.scss';
