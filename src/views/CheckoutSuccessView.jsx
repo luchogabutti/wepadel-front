@@ -1,36 +1,28 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { PageContainer } from '../components/layout/PageContainer';
 import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard/CheckoutSuccessCard';
-import { useSelector } from 'react-redux';
-import { getOrdenById } from '../services/ordenesService';
-import { getProductImageUrl, PLACEHOLDER_IMG } from '../utils/products';
+import { fetchOrderById } from '../Redux/ordersSlice';
+import { buildImageById } from '../utils/orders';
+import { PLACEHOLDER_IMG } from '../utils/products';
 
 export const CheckoutSuccessView = () => {
   const { orderId } = useParams();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const products = useSelector((state) => state.products.items);
-  const [orden, setOrden] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const orden = useSelector((state) => state.orders.current);
+  const loading = useSelector((state) => state.orders.loading);
 
   useEffect(() => {
-    if (!user?.id) {
-      setLoading(false);
-      return;
-    }
-    getOrdenById(user.id, orderId)
-      .then(setOrden)
-      .catch((err) => console.error('Error al obtener la orden:', err))
-      .finally(() => setLoading(false));
-  }, [user?.id, orderId]);
+    if (!user?.id || !orderId) return;
+    dispatch(fetchOrderById({ usuarioId: user.id, ordenId: orderId }));
+  }, [dispatch, user?.id, orderId]);
 
-  const imageById = useMemo(() => {
-    const map = new Map();
-    products.forEach((producto) => map.set(producto.id, getProductImageUrl(producto)));
-    return map;
-  }, [products]);
+  const imageById = useMemo(() => buildImageById(products), [products]);
 
   if (loading) {
     return (

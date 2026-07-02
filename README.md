@@ -11,7 +11,7 @@ E-commerce de productos de pádel desarrollado como proyecto universitario en **
 - **React Router DOM** — navegación y rutas
 - **Sass (SCSS)** — estilos por componente y clases globales
 - **notistack** — notificaciones toast (éxito/error)
-- **Redux Toolkit** + **React Redux** + **Axios** — estado global en `src/Redux/` (auth, categories, products, profile, discounts)
+- **Redux Toolkit** + **React Redux** + **Axios** — estado global en `src/Redux/` (auth, categories, products, profile, discounts, orders)
 - **Context API** — solo `CartContext` pendiente de migrar a `cartSlice`
 
 ## Estructura del proyecto
@@ -32,11 +32,11 @@ src/
 │   ├── layout/           # Wrappers de página reutilizables (PageContainer, etc.)
 │   └── profile/          # Datos de usuario y órdenes
 ├── config/               # Configuración de UI (sidebar)
-├── Redux/                # Store y slices (auth, categories, products, profile, discounts)
+├── Redux/                # Store y slices (auth, categories, products, profile, discounts, orders)
 ├── context/              # CartContext (pendiente de migrar)
-├── services/             # Cliente HTTP y llamadas legacy (carrito, órdenes)
+├── services/             # Cliente HTTP y carrito legacy (carritoService.js)
 ├── hooks/                # Hooks reutilizables (snackbar, paginación)
-├── utils/                # Mappers, validaciones y helpers (auth, checkout, perfil, productos)
+├── utils/                # Mappers, validaciones y helpers (auth, checkout, perfil, productos, órdenes)
 └── styles/
     ├── theme.js          # Tokens MUI + overrides de componentes
     └── globals.scss      # Clases reutilizables (.surface-card, etc.)
@@ -57,8 +57,9 @@ La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, adm
 | `productsSlice` | Catálogo tienda/admin, CRUD, stock, toggle habilitado; `GET /productos` enriched (`stock`, `imagenPrincipal`, `descuentos[]`) |
 | `profileSlice` | Perfil, puntos y checkout; limpia estado al logout |
 | `discountsSlice` | Mutaciones admin (`POST`/`PUT`/`DELETE` en `/descuentos`); listado derivado de `productos.descuentos[]` |
+| `ordersSlice` | Pedidos usuario/admin, checkout, cancelación; mapper en `utils/orders.js` |
 
-**Pendiente:** `cartSlice`, `ordersSlice`, `redux-persist` (sesión).
+**Pendiente:** `cartSlice`, `redux-persist` (sesión).
 
 #### Context API (`src/context/`)
 
@@ -269,7 +270,7 @@ Cliente HTTP compartido: `src/services/apiClient.js` (base URL, errores, `PLACEH
 - Header `Authorization: Bearer <token>` en slices Redux y en servicios con `auth: true`.
 - El token se lee desde `state.auth.user.token`.
 - Llamadas de dominio migradas viven en `src/Redux/*Slice.js` con axios.
-- Pendiente en `services/`: carrito (`carritoService.js`) y órdenes (`ordenesService.js`).
+- Pendiente en `services/`: carrito (`carritoService.js`).
 
 Notificaciones de éxito/error: **notistack** (`SnackbarProvider` en `main.jsx`, hook `useAppSnackbar`).
 
@@ -340,7 +341,7 @@ Listado: desde `productos.descuentos[]` (no hay fetch dedicado en el slice).
 | DELETE | `/usuarios/{id}/carrito/items/{productoId}` |
 | DELETE | `/usuarios/{id}/carrito` |
 
-#### Órdenes — `ordenesService.js` (requiere auth, pendiente `ordersSlice`)
+#### Órdenes — `ordersSlice.js` (+ `utils/orders.js`)
 
 | Método | Endpoint | Notas |
 |--------|----------|-------|
@@ -349,6 +350,8 @@ Listado: desde `productos.descuentos[]` (no hay fetch dedicado en el slice).
 | POST | `/usuarios/{id}/ordenes` | Checkout |
 | PUT | `/usuarios/{id}/ordenes/{ordenId}/cancelar` | Cancelar |
 | GET | `/ordenes` | Todas las órdenes (admin) |
+
+Listado compartido: `OrdersListSection` reutilizado en `OrdersView` y `AdminOrdersView`.
 
 ## Licencia
 

@@ -25,6 +25,7 @@ import { loginUser } from '../Redux/authSlice';
 import { fetchCategorias } from '../Redux/categoriesSlice';
 import { fetchProducts } from '../Redux/productsSlice';
 import { fetchProfile } from '../Redux/profileSlice';
+import { fetchUserOrders } from '../Redux/ordersSlice';
 
 const user = useSelector((state) => state.auth.user);
 const dispatch = useDispatch();
@@ -41,6 +42,6 @@ dispatch(loginUser({ email, password }));
 | cart | Pendiente (Fran) |
 | profile | Listo |
 | discounts | Listo |
-| orders | Pendiente (Juani) |
+| orders | Listo |
 
 > **Nota:** `redux-persist` se agregará al final del TP para persistir la sesión. Por ahora, al recargar la página hay que volver a iniciar sesión.

@@ -11,8 +11,8 @@ import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDet
 import { useCart } from '../context/CartContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPoints } from '../Redux/profileSlice';
+import { createOrder } from '../Redux/ordersSlice';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
-import { createOrden } from '../services/ordenesService';
 import {
   isCheckoutReady,
   isShippingValid,
@@ -27,6 +27,7 @@ export const CheckoutView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const { points, pointsConversion } = useSelector((state) => state.profile);
+  const mutating = useSelector((state) => state.orders.mutating);
   const { items, subtotal, refresh } = useCart();
   const { notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
@@ -49,8 +50,6 @@ export const CheckoutView = () => {
   const [pointsMode, setPointsMode] = useState('all');
   const [manualPoints, setManualPoints] = useState('');
   const [showPaymentValidation, setShowPaymentValidation] = useState(false);
-
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!usuarioId) return;
@@ -106,29 +105,30 @@ export const CheckoutView = () => {
       return;
     }
 
-    setSubmitting(true);
+    const result = await dispatch(
+      createOrder({
+        usuarioId,
+        payload: {
+          usuario: usuarioId,
+          direccion: `${shippingData.address}, ${shippingData.city}`,
+          cp: shippingData.postalCode,
+          montoEnvio: MONTO_ENVIO,
+          usaPuntos: usePoints && puntosUsados > 0,
+          puntosUsados: usePoints ? puntosUsados : 0,
+        },
+      })
+    );
 
-    try {
-      const payload = {
-        usuario: usuarioId,
-        direccion: `${shippingData.address}, ${shippingData.city}`,
-        cp: shippingData.postalCode,
-        montoEnvio: MONTO_ENVIO,
-        usaPuntos: usePoints && puntosUsados > 0,
-        puntosUsados: usePoints ? puntosUsados : 0,
-      };
-
-      const orden = await createOrden(usuarioId, payload);
-      await refresh();
-      navigate(`/checkout/confirmacion/${orden.id}`, {
-        state: { pointsEarned: orden.puntosGenerados },
-      });
-    } catch (err) {
-      const message = err.message || 'No se pudo confirmar la compra. Intentá nuevamente.';
-      notifyError(message);
-    } finally {
-      setSubmitting(false);
+    if (createOrder.rejected.match(result)) {
+      notifyError(result.error?.message || 'No se pudo confirmar la compra. Intentá nuevamente.');
+      return;
     }
+
+    const orden = result.payload;
+    await refresh();
+    navigate(`/checkout/confirmacion/${orden.id}`, {
+      state: { pointsEarned: orden.puntosGenerados },
+    });
   };
 
   return (
@@ -173,7 +173,7 @@ export const CheckoutView = () => {
               subtotal={subtotal}
               pointsDiscount={pointsDiscount}
               total={total}
-              canConfirm={canConfirm && !submitting}
+              canConfirm={canConfirm && !mutating}
               validationMessage={validationMessage}
               onConfirm={handleConfirm}
             />

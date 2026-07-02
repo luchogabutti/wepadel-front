@@ -1,20 +1,4 @@
-import { apiRequest } from './apiClient';
-import { PLACEHOLDER_IMG } from './apiClient';
-
-const base = (usuarioId) => `/usuarios/${usuarioId}/ordenes`;
-
-export const getOrdenes = (usuarioId) => apiRequest(base(usuarioId), { auth: true });
-
-export const getOrdenById = (usuarioId, ordenId) =>
-  apiRequest(`${base(usuarioId)}/${ordenId}`, { auth: true });
-
-export const createOrden = (usuarioId, payload) =>
-  apiRequest(base(usuarioId), { method: 'POST', body: payload, auth: true });
-
-export const cancelarOrden = (usuarioId, ordenId) =>
-  apiRequest(`${base(usuarioId)}/${ordenId}/cancelar`, { method: 'PUT', auth: true });
-
-export const getAllOrdenes = () => apiRequest('/ordenes', { auth: true });
+import { getProductImageUrl, PLACEHOLDER_IMG } from './products';
 
 const STATUS_MAP = {
   CONFIRMADA: 'confirmada',
@@ -32,6 +16,12 @@ const formatFecha = (iso) => {
   }).format(date);
 };
 
+export const buildImageById = (products = []) => {
+  const map = new Map();
+  products.forEach((producto) => map.set(producto.id, getProductImageUrl(producto)));
+  return map;
+};
+
 export const mapOrden = (orden, imageById = new Map()) => ({
   id: orden.id,
   date: formatFecha(orden.fechaCompra),
@@ -39,6 +29,7 @@ export const mapOrden = (orden, imageById = new Map()) => ({
   total: Number(orden.total ?? 0),
   pointsEarned: orden.puntosGenerados ?? 0,
   pointsUsed: orden.puntosUsados ?? 0,
+  customerName: orden.usuario?.nombreApellido ?? orden.usuario?.mail ?? '',
   items: (orden.items ?? []).map((item) => ({
     productId: item.producto?.id,
     name: item.producto?.nombre,
