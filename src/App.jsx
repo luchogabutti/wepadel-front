@@ -9,6 +9,7 @@ import { CheckoutSuccessView } from './views/CheckoutSuccessView'
 import { CatalogView } from './views/CatalogView'
 import { ProductDetailView } from './views/ProductDetailView'
 import { ForgotPasswordView } from './views/ForgotPasswordView'
+import { ResetPasswordView } from './views/ResetPasswordView'
 import { AuthView } from './views/AuthView'
 import { ProfileView } from './views/ProfileView'
 import { OrdersView } from './views/OrdersView'
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="login" element={<AuthView />} />
         <Route path="registro" element={<AuthView />} />
         <Route path="recuperar-contrasena" element={<ForgotPasswordView />} />
+        <Route path="reset-password" element={<ResetPasswordView />} />
         <Route path="mis-pedidos" element={<Navigate to="/perfil/ordenes" replace />} />
         <Route path="sobre-nosotros" element={<AboutUsView />} />
         <Route path="politica-de-privacidad" element={<PrivacyPolicyView />} />

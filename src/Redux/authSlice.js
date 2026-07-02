@@ -39,6 +39,39 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const forgotPassword = createAsyncThunk(
+  'auth/forgotPassword',
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/forgot-password`, {
+        email: email.trim(),
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo procesar la solicitud. Intentá de nuevo.')
+      );
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async ({ token, newPassword }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/reset-password`, {
+        token,
+        newPassword,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo restablecer la contraseña. Intentá de nuevo.')
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
