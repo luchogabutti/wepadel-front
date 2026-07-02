@@ -1,4 +1,4 @@
-# Redux — WePadel
+# Redux — README A ELIMINAR UNA VEZ INTEGRADO AL 100% REDUX EN EL PROYECTO. ES SOLO PARA QUE QUIEN TENGA QUE HACER UNA SLICE SIGA ESTA CONVENCION.
 
 Estructura simple (como en clase):
 
@@ -40,7 +40,7 @@ dispatch(loginUser({ email, password }));
 | products | Listo |
 | cart | Pendiente (Fran) |
 | profile | Listo |
-| discounts | Pendiente (Palo) |
+| discounts | Listo |
 | orders | Pendiente (Juani) |
 
 > **Nota:** `redux-persist` se agregará al final del TP para persistir la sesión. Por ahora, al recargar la página hay que volver a iniciar sesión.
