@@ -1,29 +1,63 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { logout } from './authSlice';
+import { loginUser, logout, registerUser } from './authSlice';
 import { API_BASE_URL } from '../utils/api';
+import { normalizeUserFetchArg } from './fetchArgs';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+const resetUserOrdersCache = (state) => {
+  state.userOrdersLoaded = false;
+  state.userOrdersUserId = null;
+};
+
+const resetAdminOrdersCache = (state) => {
+  state.adminOrdersLoaded = false;
+};
+
 export const fetchUserOrders = createAsyncThunk(
   'orders/fetchUserOrders',
-  async (usuarioId, { getState }) => {
+  async (arg, { getState }) => {
+    const { usuarioId } = normalizeUserFetchArg(arg);
     const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes`, {
       headers: getAuthHeaders(getState),
     });
-    return data ?? [];
+    return { usuarioId, data: data ?? [] };
+  },
+  {
+    condition: (arg, { getState }) => {
+      const { usuarioId, forceRefresh } = normalizeUserFetchArg(arg);
+      if (!usuarioId) return false;
+      if (forceRefresh) return true;
+
+      const { orders } = getState();
+      return !(orders.userOrdersLoaded && orders.userOrdersUserId === usuarioId);
+    },
   }
 );
 
-export const fetchAllOrders = createAsyncThunk('orders/fetchAllOrders', async (_, { getState }) => {
-  const { data } = await axios.get(`${API_BASE_URL}/ordenes`, {
-    headers: getAuthHeaders(getState),
-  });
-  return data ?? [];
-});
+export const fetchAllOrders = createAsyncThunk(
+  'orders/fetchAllOrders',
+  async (arg = {}, { getState }) => {
+    const forceRefresh = typeof arg === 'object' && arg !== null ? Boolean(arg.forceRefresh) : false;
+    void forceRefresh;
+
+    const { data } = await axios.get(`${API_BASE_URL}/ordenes`, {
+      headers: getAuthHeaders(getState),
+    });
+    return data ?? [];
+  },
+  {
+    condition: (arg, { getState }) => {
+      const forceRefresh = typeof arg === 'object' && arg !== null ? Boolean(arg.forceRefresh) : false;
+      if (forceRefresh) return true;
+      return !getState().orders.adminOrdersLoaded;
+    },
+  }
+);
 
 export const fetchOrderById = createAsyncThunk(
   'orders/fetchOrderById',
@@ -60,38 +94,55 @@ const ordersSlice = createSlice({
   initialState: {
     items: [],
     current: null,
+    userOrdersLoaded: false,
+    userOrdersUserId: null,
+    adminOrdersLoaded: false,
     loading: false,
     mutating: false,
     error: null,
   },
   reducers: {
-    clearCurrentOrder(state) {
-      state.current = null;
-    },
+    invalidateUserOrders: resetUserOrdersCache,
+    invalidateAdminOrders: resetAdminOrdersCache,
   },
   extraReducers: (builder) => {
     const handleListPending = (state) => {
       state.loading = true;
       state.error = null;
     };
-    const handleListFulfilled = (state, action) => {
-      state.loading = false;
-      state.items = action.payload;
-      state.error = null;
-    };
     const handleListRejected = (state, action) => {
       state.loading = false;
       state.error = action.error.message;
-      state.items = [];
     };
 
     builder
       .addCase(fetchUserOrders.pending, handleListPending)
-      .addCase(fetchUserOrders.fulfilled, handleListFulfilled)
-      .addCase(fetchUserOrders.rejected, handleListRejected)
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload.data;
+        state.userOrdersUserId = action.payload.usuarioId;
+        state.userOrdersLoaded = true;
+        state.adminOrdersLoaded = false;
+        state.error = null;
+      })
+      .addCase(fetchUserOrders.rejected, (state, action) => {
+        handleListRejected(state, action);
+        resetUserOrdersCache(state);
+        state.items = [];
+      })
       .addCase(fetchAllOrders.pending, handleListPending)
-      .addCase(fetchAllOrders.fulfilled, handleListFulfilled)
-      .addCase(fetchAllOrders.rejected, handleListRejected)
+      .addCase(fetchAllOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+        state.adminOrdersLoaded = true;
+        resetUserOrdersCache(state);
+        state.error = null;
+      })
+      .addCase(fetchAllOrders.rejected, (state, action) => {
+        handleListRejected(state, action);
+        resetAdminOrdersCache(state);
+        state.items = [];
+      })
       .addCase(fetchOrderById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -114,6 +165,7 @@ const ordersSlice = createSlice({
       .addCase(createOrder.fulfilled, (state) => {
         state.mutating = false;
         state.error = null;
+        resetUserOrdersCache(state);
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.mutating = false;
@@ -123,13 +175,28 @@ const ordersSlice = createSlice({
         state.mutating = true;
         state.error = null;
       })
-      .addCase(cancelOrder.fulfilled, (state) => {
+      .addCase(cancelOrder.fulfilled, (state, action) => {
         state.mutating = false;
         state.error = null;
+        state.items = state.items.map((orden) =>
+          orden.id === action.payload ? { ...orden, estado: 'CANCELADA' } : orden
+        );
       })
       .addCase(cancelOrder.rejected, (state, action) => {
         state.mutating = false;
         state.error = action.error.message;
+      })
+      .addCase(loginUser.fulfilled, (state) => {
+        state.items = [];
+        state.current = null;
+        resetUserOrdersCache(state);
+        resetAdminOrdersCache(state);
+      })
+      .addCase(registerUser.fulfilled, (state) => {
+        state.items = [];
+        state.current = null;
+        resetUserOrdersCache(state);
+        resetAdminOrdersCache(state);
       })
       .addCase(logout, (state) => {
         state.items = [];
@@ -137,9 +204,11 @@ const ordersSlice = createSlice({
         state.loading = false;
         state.mutating = false;
         state.error = null;
+        resetUserOrdersCache(state);
+        resetAdminOrdersCache(state);
       });
   },
 });
 
-export const { clearCurrentOrder } = ordersSlice.actions;
+export const { invalidateUserOrders, invalidateAdminOrders } = ordersSlice.actions;
 export default ordersSlice.reducer;
