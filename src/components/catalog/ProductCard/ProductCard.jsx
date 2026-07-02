@@ -1,7 +1,7 @@
 import { Typography, IconButton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../../context/CartContext';
+import { useCart } from '../../../hooks/useCart';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
 import { getProductImageUrl } from '../../../utils/products';
 import './styles.scss';

@@ -11,8 +11,9 @@ E-commerce de productos de pádel desarrollado como proyecto universitario en **
 - **React Router DOM** — navegación y rutas
 - **Sass (SCSS)** — estilos por componente y clases globales
 - **notistack** — notificaciones toast (éxito/error)
-- **Redux Toolkit** + **React Redux** + **Axios** — estado global en `src/Redux/` (auth, categories, products, profile, discounts, orders)
-- **Context API** — solo `CartContext` pendiente de migrar a `cartSlice`
+- **Redux Toolkit** + **React Redux** + **Axios** — estado global en `src/Redux/` (auth, categories, products, profile, discounts, orders, cart)
+
+La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, admin).
 
 ## Estructura del proyecto
 
@@ -32,17 +33,14 @@ src/
 │   ├── layout/           # Wrappers de página reutilizables (PageContainer, etc.)
 │   └── profile/          # Datos de usuario y órdenes
 ├── config/               # Configuración de UI (sidebar)
-├── Redux/                # Store y slices (auth, categories, products, profile, discounts, orders)
-├── context/              # CartContext (pendiente de migrar)
-├── services/             # Cliente HTTP y carrito legacy (carritoService.js)
-├── hooks/                # Hooks reutilizables (snackbar, paginación)
-├── utils/                # Mappers, validaciones y helpers (auth, checkout, perfil, productos, órdenes)
+├── Redux/                # Store y slices (auth, categories, products, profile, discounts, orders, cart)
+├── services/             # Cliente HTTP compartido (`apiClient.js`)
+├── hooks/                # Hooks reutilizables (snackbar, paginación, carrito)
+├── utils/                # Mappers, validaciones y helpers (auth, checkout, perfil, productos, órdenes, carrito)
 └── styles/
     ├── theme.js          # Tokens MUI + overrides de componentes
     └── globals.scss      # Clases reutilizables (.surface-card, etc.)
 ```
-
-La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, admin).
 
 ### Estado global
 
@@ -58,16 +56,11 @@ La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, adm
 | `profileSlice` | Perfil, puntos y checkout; limpia estado al logout |
 | `discountsSlice` | Mutaciones admin (`POST`/`PUT`/`DELETE` en `/descuentos`); listado derivado de `productos.descuentos[]` |
 | `ordersSlice` | Pedidos usuario/admin, checkout, cancelación; mapper en `utils/orders.js` |
+| `cartSlice` | Carrito cliente (`GET/POST/PUT/DELETE` en `/usuarios/{id}/carrito`); hook `useCart` |
 
-**Pendiente:** `cartSlice`, `redux-persist` (sesión).
+**Pendiente:** `redux-persist` (sesión).
 
-#### Context API (`src/context/`)
-
-| Contexto | Rol |
-|----------|-----|
-| `CartContext` | Carrito del usuario autenticado (usa `carritoService.js`) |
-
-`MainLayout` monta `CartProvider` y dispara `fetchCategorias()` + `fetchProducts()` al iniciar.
+`MainLayout` dispara `fetchCategorias()`, `fetchProducts()` y `fetchCart()` (solo clientes) al iniciar.
 
 ### Configuración (`src/config/`)
 
@@ -77,7 +70,7 @@ La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, adm
 
 ## Rutas actuales
 
-Todas las rutas viven dentro de `MainLayout` (header + footer + `CartProvider`).
+Todas las rutas viven dentro de `MainLayout` (header + footer).
 
 Las rutas de perfil y admin están protegidas con `ProtectedRoute` (requieren login; `/admin/*` además exige rol `ADMINISTRADOR`).
 
@@ -190,7 +183,7 @@ Cada componente de UI tiene su SCSS co-located. Ahí va **solo el estilo interno
 
 | Layout | Rol |
 |--------|-----|
-| `MainLayout` | Shell global: header, footer, `CartProvider`, `fetchCategorias` + `fetchProducts`, scroll al cambiar de ruta |
+| `MainLayout` | Shell global: header, footer, `fetchCategorias` + `fetchProducts` + `fetchCart`, scroll al cambiar de ruta |
 | `ProfileAreaLayout` | Sidebar de perfil + `PageContainer` estrecho para `/perfil` y `/perfil/ordenes` |
 | `AdminAreaLayout` | Sidebar de admin + área de contenido para rutas `/admin/*` |
 
@@ -269,8 +262,8 @@ Cliente HTTP compartido: `src/services/apiClient.js` (base URL, errores, `PLACEH
 - Base URL desde `VITE_API_URL` (fallback `http://localhost:8080`).
 - Header `Authorization: Bearer <token>` en slices Redux y en servicios con `auth: true`.
 - El token se lee desde `state.auth.user.token`.
-- Llamadas de dominio migradas viven en `src/Redux/*Slice.js` con axios.
-- Pendiente en `services/`: carrito (`carritoService.js`).
+- Llamadas de dominio viven en `src/Redux/*Slice.js` con axios.
+- `services/` solo expone `apiClient.js` (base URL, errores, placeholder).
 
 Notificaciones de éxito/error: **notistack** (`SnackbarProvider` en `main.jsx`, hook `useAppSnackbar`).
 
@@ -331,7 +324,7 @@ Catálogo, stock y descuentos usan `fetchAdminProducts()` → mismo `GET /produc
 
 Listado: desde `productos.descuentos[]` (no hay fetch dedicado en el slice).
 
-#### Carrito — `carritoService.js` (requiere auth, vía `CartContext`)
+#### Carrito — `cartSlice.js` (+ `hooks/useCart.js`, `utils/cart.js`)
 
 | Método | Endpoint |
 |--------|----------|
@@ -340,6 +333,8 @@ Listado: desde `productos.descuentos[]` (no hay fetch dedicado en el slice).
 | PUT | `/usuarios/{id}/carrito/items/{productoId}` |
 | DELETE | `/usuarios/{id}/carrito/items/{productoId}` |
 | DELETE | `/usuarios/{id}/carrito` |
+
+Solo disponible para clientes autenticados (no admin).
 
 #### Órdenes — `ordersSlice.js` (+ `utils/orders.js`)
 

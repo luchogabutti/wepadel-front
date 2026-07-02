@@ -26,6 +26,7 @@ import { fetchCategorias } from '../Redux/categoriesSlice';
 import { fetchProducts } from '../Redux/productsSlice';
 import { fetchProfile } from '../Redux/profileSlice';
 import { fetchUserOrders } from '../Redux/ordersSlice';
+import { fetchCart } from '../Redux/cartSlice';
 
 const user = useSelector((state) => state.auth.user);
 const dispatch = useDispatch();
@@ -39,7 +40,7 @@ dispatch(loginUser({ email, password }));
 | auth | Listo |
 | categories | Listo |
 | products | Listo |
-| cart | Pendiente (Fran) |
+| cart | Listo |
 | profile | Listo |
 | discounts | Listo |
 | orders | Listo |
