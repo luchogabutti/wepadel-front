@@ -128,10 +128,7 @@ const ordersSlice = createSlice({
     mutating: false,
     error: null,
   },
-  reducers: {
-    invalidateUserOrders: resetUserOrdersCache,
-    invalidateAdminOrders: resetAdminOrdersCache,
-  },
+  reducers: {},
   extraReducers: (builder) => {
     const handleListPending = (state) => {
       state.loading = true;
@@ -240,5 +237,4 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { invalidateUserOrders, invalidateAdminOrders } = ordersSlice.actions;
 export default ordersSlice.reducer;

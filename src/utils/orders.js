@@ -1,4 +1,6 @@
-import { getProductImageUrl, PLACEHOLDER_IMG } from './products';
+import { buildImageById, getProductImageUrl, PLACEHOLDER_IMG } from './products';
+
+export { buildImageById };
 
 const STATUS_MAP = {
   CONFIRMADA: 'confirmada',
@@ -14,12 +16,6 @@ const formatFecha = (iso) => {
     month: 'long',
     year: 'numeric',
   }).format(date);
-};
-
-export const buildImageById = (products = []) => {
-  const map = new Map();
-  products.forEach((producto) => map.set(producto.id, getProductImageUrl(producto)));
-  return map;
 };
 
 export const mapOrden = (orden, imageById = new Map()) => ({

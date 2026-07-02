@@ -103,15 +103,7 @@ const profileSlice = createSlice({
     profileError: null,
     pointsError: null,
   },
-  reducers: {
-    invalidateProfile(state) {
-      state.profileLoaded = false;
-    },
-    invalidatePoints(state) {
-      state.pointsLoaded = false;
-    },
-    invalidateProfileCache: resetProfileCache,
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchProfile.pending, (state) => {
@@ -182,5 +174,4 @@ const profileSlice = createSlice({
   },
 });
 
-export const { invalidateProfile, invalidatePoints, invalidateProfileCache } = profileSlice.actions;
 export default profileSlice.reducer;
