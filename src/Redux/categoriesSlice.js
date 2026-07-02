@@ -1,14 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { mapCategorias } from '../utils/categories';
-
-const URL = 'http://localhost:8080';
+import { API_BASE_URL } from '../utils/api';
 
 export const DEFAULT_CATEGORIA_ID = 'paletas';
 export const DEFAULT_CATALOG_PATH = '/catalogo/paletas';
 
 export const fetchCategorias = createAsyncThunk('categories/fetchCategorias', async () => {
-  const { data } = await axios.get(`${URL}/categorias`);
+  const { data } = await axios.get(`${API_BASE_URL}/categorias`);
   return mapCategorias(data);
 });
 

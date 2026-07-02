@@ -34,9 +34,8 @@ src/
 │   └── profile/          # Datos de usuario y órdenes
 ├── config/               # Configuración de UI (sidebar)
 ├── Redux/                # Store y slices (auth, categories, products, profile, discounts, orders, cart)
-├── services/             # Cliente HTTP compartido (`apiClient.js`)
 ├── hooks/                # Hooks reutilizables (snackbar, paginación, carrito)
-├── utils/                # Mappers, validaciones y helpers (auth, checkout, perfil, productos, órdenes, carrito)
+├── utils/                # Mappers, validaciones y helpers (auth, api, checkout, perfil, productos, órdenes, carrito)
 └── styles/
     ├── theme.js          # Tokens MUI + overrides de componentes
     └── globals.scss      # Clases reutilizables (.surface-card, etc.)
@@ -46,7 +45,7 @@ src/
 
 #### Redux (`src/Redux/`)
 
-`Provider` en `main.jsx`. Patrón: `createAsyncThunk` + axios + `useSelector` / `useDispatch`. Ver [`src/Redux/README.md`](src/Redux/README.md).
+`Provider` en `main.jsx`. Patrón: `createAsyncThunk` + axios + `useSelector` / `useDispatch`.
 
 | Slice | Rol |
 |-------|-----|
@@ -257,13 +256,12 @@ Las variables del cliente deben usar el prefijo `VITE_`.
 
 ## Integración con API
 
-Cliente HTTP compartido: `src/services/apiClient.js` (base URL, errores, `PLACEHOLDER_IMG`).
+Configuración compartida de API: `src/utils/api.js` (`API_BASE_URL`, `getApiErrorMessage`, `PLACEHOLDER_IMG`).
 
 - Base URL desde `VITE_API_URL` (fallback `http://localhost:8080`).
-- Header `Authorization: Bearer <token>` en slices Redux y en servicios con `auth: true`.
+- Header `Authorization: Bearer <token>` en slices Redux.
 - El token se lee desde `state.auth.user.token`.
 - Llamadas de dominio viven en `src/Redux/*Slice.js` con axios.
-- `services/` solo expone `apiClient.js` (base URL, errores, placeholder).
 
 Notificaciones de éxito/error: **notistack** (`SnackbarProvider` en `main.jsx`, hook `useAppSnackbar`).
 

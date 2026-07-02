@@ -1,8 +1,6 @@
 import axios from 'axios';
-import { API_BASE_URL, PLACEHOLDER_IMG } from '../services/apiClient';
+import { API_BASE_URL, PLACEHOLDER_IMG } from './api';
 import { enrichProductoConDescuento } from './discountUtils';
-
-const URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export { PLACEHOLDER_IMG };
 
@@ -71,7 +69,7 @@ export const saveProductImageRequest = async (archivo, { productoId, imagenId },
   const config = { headers: { ...authHeaders, 'Content-Type': 'multipart/form-data' } };
 
   if (imagenId) {
-    await axios.put(`${URL}/imagenes/${imagenId}`, formData, config);
+    await axios.put(`${API_BASE_URL}/imagenes/${imagenId}`, formData, config);
     return {
       id: imagenId,
       nombre: archivo.name,
@@ -80,7 +78,7 @@ export const saveProductImageRequest = async (archivo, { productoId, imagenId },
   }
 
   formData.append('productoId', productoId);
-  const response = await axios.post(`${URL}/imagenes`, formData, config);
+  const response = await axios.post(`${API_BASE_URL}/imagenes`, formData, config);
   const newId = parseImagenIdFromLocation(response.headers?.location ?? response.headers?.Location);
   if (!newId) return null;
 

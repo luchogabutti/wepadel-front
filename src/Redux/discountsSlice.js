@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
-
-const URL = 'http://localhost:8080';
+import { API_BASE_URL } from '../utils/api';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
@@ -43,7 +42,7 @@ export const createDescuento = createAsyncThunk(
   'discounts/createDescuento',
   async (descuento, { getState }) => {
     const body = buildDescuentoBody(descuento);
-    const { data, headers } = await axios.post(`${URL}/descuentos`, body, {
+    const { data, headers } = await axios.post(`${API_BASE_URL}/descuentos`, body, {
       headers: getAuthHeaders(getState),
     });
 
@@ -66,7 +65,7 @@ export const updateDescuento = createAsyncThunk(
       descuento.productoId;
     const body = buildDescuentoBody(descuento, overrides);
 
-    const { data } = await axios.put(`${URL}/descuentos/${id}`, body, {
+    const { data } = await axios.put(`${API_BASE_URL}/descuentos/${id}`, body, {
       headers: getAuthHeaders(getState),
     });
 
@@ -83,7 +82,7 @@ export const deleteDescuento = createAsyncThunk(
   async (id, { getState }) => {
     const productoId = findProductoIdByDescuento(getState().products.items, id);
 
-    await axios.delete(`${URL}/descuentos/${id}`, {
+    await axios.delete(`${API_BASE_URL}/descuentos/${id}`, {
       headers: getAuthHeaders(getState),
     });
 

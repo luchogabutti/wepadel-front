@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
-
-const URL = 'http://localhost:8080';
+import { API_BASE_URL } from '../utils/api';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
@@ -12,7 +11,7 @@ const getAuthHeaders = (getState) => {
 export const fetchProfile = createAsyncThunk(
   'profile/fetchProfile',
   async (usuarioId, { getState }) => {
-    const { data } = await axios.get(`${URL}/usuarios/${usuarioId}`, {
+    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}`, {
       headers: getAuthHeaders(getState),
     });
     return data;
@@ -22,7 +21,7 @@ export const fetchProfile = createAsyncThunk(
 export const fetchPoints = createAsyncThunk(
   'profile/fetchPoints',
   async (usuarioId, { getState }) => {
-    const { data } = await axios.get(`${URL}/usuarios/${usuarioId}/puntos`, {
+    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/puntos`, {
       headers: getAuthHeaders(getState),
     });
     return data;
@@ -33,7 +32,7 @@ export const updateProfile = createAsyncThunk(
   'profile/updateProfile',
   async ({ id, nombreApellido, mail }, { getState }) => {
     const { data } = await axios.put(
-      `${URL}/usuarios/${id}`,
+      `${API_BASE_URL}/usuarios/${id}`,
       { nombreApellido, mail },
       { headers: getAuthHeaders(getState) }
     );

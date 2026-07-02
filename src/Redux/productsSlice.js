@@ -10,6 +10,7 @@ import {
   getProductImagenId,
 } from '../utils/products';
 import { enrichProductoConDescuento } from '../utils/discountUtils';
+import { API_BASE_URL } from '../utils/api';
 
 const applyDescuentosToProduct = (product, descuentos) => {
   product.descuentos = descuentos;
@@ -18,22 +19,20 @@ const applyDescuentosToProduct = (product, descuentos) => {
   product.descuentoPorcentaje = enriched.descuentoPorcentaje;
 };
 
-const URL = 'http://localhost:8080';
-
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  const { data } = await axios.get(`${URL}/productos`);
+  const { data } = await axios.get(`${API_BASE_URL}/productos`);
   return mapProductsFromApi(data);
 });
 
 export const fetchAdminProducts = createAsyncThunk(
   'products/fetchAdminProducts',
   async (_, { getState }) => {
-    const { data } = await axios.get(`${URL}/productos`, {
+    const { data } = await axios.get(`${API_BASE_URL}/productos`, {
       headers: getAuthHeaders(getState),
     });
     return mapProductsFromApi(data);
@@ -47,7 +46,7 @@ export const createProductWithDetails = createAsyncThunk(
     const config = { headers: authHeaders };
 
     const { data: creado } = await axios.post(
-      `${URL}/productos`,
+      `${API_BASE_URL}/productos`,
       toProductoPayload(savedProduct),
       config
     );
@@ -55,7 +54,7 @@ export const createProductWithDetails = createAsyncThunk(
     let stock = Number(savedProduct.stock) || 0;
     if (savedProduct.stock) {
       const { data: stockData } = await axios.put(
-        `${URL}/stocks/producto/${creado.id}`,
+        `${API_BASE_URL}/stocks/producto/${creado.id}`,
         { cantidad: stock },
         config
       );
@@ -84,14 +83,14 @@ export const updateProductWithDetails = createAsyncThunk(
     const imagenId = getProductImagenId(updatedProduct);
 
     const { data: actualizado } = await axios.put(
-      `${URL}/productos/${updatedProduct.id}`,
+      `${API_BASE_URL}/productos/${updatedProduct.id}`,
       toProductoPayload(updatedProduct),
       config
     );
 
     const stock = Number(updatedProduct.stock) || 0;
     const { data: stockData } = await axios.put(
-      `${URL}/stocks/producto/${updatedProduct.id}`,
+      `${API_BASE_URL}/stocks/producto/${updatedProduct.id}`,
       { cantidad: stock },
       config
     );
@@ -129,7 +128,7 @@ export const updateProductWithDetails = createAsyncThunk(
 export const deleteProducto = createAsyncThunk(
   'products/deleteProducto',
   async (productId, { getState }) => {
-    await axios.delete(`${URL}/productos/${productId}`, {
+    await axios.delete(`${API_BASE_URL}/productos/${productId}`, {
       headers: getAuthHeaders(getState),
     });
     return productId;
@@ -144,7 +143,7 @@ export const updateProductStock = createAsyncThunk(
 
     await Promise.all(
       changes.map(({ id, stock }) =>
-        axios.put(`${URL}/stocks/producto/${id}`, { cantidad: Number(stock) }, config)
+        axios.put(`${API_BASE_URL}/stocks/producto/${id}`, { cantidad: Number(stock) }, config)
       )
     );
 
@@ -156,7 +155,7 @@ export const toggleProductEnabled = createAsyncThunk(
   'products/toggleProductEnabled',
   async ({ product, nextEnabled }, { getState }) => {
     await axios.put(
-      `${URL}/productos/${product.id}`,
+      `${API_BASE_URL}/productos/${product.id}`,
       toProductoPayload(product, { estaHabilitado: nextEnabled }),
       { headers: getAuthHeaders(getState) }
     );
