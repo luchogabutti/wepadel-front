@@ -1,8 +1,14 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { AdminProfileSection } from '../../components/admin/profile/AdminProfileSection/AdminProfileSection';
-import { useAuth } from '../../context/AuthContext';
+import { LoadingState } from '../../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
+import { PageHeader } from '../../components/layout/PageHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout as logoutAction, updateUser } from '../../Redux/authSlice';
+import { persistor } from '../../Redux/store';
+import { fetchProfile, updateProfile } from '../../Redux/profileSlice';
+import { withForceRefresh } from '../../Redux/fetchArgs';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
-import { getUsuarioById, updateUsuario } from '../../services/usuariosService';
 import { useNavigate } from 'react-router-dom';
 
 const splitNombre = (nombreApellido = '') => {
@@ -11,19 +17,19 @@ const splitNombre = (nombreApellido = '') => {
 };
 
 export const AdminProfileView = () => {
-  const { user, updateUser, logout } = useAuth();
-  const { notifySuccess } = useAppSnackbar();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const { usuario, loading, profileLoaded, profileError, updating } = useSelector(
+    (state) => state.profile
+  );
+  const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
 
-  const [usuario, setUsuario] = useState(null);
-
   useEffect(() => {
     if (!usuarioId) return;
-    getUsuarioById(usuarioId)
-      .then(setUsuario)
-      .catch((err) => console.error('Error al obtener el perfil:', err));
-  }, [usuarioId]);
+    dispatch(fetchProfile(usuarioId));
+  }, [dispatch, usuarioId]);
 
   const datos = useMemo(() => {
     const fuente = usuario ?? user ?? {};
@@ -31,27 +37,62 @@ export const AdminProfileView = () => {
     return { firstName, lastName, email: fuente.mail ?? '' };
   }, [usuario, user]);
 
+  const handleRetryProfile = () => {
+    if (usuarioId) dispatch(fetchProfile(withForceRefresh(usuarioId)));
+  };
+
   const handleSave = async (form) => {
     const nombreApellido = `${form.firstName} ${form.lastName}`.trim();
     const emailChanged =
       form.email.trim().toLowerCase() !== (datos.email ?? '').trim().toLowerCase();
 
-    const actualizado = await updateUsuario(usuarioId, {
-      nombreApellido,
-      mail: form.email.trim(),
-    });
-    setUsuario(actualizado);
-    updateUser({ nombreApellido, mail: form.email.trim() });
+    const result = await dispatch(
+      updateProfile({
+        id: usuarioId,
+        nombreApellido,
+        mail: form.email.trim(),
+      })
+    );
+
+    if (updateProfile.rejected.match(result)) {
+      notifyError(result.payload || 'No se pudieron guardar los datos.');
+      return false;
+    }
+
+    dispatch(updateUser({ nombreApellido, mail: form.email.trim() }));
 
     if (emailChanged) {
       notifySuccess('Email actualizado. Iniciá sesión con tu nuevo email.');
-      logout();
+      dispatch(logoutAction());
+      persistor.purge();
       navigate('/login');
-      return;
+      return true;
     }
 
     notifySuccess('Datos guardados.');
+    return true;
   };
+
+  if (!profileLoaded && loading) {
+    return <LoadingState message="Cargando perfil..." />;
+  }
+
+  if (profileError && !profileLoaded) {
+    return (
+      <>
+        <PageHeader
+          variant="profile"
+          title="Perfil Administrador"
+          subtitle="Datos de la cuenta con acceso al panel de administración."
+        />
+        <ApiErrorState
+          error={profileError}
+          fallback="No se pudo cargar el perfil."
+          onRetry={handleRetryProfile}
+        />
+      </>
+    );
+  }
 
   return (
     <AdminProfileSection
@@ -61,6 +102,7 @@ export const AdminProfileView = () => {
       lastName={datos.lastName}
       email={datos.email}
       onSave={handleSave}
+      saving={updating}
     />
   );
 };

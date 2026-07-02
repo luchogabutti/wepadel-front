@@ -5,15 +5,20 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { ProductDetail } from '../components/catalog/ProductDetail/ProductDetail';
-import { useProducts } from '../context/ProductsContext';
-import { useCategorias } from '../context/CategoriesContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDefaultCatalogPath } from '../Redux/categoriesSlice';
+import { fetchProducts } from '../Redux/productsSlice';
 import './styles.scss';
 
 export const ProductDetailView = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const productId = parseInt(id, 10);
-  const { products, loading, error, refresh } = useProducts();
-  const { defaultCatalogPath } = useCategorias();
+  const products = useSelector((state) => state.products.items);
+  const loading = useSelector((state) => state.products.loading);
+  const error = useSelector((state) => state.products.error);
+  const categorias = useSelector((state) => state.categories.items);
+  const defaultCatalogPath = getDefaultCatalogPath(categorias);
 
   const product =
     products.find((p) => p.id === productId && p.estaHabilitado !== false) ?? null;
@@ -32,7 +37,7 @@ export const ProductDetailView = () => {
         <ApiErrorState
           error={error}
           fallback="No se pudo cargar la información del producto."
-          onRetry={refresh}
+          onRetry={() => dispatch(fetchProducts())}
         />
       </CenteredPage>
     );

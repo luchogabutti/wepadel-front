@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
 import { AdminCatalogToolbar } from '../../components/admin/catalog/AdminCatalogToolbar/AdminCatalogToolbar';
@@ -7,37 +8,42 @@ import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { AdminCatalogSection } from '../../components/admin/catalog/AdminCatalogSection/AdminCatalogSection';
 import { AdminProductModal } from '../../components/admin/catalog/AdminProductModal/AdminProductModal';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
-import { useAdminProducts } from '../../hooks/useAdminProducts';
-import { useProducts } from '../../context/ProductsContext';
 import {
-  createProducto,
-  updateProducto,
+  fetchAdminProducts,
+  createProductWithDetails,
   deleteProducto,
-  buildProductoRequest,
-} from '../../services/productsService';
-import { updateStock } from '../../services/stocksService';
-import { saveProductImage } from '../../services/imagenesService';
+  toggleProductEnabled,
+} from '../../Redux/productsSlice';
 
 export const AdminCatalogView = () => {
   const navigate = useNavigate();
-  const { products, loading, error, refresh } = useAdminProducts();
-  const { refresh: refreshCatalog } = useProducts();
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.products.items);
+  const loading = useSelector((state) => state.products.loading);
+  const error = useSelector((state) => state.products.error);
+  const products = items;
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [searchTerm, setSearchTerm] = useState('');
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [productToToggle, setProductToToggle] = useState(null);
 
-  const nextProductEnabled = productToToggle ? !productToToggle.enabled : false;
+  const nextProductEnabled = productToToggle ? !productToToggle.estaHabilitado : false;
 
   const handleToggleProductEnabled = async (productId) => {
     const product = products.find((p) => p.id === productId);
     if (!product) return;
-    const nextEnabled = !product.enabled;
+
+    const nextEnabled = !product.estaHabilitado;
+
     try {
-      await updateProducto(productId, buildProductoRequest(product, { estaHabilitado: nextEnabled }));
-      await refresh();
-      await refreshCatalog();
+      const result = await dispatch(toggleProductEnabled({ product, nextEnabled }));
+
+      if (toggleProductEnabled.rejected.match(result)) {
+        notifyError(result.payload || 'No se pudo actualizar el producto.');
+        return;
+      }
+
       notifySuccess(nextEnabled ? 'Producto habilitado.' : 'Producto deshabilitado.');
     } catch (error) {
       notifyError(error.message || 'No se pudo actualizar el producto.');
@@ -50,15 +56,13 @@ export const AdminCatalogView = () => {
 
   const handleSaveProduct = async (savedProduct) => {
     try {
-      const creado = await createProducto(buildProductoRequest(savedProduct));
-      if (savedProduct.stock) {
-        await updateStock(creado.id, Number(savedProduct.stock));
+      const result = await dispatch(createProductWithDetails(savedProduct));
+
+      if (createProductWithDetails.rejected.match(result)) {
+        notifyError(result.payload || 'No se pudo crear el producto.');
+        return;
       }
-      if (savedProduct.imageFile) {
-        await saveProductImage(savedProduct.imageFile, { productoId: creado.id });
-      }
-      await refresh();
-      await refreshCatalog();
+
       setIsProductModalOpen(false);
       notifySuccess('¡Producto creado con éxito!');
     } catch (error) {
@@ -72,10 +76,15 @@ export const AdminCatalogView = () => {
 
   const handleConfirmDelete = async () => {
     if (!productToDelete) return;
+
     try {
-      await deleteProducto(productToDelete.id);
-      await refresh();
-      await refreshCatalog();
+      const result = await dispatch(deleteProducto(productToDelete.id));
+
+      if (deleteProducto.rejected.match(result)) {
+        notifyError(result.payload || 'No se pudo eliminar el producto.');
+        return;
+      }
+
       notifySuccess('¡Producto eliminado con éxito!');
     } catch (error) {
       notifyError(error.message || 'No se pudo eliminar el producto.');
@@ -100,7 +109,7 @@ export const AdminCatalogView = () => {
         <ApiErrorState
           error={error}
           fallback="No se pudo cargar el catálogo."
-          onRetry={refresh}
+          onRetry={() => dispatch(fetchAdminProducts())}
         />
       ) : (
         <AdminCatalogSection

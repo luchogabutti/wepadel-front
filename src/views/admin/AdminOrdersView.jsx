@@ -1,103 +1,44 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Stack, Typography } from '@mui/material';
-import { LoadingState } from '../../components/general/LoadingState/LoadingState';
-import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
-import { PageHeader } from '../../components/layout/PageHeader';
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { OrderCard } from '../../components/profile/orders/OrderCard/OrderCard';
-import { TablePaginationFooter } from '../../components/general/TablePaginationFooter/TablePaginationFooter';
-import { buildShowingLabel } from '../../utils/paginationLabels';
-import { useProducts } from '../../context/ProductsContext';
-import { usePagination } from '../../hooks/usePagination';
-import { getAllOrdenes, mapOrden } from '../../services/ordenesService';
+import { OrdersListSection } from '../../components/profile/orders/OrdersListSection/OrdersListSection';
+import { fetchAllOrders } from '../../Redux/ordersSlice';
+import { buildImageById, mapOrden } from '../../utils/orders';
 
 export const AdminOrdersView = () => {
-  const { products } = useProducts();
-  const [ordersRaw, setOrdersRaw] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const imageById = useMemo(() => {
-    const map = new Map();
-    products.forEach((producto) => map.set(producto.id, producto.imagen));
-    return map;
-  }, [products]);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getAllOrdenes();
-      setOrdersRaw(data ?? []);
-    } catch (err) {
-      setError(err);
-      setOrdersRaw([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.items);
+  const ordersRaw = useSelector((state) => state.orders.items);
+  const loading = useSelector((state) => state.orders.loading);
+  const error = useSelector((state) => state.orders.error);
+  const adminOrdersLoaded = useSelector((state) => state.orders.adminOrdersLoaded);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    dispatch(fetchAllOrders());
+  }, [dispatch]);
+
+  const imageById = useMemo(() => buildImageById(products), [products]);
 
   const ordersList = useMemo(
     () => ordersRaw.map((orden) => mapOrden(orden, imageById)),
     [ordersRaw, imageById]
   );
 
-  const { paginatedItems, page, setPage, totalPages, rangeStart, rangeEnd, totalCount } =
-    usePagination(ordersList, 5);
-
-  const renderContent = () => {
-    if (loading) {
-      return <LoadingState message="Cargando pedidos..." />;
-    }
-
-    if (error) {
-      return (
-        <ApiErrorState
-          error={error}
-          fallback="No se pudieron cargar los pedidos."
-          onRetry={load}
-        />
-      );
-    }
-
-    if (ordersList.length === 0) {
-      return (
-        <Typography variant="body1" color="text.secondary" sx={{ py: 4 }}>
-          No hay pedidos registrados.
-        </Typography>
-      );
-    }
-
-    return (
-      <>
-        <Stack spacing={3}>
-          {paginatedItems.map((order) => (
-            <OrderCard key={order.id} order={order} showCustomer />
-          ))}
-        </Stack>
-
-        <TablePaginationFooter
-          className="table-pagination-footer--orders"
-          label={buildShowingLabel(rangeStart, rangeEnd, totalCount, 'pedidos')}
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
-      </>
-    );
-  };
+  const isInitialLoad = !adminOrdersLoaded && loading;
 
   return (
-    <>
-      <PageHeader
-        variant="profile"
-        title="Pedidos de la tienda"
-        subtitle="Vista global de todos los pedidos de clientes."
-      />
-      {renderContent()}
-    </>
+    <OrdersListSection
+      title="Pedidos de la tienda"
+      subtitle="Vista global de todos los pedidos de clientes."
+      orders={ordersList}
+      loading={isInitialLoad}
+      error={error}
+      loadingMessage="Cargando pedidos..."
+      errorFallback="No se pudieron cargar los pedidos."
+      emptyMessage="No hay pedidos registrados."
+      paginationLabel="pedidos"
+      onRetry={() => dispatch(fetchAllOrders())}
+      renderOrder={(order) => <OrderCard order={order} showCustomer />}
+    />
   );
 };

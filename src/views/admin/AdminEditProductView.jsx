@@ -1,25 +1,24 @@
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { AdminEditProductSection } from '../../components/admin/catalog/AdminEditProductSection/AdminEditProductSection';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
-import { useAdminProducts } from '../../hooks/useAdminProducts';
-import { useProducts } from '../../context/ProductsContext';
-import { updateProducto, buildProductoRequest } from '../../services/productsService';
-import { updateStock } from '../../services/stocksService';
-import { saveProductImage } from '../../services/imagenesService';
+import { updateProductWithDetails } from '../../Redux/productsSlice';
 
 export const AdminEditProductView = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { productId } = useParams();
-  const { products, loading, refresh } = useAdminProducts();
-  const { refresh: refreshCatalog } = useProducts();
+  const items = useSelector((state) => state.products.items);
+  const loading = useSelector((state) => state.products.loading);
+  const adminLoaded = useSelector((state) => state.products.adminLoaded);
   const { notifySuccess, notifyError } = useAppSnackbar();
 
-  if (loading) {
+  if (!adminLoaded || loading) {
     return <LoadingState message="Cargando producto..." />;
   }
 
-  const product = products.find((item) => String(item.id) === String(productId));
+  const product = items.find((item) => String(item.id) === String(productId));
 
   if (!product) {
     return <Navigate to="/admin/catalogo" replace />;
@@ -31,26 +30,21 @@ export const AdminEditProductView = () => {
 
   const handleSave = async (updatedProduct) => {
     try {
-      await updateProducto(updatedProduct.id, buildProductoRequest(updatedProduct));
-      await updateStock(updatedProduct.id, Number(updatedProduct.stock));
-      if (updatedProduct.imageFile) {
-        await saveProductImage(updatedProduct.imageFile, {
-          productoId: updatedProduct.id,
-          imagenId: updatedProduct.imagenId,
-        });
+      const result = await dispatch(updateProductWithDetails(updatedProduct));
+
+      if (updateProductWithDetails.rejected.match(result)) {
+        notifyError(result.payload || 'No se pudo actualizar el producto.');
+        return;
       }
-      await refresh();
-      await refreshCatalog();
+
       notifySuccess('¡Producto actualizado con éxito!');
-      window.setTimeout(() => navigate('/admin/catalogo'), 1000);
+      navigate('/admin/catalogo');
     } catch (error) {
       notifyError(error.message || 'No se pudo actualizar el producto.');
     }
   };
 
   return (
-    <>
-      <AdminEditProductSection product={product} onCancel={handleCancel} onSave={handleSave} />
-    </>
+    <AdminEditProductSection product={product} onCancel={handleCancel} onSave={handleSave} />
   );
 };

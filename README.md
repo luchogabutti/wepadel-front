@@ -11,9 +11,9 @@ E-commerce de productos de pádel desarrollado como proyecto universitario en **
 - **React Router DOM** — navegación y rutas
 - **Sass (SCSS)** — estilos por componente y clases globales
 - **notistack** — notificaciones toast (éxito/error)
-- **Context API** — estado global (`AuthContext`, `ProductsContext`, `CartContext`)
+- **Redux Toolkit** + **React Redux** + **redux-persist** + **Axios** — estado global en `src/Redux/` (auth, categories, products, profile, discounts, orders, cart)
 
-La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, admin). Algunos datos de UI siguen en `src/data/` (categorías, hero, textos del panel).
+La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, admin).
 
 ## Estructura del proyecto
 
@@ -24,7 +24,7 @@ src/
 │   └── admin/            # Vistas del panel de administración
 ├── components/           # UI por dominio
 │   ├── admin/            # Catálogo, stock, descuentos, perfil admin
-│   ├── auth/             # Login y registro
+│   ├── auth/             # Login, registro y recuperación de contraseña
 │   ├── cart/             # Carrito
 │   ├── catalog/          # Catálogo, filtros, detalle de producto
 │   ├── checkout/         # Envío, pago y confirmación
@@ -33,48 +33,47 @@ src/
 │   ├── layout/           # Wrappers de página reutilizables (PageContainer, etc.)
 │   └── profile/          # Datos de usuario y órdenes
 ├── config/               # Configuración de UI (sidebar)
-├── context/              # Estado global (auth, productos, carrito)
-├── services/             # Cliente HTTP y llamadas a la API
-├── hooks/                # Hooks reutilizables (snackbar, paginación)
-├── data/                 # Datos estáticos de UI (no reemplazan la API)
-├── utils/                # Validaciones (auth, checkout, perfil)
+├── Redux/                # Store, slices, persistencia de auth y helpers de fetch
+├── hooks/                # Hooks reutilizables (carrito, snackbar, paginación)
+├── utils/                # API, mappers y helpers (auth, products, cart, orders, categories, checkout, perfil)
 └── styles/
     ├── theme.js          # Tokens MUI + overrides de componentes
     └── globals.scss      # Clases reutilizables (.surface-card, etc.)
 ```
 
-### Estado global (`src/context/`)
+### Estado global
 
-| Contexto | Rol |
-|----------|-----|
-| `AuthContext` | Sesión del usuario, login/registro, token en `localStorage` o `sessionStorage` |
-| `ProductsContext` | Catálogo precargado desde la API (productos + imágenes + stock + descuentos) |
-| `CartContext` | Carrito del usuario autenticado (cliente) |
+#### Redux (`src/Redux/`)
 
-`MainLayout` monta `ProductsProvider` y `CartProvider`. `AuthProvider` envuelve la app en `main.jsx`.
+`Provider` + `PersistGate` en `main.jsx`. Patrón: `createAsyncThunk` + axios + `rejectWithValue` + `useSelector` / `useDispatch`.
 
-### Datos estáticos (`src/data/`)
+| Slice | Rol |
+|-------|-----|
+| `authSlice` | Login, registro, logout, `updateUser`, olvidé/restablecer contraseña |
+| `categoriesSlice` | `GET /categorias` (+ íconos MUI en `utils/categories.js`) |
+| `productsSlice` | Catálogo tienda/admin, CRUD, stock, toggle habilitado; `GET /productos` enriched (`stock`, `imagenPrincipal`, `descuentos[]`) |
+| `profileSlice` | Perfil, puntos y actualización de datos; limpia estado al logout |
+| `discountsSlice` | Mutaciones admin (`POST`/`PUT`/`DELETE` en `/descuentos`); listado derivado de `productos.descuentos[]` |
+| `ordersSlice` | Pedidos usuario/admin, checkout, cancelación; mapper en `utils/orders.js` |
+| `cartSlice` | Carrito cliente (`GET/POST/PUT/DELETE` en `/usuarios/{id}/carrito`); hook `useCart` |
 
-| Archivo | Uso actual |
-|---------|------------|
-| `categoriesData.js` | Tabs y secciones de categorías en home/catálogo |
-| `heroSlides.js` | Imágenes del carrusel del hero |
-| `cartData.js` | Helpers de formato de precio (`formatCartPrice`, `formatCheckoutPrice`) |
-| `adminProductsData.js` | Títulos y subtítulos de secciones del panel admin (`adminSectionContent`) |
-| `productsData.js` | Legacy — no se importa |
-| `orders.js` | Legacy — las órdenes vienen de la API |
-| `adminOrders.js` | Legacy — no se importa |
+**Persistencia:** `redux-persist` guarda `auth.user` con storage custom (`authPersistStorage.js`): sesión en `sessionStorage` o `localStorage` según “Recordarme” en el login.
+
+**Caché:** `fetchArgs.js` expone `withForceRefresh` para re-fetch forzado en perfil y pedidos (thunks con `condition`).
+
+**Errores:** mensajes en español vía `getAxiosErrorMessage` / `getApiErrorMessage` (`utils/api.js`); vistas críticas usan `ApiErrorState` con retry.
+
+`MainLayout` dispara `fetchCategorias()`, `fetchProducts()` y `fetchCart()` (solo clientes autenticados) al iniciar.
 
 ### Configuración (`src/config/`)
 
 | Archivo | Contenido |
 |---------|-----------|
 | `sidebarItems.jsx` | Ítems de navegación lateral (perfil y admin) |
-| `accountUser.js` | Legacy — no se importa |
 
 ## Rutas actuales
 
-Todas las rutas viven dentro de `MainLayout` (header + footer + `ProductsProvider` + `CartProvider`).
+Todas las rutas viven dentro de `MainLayout` (header + footer).
 
 Las rutas de perfil y admin están protegidas con `ProtectedRoute` (requieren login; `/admin/*` además exige rol `ADMINISTRADOR`).
 
@@ -91,8 +90,9 @@ Las rutas de perfil y admin están protegidas con `ProtectedRoute` (requieren lo
 | `/checkout/confirmacion/:orderId` | CheckoutSuccessView | Confirmación de compra |
 | `/login` | AuthView | Inicio de sesión |
 | `/registro` | AuthView | Registro |
-| `/recuperar-contrasena` | ForgotPasswordView | Placeholder (sin endpoint) |
-| `/mis-pedidos` | PlaceholderView | Sección pendiente |
+| `/recuperar-contrasena` | ForgotPasswordView | Solicitud de recuperación de contraseña |
+| `/reset-password` | ResetPasswordView | Restablecer contraseña (`?token=...`) |
+| `/mis-pedidos` | — | Redirige a `/perfil/ordenes` |
 | `/sobre-nosotros` | AboutUsView | Información institucional |
 | `/politica-de-privacidad` | PrivacyPolicyView | Política de privacidad |
 | `/terminos-de-servicio` | TermsOfServiceView | Términos de servicio |
@@ -187,7 +187,7 @@ Cada componente de UI tiene su SCSS co-located. Ahí va **solo el estilo interno
 
 | Layout | Rol |
 |--------|-----|
-| `MainLayout` | Shell global: header, footer, `ProductsProvider`, `CartProvider`, scroll al cambiar de ruta |
+| `MainLayout` | Shell global: header, footer, `fetchCategorias` + `fetchProducts` + `fetchCart`, scroll al cambiar de ruta |
 | `ProfileAreaLayout` | Sidebar de perfil + `PageContainer` estrecho para `/perfil` y `/perfil/ordenes` |
 | `AdminAreaLayout` | Sidebar de admin + área de contenido para rutas `/admin/*` |
 
@@ -261,69 +261,76 @@ Las variables del cliente deben usar el prefijo `VITE_`.
 
 ## Integración con API
 
-Cliente HTTP: `src/services/apiClient.js`.
+Configuración compartida de API: `src/utils/api.js` (`API_BASE_URL`, `getAxiosErrorMessage`, `getApiErrorMessage`, `PLACEHOLDER_IMG`).
 
-- Base URL desde `VITE_API_URL`.
-- Header `Authorization: Bearer <token>` cuando la llamada usa `auth: true`.
-- Token persistido en `localStorage` o `sessionStorage` bajo la clave `wepadel_auth`.
+- Base URL desde `VITE_API_URL` (fallback `http://localhost:8080`).
+- Header `Authorization: Bearer <token>` en slices Redux autenticados.
+- El token se lee desde `state.auth.user.token` (persistido con redux-persist).
+- Llamadas de dominio viven en `src/Redux/*Slice.js` con axios; errores se propagan con `rejectWithValue`.
+- Estados de carga/error: `loading` / `mutating` / `status` en slices; UI con `LoadingState`, `ApiErrorState` y snackbars.
 
 Notificaciones de éxito/error: **notistack** (`SnackbarProvider` en `main.jsx`, hook `useAppSnackbar`).
 
-### Carga del catálogo
+### Carga del catálogo (tienda)
 
-Al iniciar la app, `ProductsContext` ejecuta:
+Al montar `MainLayout`:
 
-1. `GET /productos`
-2. Por cada producto, en paralelo: imágenes, stock y descuentos
+1. `dispatch(fetchCategorias())` → `GET /categorias`
+2. `dispatch(fetchProducts())` → `GET /productos` (respuesta enriched: stock, imagen, descuentos)
 
-Los datos quedan en memoria. Navegar entre home, catálogo y detalle **no vuelve a fetchear** hasta recargar la página.
+Los productos quedan en `state.products.items`. Home, catálogo y detalle leen de Redux; si falla el fetch, `ProductsErrorBanner` permite reintentar.
 
-### Endpoints (`src/services/`)
+### Panel admin (productos)
 
-#### Auth — `authService.js`
+Catálogo, stock y descuentos usan `fetchAdminProducts()` → mismo `GET /productos` con auth. La respuesta incluye `descuentos[]` embebidos; el listado de descuentos se deriva en la vista (sin `GET /descuentos/producto/{id}` por producto).
+
+### Endpoints por capa
+
+#### Auth — `authSlice.js`
 
 | Método | Endpoint | Auth |
 |--------|----------|------|
 | POST | `/api/v1/auth/authenticate` | No |
 | POST | `/api/v1/auth/register` | No |
+| POST | `/api/v1/auth/forgot-password` | No |
+| POST | `/api/v1/auth/reset-password` | No |
 
-#### Productos — `productsService.js`
+#### Categorías — `categoriesSlice.js`
+
+| Método | Endpoint | Auth |
+|--------|----------|------|
+| GET | `/categorias` | No |
+
+#### Productos — `productsSlice.js` (+ `utils/products.js`)
 
 | Método | Endpoint | Auth | Notas |
 |--------|----------|------|-------|
-| GET | `/productos` | No / Sí | Público en tienda; con auth en admin |
-| GET | `/productos/{id}` | No | Definido, no usado en UI |
-| GET | `/productos/{id}/imagenes` | No | Imágenes del producto |
+| GET | `/productos` | No / Sí | Tienda sin auth; admin con auth |
 | POST | `/productos` | Sí | Crear (admin) |
-| PUT | `/productos/{id}` | Sí | Editar (admin) |
+| PUT | `/productos/{id}` | Sí | Editar / toggle habilitado |
 | DELETE | `/productos/{id}` | Sí | Eliminar (admin) |
+| PUT | `/stocks/producto/{id}` | Sí | Actualizar stock |
+| POST / PUT | `/imagenes` | Sí | Subir / reemplazar imagen (`FormData`) |
 
-#### Imágenes — `imagenesService.js`
+#### Perfil — `profileSlice.js`
+
+| Método | Endpoint | Auth |
+|--------|----------|------|
+| GET | `/usuarios/{id}` | Sí |
+| PUT | `/usuarios/{id}` | Sí |
+| GET | `/usuarios/{id}/puntos` | Sí |
+
+#### Descuentos — `discountsSlice.js`
 
 | Método | Endpoint | Auth | Notas |
 |--------|----------|------|-------|
-| GET | `/imagenes/{id}` | No | Definido, no usado en UI |
-| POST | `/imagenes` | Sí | Subir imagen (`FormData`) |
-| PUT | `/imagenes/{id}` | Sí | Reemplazar imagen (`FormData`) |
+| POST | `/descuentos` | Sí | Crear |
+| PUT | `/descuentos/{id}` | Sí | Editar / activar-desactivar |
+| DELETE | `/descuentos/{id}` | Sí | Eliminar |
 
-#### Stock — `stocksService.js`
+Listado: desde `productos.descuentos[]` (no hay fetch dedicado en el slice).
 
-| Método | Endpoint | Auth |
-|--------|----------|------|
-| GET | `/stocks/producto/{id}` | No |
-| PUT | `/stocks/producto/{id}` | Sí |
-
-#### Descuentos — `descuentosService.js`
-
-| Método | Endpoint | Auth |
-|--------|----------|------|
-| GET | `/descuentos/producto/{id}` | No |
-| GET | `/descuentos/{id}` | Sí |
-| POST | `/descuentos` | Sí |
-| PUT | `/descuentos/{id}` | Sí |
-| DELETE | `/descuentos/{id}` | Sí |
-
-#### Carrito — `carritoService.js` (requiere auth)
+#### Carrito — `cartSlice.js` (+ `hooks/useCart.js`, `utils/cart.js`)
 
 | Método | Endpoint |
 |--------|----------|
@@ -333,29 +340,19 @@ Los datos quedan en memoria. Navegar entre home, catálogo y detalle **no vuelve
 | DELETE | `/usuarios/{id}/carrito/items/{productoId}` |
 | DELETE | `/usuarios/{id}/carrito` |
 
-#### Órdenes — `ordenesService.js` (requiere auth)
+Solo disponible para clientes autenticados (no admin).
+
+#### Órdenes — `ordersSlice.js` (+ `utils/orders.js`)
 
 | Método | Endpoint | Notas |
 |--------|----------|-------|
 | GET | `/usuarios/{id}/ordenes` | Mis pedidos |
-| GET | `/usuarios/{id}/ordenes/{ordenId}` | Detalle |
+| GET | `/usuarios/{id}/ordenes/{ordenId}` | Detalle / confirmación |
 | POST | `/usuarios/{id}/ordenes` | Checkout |
 | PUT | `/usuarios/{id}/ordenes/{ordenId}/cancelar` | Cancelar |
 | GET | `/ordenes` | Todas las órdenes (admin) |
 
-#### Usuarios — `usuariosService.js` (requiere auth)
-
-| Método | Endpoint | Notas |
-|--------|----------|-------|
-| GET | `/usuarios/{id}` | Perfil |
-| PUT | `/usuarios/{id}` | Actualizar perfil |
-| GET | `/usuarios` | Definido, no usado en UI |
-
-#### Puntos — `puntosService.js` (requiere auth)
-
-| Método | Endpoint |
-|--------|----------|
-| GET | `/usuarios/{id}/puntos` |
+Listado compartido: `OrdersListSection` reutilizado en `OrdersView` y `AdminOrdersView`.
 
 ## Licencia
 

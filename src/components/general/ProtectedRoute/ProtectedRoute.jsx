@@ -1,8 +1,10 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+import { useSelector } from 'react-redux';
 
 export const ProtectedRoute = ({ requireAdmin = false }) => {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = Boolean(user?.token);
+  const isAdmin = user?.rol === 'ADMINISTRADOR';
   const location = useLocation();
 
   if (!isAuthenticated) {

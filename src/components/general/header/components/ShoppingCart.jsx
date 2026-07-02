@@ -1,7 +1,7 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Badge, IconButton } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { useCart } from '../../../../context/CartContext';
+import { useCart } from '../../../../hooks/useCart';
 
 export const ShoppingCart = () => {
   const { itemCount } = useCart();

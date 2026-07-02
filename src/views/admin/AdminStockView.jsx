@@ -1,14 +1,18 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
 import { AdminStockSection } from '../../components/admin/stock/AdminStockSection/AdminStockSection';
 import { ConfirmationDialog } from '../../components/general/ConfirmationDialog/ConfirmationDialog';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
-import { useAdminProducts } from '../../hooks/useAdminProducts';
-import { updateStock } from '../../services/stocksService';
+import { fetchAdminProducts, updateProductStock } from '../../Redux/productsSlice';
 
 export const AdminStockView = () => {
-  const { products, loading, error, refresh } = useAdminProducts();
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.products.items);
+  const loading = useSelector((state) => state.products.loading);
+  const error = useSelector((state) => state.products.error);
+  const products = items;
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [pendingStockSave, setPendingStockSave] = useState(null);
 
@@ -22,11 +26,21 @@ export const AdminStockView = () => {
 
   const handleConfirmSaveStock = async () => {
     if (!pendingStockSave) return;
+
     const currentById = new Map(products.map((p) => [p.id, p.stock]));
-    const changed = pendingStockSave.filter((p) => currentById.get(p.id) !== p.stock);
+
+    const changed = pendingStockSave
+      .filter((p) => currentById.get(p.id) !== p.stock)
+      .map((p) => ({ id: p.id, stock: p.stock }));
+
     try {
-      await Promise.all(changed.map((p) => updateStock(p.id, Number(p.stock))));
-      await refresh();
+      const result = await dispatch(updateProductStock(changed));
+
+      if (updateProductStock.rejected.match(result)) {
+        notifyError(result.payload || 'No se pudo guardar el stock.');
+        return;
+      }
+
       notifySuccess('Stock guardado con éxito');
     } catch (error) {
       notifyError(error.message || 'No se pudo guardar el stock.');
@@ -43,7 +57,7 @@ export const AdminStockView = () => {
         <ApiErrorState
           error={error}
           fallback="No se pudo cargar el inventario."
-          onRetry={refresh}
+          onRetry={() => dispatch(fetchAdminProducts())}
         />
       ) : (
         <AdminStockSection
@@ -64,7 +78,6 @@ export const AdminStockView = () => {
         cancelLabel="Cancelar"
         center
       />
-
     </>
   );
 };

@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InputBase, Paper, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useProducts } from '../../../../context/ProductsContext';
-import { PLACEHOLDER_IMG } from '../../../../services/productMapper';
+import { useSelector } from 'react-redux';
+import { getProductImageUrl } from '../../../../utils/products';
 
 export const ProductSearch = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const { products } = useProducts();
+  const products = useSelector((state) => state.products.items);
 
   const normalizedQuery = query.trim().toLowerCase();
   const results = normalizedQuery
@@ -63,7 +63,7 @@ export const ProductSearch = () => {
                 className="product-search-option"
                 onMouseDown={() => handleSelect(product.id)}
               >
-                <img src={product.imagen || PLACEHOLDER_IMG} alt="" />
+                <img src={getProductImageUrl(product)} alt="" />
                 <span>{product.nombre}</span>
               </button>
             ))

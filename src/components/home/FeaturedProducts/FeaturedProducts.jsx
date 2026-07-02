@@ -2,16 +2,18 @@ import { Typography, Button, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from '../../../context/CartContext';
+import { useCart } from '../../../hooks/useCart';
 import { ProductPrice } from '../../catalog/ProductPrice/ProductPrice';
-import { PLACEHOLDER_IMG } from '../../../services/productMapper';
-import { useCategorias } from '../../../context/CategoriesContext';
+import { getProductImageUrl } from '../../../utils/products';
+import { useSelector } from 'react-redux';
+import { getDefaultCatalogPath } from '../../../Redux/categoriesSlice';
 import './styles.scss';
 
 export const FeaturedProducts = ({ products }) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
-  const { defaultCatalogPath } = useCategorias();
+  const categorias = useSelector((state) => state.categories.items);
+  const defaultCatalogPath = getDefaultCatalogPath(categorias);
 
   const handleCardClick = (productId) => {
     navigate(`/producto/${productId}`);
@@ -53,7 +55,7 @@ export const FeaturedProducts = ({ products }) => {
           >
             <div className="product-image-container">
               <img
-                src={product.imagen || PLACEHOLDER_IMG}
+                src={getProductImageUrl(product)}
                 alt={product.nombre}
                 className="product-image"
               />

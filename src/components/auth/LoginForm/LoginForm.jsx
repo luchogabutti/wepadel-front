@@ -16,14 +16,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
-import { isLoginFormValid } from '../../../utils/authValidation';
-import { useAuth } from '../../../context/AuthContext';
+import { isLoginFormValid } from '../../../utils/auth';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../../Redux/authSlice';
 import { useAppSnackbar } from '../../../hooks/useAppSnackbar';
 import './styles.scss';
 
 export const LoginForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const dispatch = useDispatch();
   const { notifyError } = useAppSnackbar();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,7 +40,12 @@ export const LoginForm = () => {
 
     setSubmitting(true);
     try {
-      await login({ email: email.trim(), password, remember });
+      const result = await dispatch(loginUser({ email: email.trim(), password, remember }));
+      if (loginUser.rejected.match(result)) {
+        notifyError(result.payload || 'No se pudo iniciar sesión. Revisá tus datos.');
+        return;
+      }
+
       navigate('/');
     } catch (err) {
       const message = err.message || 'No se pudo iniciar sesión. Revisá tus datos.';

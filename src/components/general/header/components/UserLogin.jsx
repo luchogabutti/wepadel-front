@@ -2,12 +2,17 @@ import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import { Divider, IconButton, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../../context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout as logoutAction } from '../../../../Redux/authSlice';
+import { persistor } from '../../../../Redux/store';
 import { ConfirmationDialog } from '../../ConfirmationDialog/ConfirmationDialog';
 
 export const UserLogin = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, isAdmin, user, logout } = useAuth();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = user?.token;
+  const isAdmin = user?.rol === 'ADMINISTRADOR';
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -35,7 +40,8 @@ export const UserLogin = () => {
 
   const handleLogout = () => {
     handleClose();
-    logout();
+    dispatch(logoutAction());
+    persistor.purge();
     navigate('/login');
   };
 

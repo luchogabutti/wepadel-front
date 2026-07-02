@@ -1,37 +1,35 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
 import { CenteredPage } from '../components/layout/CenteredPage';
 import { PageContainer } from '../components/layout/PageContainer';
 import { CheckoutSuccessCard } from '../components/checkout/CheckoutSuccessCard/CheckoutSuccessCard';
-import { useAuth } from '../context/AuthContext';
-import { useProducts } from '../context/ProductsContext';
-import { getOrdenById } from '../services/ordenesService';
-import { PLACEHOLDER_IMG } from '../services/productMapper';
+import { fetchOrderById } from '../Redux/ordersSlice';
+import { buildImageById } from '../utils/orders';
+import { PLACEHOLDER_IMG } from '../utils/products';
 
 export const CheckoutSuccessView = () => {
   const { orderId } = useParams();
-  const { user } = useAuth();
-  const { products } = useProducts();
-  const [orden, setOrden] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const products = useSelector((state) => state.products.items);
+  const orden = useSelector((state) => state.orders.current);
+  const loading = useSelector((state) => state.orders.loading);
+  const error = useSelector((state) => state.orders.error);
 
   useEffect(() => {
-    if (!user?.id) {
-      setLoading(false);
-      return;
-    }
-    getOrdenById(user.id, orderId)
-      .then(setOrden)
-      .catch((err) => console.error('Error al obtener la orden:', err))
-      .finally(() => setLoading(false));
-  }, [user?.id, orderId]);
+    if (!user?.id || !orderId) return;
+    dispatch(fetchOrderById({ usuarioId: user.id, ordenId: orderId }));
+  }, [dispatch, user?.id, orderId]);
 
-  const imageById = useMemo(() => {
-    const map = new Map();
-    products.forEach((producto) => map.set(producto.id, producto.imagen));
-    return map;
-  }, [products]);
+  const handleRetry = () => {
+    if (!user?.id || !orderId) return;
+    dispatch(fetchOrderById({ usuarioId: user.id, ordenId: orderId }));
+  };
+
+  const imageById = useMemo(() => buildImageById(products), [products]);
 
   if (loading) {
     return (
@@ -41,12 +39,26 @@ export const CheckoutSuccessView = () => {
     );
   }
 
-  const items = orden?.items ?? [];
+  if (error || !orden) {
+    return (
+      <CenteredPage>
+        <PageContainer maxWidth="lg" py={6}>
+          <ApiErrorState
+            error={error}
+            fallback="No se pudo cargar la confirmación del pedido."
+            onRetry={handleRetry}
+          />
+        </PageContainer>
+      </CenteredPage>
+    );
+  }
+
+  const items = orden.items ?? [];
   const productImages = items
     .slice(0, 2)
     .map((item) => imageById.get(item.producto?.id) || PLACEHOLDER_IMG);
   const extraItemsCount = Math.max(items.length - 2, 0);
-  const pointsEarned = orden?.puntosGenerados ?? 0;
+  const pointsEarned = orden.puntosGenerados ?? 0;
 
   return (
     <CenteredPage>

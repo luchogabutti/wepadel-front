@@ -6,7 +6,7 @@ import { CartSummary } from '../components/cart/CartSummary/CartSummary';
 import { CartEmptyState } from '../components/cart/CartEmptyState/CartEmptyState';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../hooks/useCart';
 
 export const CartView = () => {
   const { items, subtotal, discountTotal, updateQuantity, removeItem, loading, error, refresh } =

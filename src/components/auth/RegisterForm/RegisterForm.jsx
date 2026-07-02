@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, TextField } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Form } from '../Form/Form';
-import { isRegisterFormValid } from '../../../utils/authValidation';
-import { useAuth } from '../../../context/AuthContext';
+import { isRegisterFormValid } from '../../../utils/auth';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../../../Redux/authSlice';
 import { useAppSnackbar } from '../../../hooks/useAppSnackbar';
 import './styles.scss';
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const dispatch = useDispatch();
   const { notifyError } = useAppSnackbar();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -26,11 +27,19 @@ export const RegisterForm = () => {
 
     setSubmitting(true);
     try {
-      await register({
-        nombreApellido: `${firstName.trim()} ${lastName.trim()}`,
-        email: email.trim(),
-        password,
-      });
+      const result = await dispatch(
+        registerUser({
+          nombreApellido: `${firstName.trim()} ${lastName.trim()}`,
+          email: email.trim(),
+          password,
+        })
+      );
+
+      if (registerUser.rejected.match(result)) {
+        notifyError(result.payload || 'No se pudo crear la cuenta. Intentá de nuevo.');
+        return;
+      }
+
       navigate('/');
     } catch (err) {
       const message = err.message || 'No se pudo crear la cuenta. Intentá de nuevo.';

@@ -28,13 +28,6 @@
       object-fit: cover;
       object-position: center center;
       filter: brightness(0.45);
-      opacity: 0;
-      transition: opacity 1.4s ease-in-out;
-      will-change: opacity;
-
-      &--active {
-        opacity: 1;
-      }
     }
 
     .bg-overlay {

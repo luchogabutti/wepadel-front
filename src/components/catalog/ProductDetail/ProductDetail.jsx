@@ -9,22 +9,22 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
-import { useCart } from '../../../context/CartContext';
+import { useSelector } from 'react-redux';
+import { useCart } from '../../../hooks/useCart';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
-import { PLACEHOLDER_IMG } from '../../../services/productMapper';
+import { getProductImageUrl } from '../../../utils/products';
 import './styles.scss';
 
 export const ProductDetail = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const isAdmin = useSelector((state) => state.auth.user?.rol === 'ADMINISTRADOR');
   const { addItem } = useCart();
 
   const nombre = product.nombre;
   const categoriaSlug = product.categoria?.toLowerCase() || '';
-  const imagen = product.imagen || PLACEHOLDER_IMG;
-  const imagenes = product.imagenes?.length ? product.imagenes : [imagen];
+  const imagen = getProductImageUrl(product);
+  const imagenes = [imagen];
   const inStock = Number(product.stock) > 0;
 
   const descripcionParrafos = (product.descripcion || '')

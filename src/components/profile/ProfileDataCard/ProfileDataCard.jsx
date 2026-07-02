@@ -10,10 +10,10 @@ export const ProfileDataCard = ({
   email = '',
   onSave,
   onSaved,
+  saving = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ firstName, lastName, email });
   const [saved, setSaved] = useState({ firstName, lastName, email });
   const { notifyError } = useAppSnackbar();
@@ -50,17 +50,16 @@ export const ProfileDataCard = ({
       return;
     }
 
-    setSaving(true);
     try {
-      await onSave?.(form);
+      const savedOk = await onSave?.(form);
+      if (savedOk === false) return;
+
       setSaved({ ...form });
       setShowErrors(false);
       setIsEditing(false);
       onSaved?.();
     } catch (err) {
       notifyError(err.message || 'No se pudieron guardar los datos.');
-    } finally {
-      setSaving(false);
     }
   };
 

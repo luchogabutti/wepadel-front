@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useCategorias } from '../../../context/CategoriesContext';
+import { useSelector } from 'react-redux';
 import './styles.scss';
 
 export const CategoryTabs = ({ activeCategory }) => {
   const navigate = useNavigate();
-  const { categorias, loading } = useCategorias();
+  const categorias = useSelector((state) => state.categories.items);
+  const loading = useSelector((state) => state.categories.loading);
 
   if (loading || categorias.length === 0) {
     return null;

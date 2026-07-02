@@ -29,18 +29,21 @@ import { AdminTableCard } from '../../shared/AdminTableCard/AdminTableCard'
 import { TablePaginationFooter } from '../../../general/TablePaginationFooter/TablePaginationFooter'
 import { buildShowingLabel } from '../../../../utils/paginationLabels'
 import { usePagination } from '../../../../hooks/usePagination'
+import { getProductImageUrl } from '../../../../utils/products'
 import '../../styles.scss'
 import './styles.scss'
 
 const defaultEndDate = () =>
   new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
+const formatDate = (value) => (value || '').split('T')[0]
+
 const buildEmptyForm = (products) => ({
-  productId: products[0]?.id || '',
-  percentage: '',
-  startDate: new Date().toISOString().split('T')[0],
-  endDate: defaultEndDate(),
-  active: true,
+  productoId: products[0]?.id || '',
+  porcentaje: '',
+  fechaInicio: new Date().toISOString().split('T')[0],
+  fechaFin: defaultEndDate(),
+  activo: true,
 })
 
 export const AdminDiscountsSection = ({
@@ -60,7 +63,10 @@ export const AdminDiscountsSection = ({
   const [discountToToggle, setDiscountToToggle] = useState(null)
 
   const isEditMode = Boolean(editingDiscount)
-  const nextDiscountActive = discountToToggle?.status !== 'Activado'
+  const nextDiscountActive = !discountToToggle?.activo
+
+  const getProductForDiscount = (descuento) =>
+    products.find((product) => product.id === descuento.producto?.id)
 
   const handleOpenCreate = () => {
     setEditingDiscount(null)
@@ -68,14 +74,14 @@ export const AdminDiscountsSection = ({
     setIsModalOpen(true)
   }
 
-  const handleOpenEdit = (discount) => {
-    setEditingDiscount(discount)
+  const handleOpenEdit = (descuento) => {
+    setEditingDiscount(descuento)
     setForm({
-      productId: discount.productId,
-      percentage: discount.percentage,
-      startDate: discount.startDate,
-      endDate: discount.endDate,
-      active: discount.status === 'Activado',
+      productoId: descuento.producto?.id ?? '',
+      porcentaje: descuento.porcentaje,
+      fechaInicio: formatDate(descuento.fechaInicio),
+      fechaFin: formatDate(descuento.fechaFin),
+      activo: descuento.activo,
     })
     setIsModalOpen(true)
   }
@@ -87,25 +93,28 @@ export const AdminDiscountsSection = ({
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const productId = Number(form.productId)
-    const product = products.find((p) => p.id === productId)
+    const productoId = Number(form.productoId)
+    const product = products.find((item) => item.id === productoId)
     if (!product) return
 
-    const discountData = {
-      productId,
-      productTitle: product.title,
-      productImg: product.img,
-      productCategory: product.categoryId.toUpperCase(),
-      percentage: Number(form.percentage),
-      startDate: form.startDate,
-      endDate: form.endDate,
-      status: form.active ? 'Activado' : 'Desactivado',
+    const descuento = {
+      productoId,
+      porcentaje: Number(form.porcentaje),
+      fechaInicio: form.fechaInicio,
+      fechaFin: form.fechaFin,
+      activo: form.activo,
+      producto: {
+        id: product.id,
+        nombre: product.nombre,
+        categoria: product.categoria,
+        imagenPrincipal: product.imagenPrincipal,
+      },
     }
 
     if (isEditMode) {
-      onEditDiscount({ ...editingDiscount, ...discountData })
+      onEditDiscount({ ...editingDiscount, ...descuento })
     } else {
-      onAddDiscount({ id: Date.now(), ...discountData })
+      onAddDiscount(descuento)
     }
 
     handleCloseModal()
@@ -117,8 +126,8 @@ export const AdminDiscountsSection = ({
     }
   }
 
-  const activeDiscounts = discounts.filter((d) => d.status === 'Activado').length
-  const inactiveDiscounts = discounts.filter((d) => d.status === 'Desactivado').length
+  const activeDiscounts = discounts.filter((descuento) => descuento.activo).length
+  const inactiveDiscounts = discounts.filter((descuento) => !descuento.activo).length
 
   const { paginatedItems, page, setPage, totalPages, rangeStart, rangeEnd, totalCount } =
     usePagination(discounts, 10)
@@ -179,70 +188,74 @@ export const AdminDiscountsSection = ({
             </tr>
           </thead>
           <tbody>
-            {paginatedItems.map((discount) => (
-              <tr key={discount.id}>
-                <td>
-                  <Box className="admin-discount-product-row">
-                    <img
-                      className="admin-product-image"
-                      src={discount.productImg}
-                      alt={discount.productTitle}
-                    />
-                    <Box className="admin-product-info">
-                      <Typography variant="body2" className="admin-product-info__title">
-                        {discount.productTitle}
-                      </Typography>
-                      <Typography variant="caption" className="admin-product-info__sku">
-                        {discount.productCategory}
-                      </Typography>
+            {paginatedItems.map((descuento) => {
+              const product = getProductForDiscount(descuento) ?? descuento.producto
+
+              return (
+                <tr key={descuento.id}>
+                  <td>
+                    <Box className="admin-discount-product-row">
+                      <img
+                        className="admin-product-image"
+                        src={getProductImageUrl(product)}
+                        alt={descuento.producto?.nombre}
+                      />
+                      <Box className="admin-product-info">
+                        <Typography variant="body2" className="admin-product-info__title">
+                          {descuento.producto?.nombre}
+                        </Typography>
+                        <Typography variant="caption" className="admin-product-info__sku">
+                          {descuento.producto?.categoria}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  <Typography variant="h6" className="admin-discount-percent">
-                    {discount.percentage}%
-                  </Typography>
-                </td>
-                <td>
-                  <Typography variant="body2" className="admin-discount-date">
-                    {discount.startDate}
-                  </Typography>
-                </td>
-                <td>
-                  <Typography variant="body2" className="admin-discount-date">
-                    {discount.endDate}
-                  </Typography>
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  <Switch
-                    checked={discount.status === 'Activado'}
-                    onChange={() => setDiscountToToggle(discount)}
-                    color="success"
-                    size="small"
-                  />
-                </td>
-                <td>
-                  <Box className="admin-actions admin-actions--end">
-                    <IconButton
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <Typography variant="h6" className="admin-discount-percent">
+                      {descuento.porcentaje}%
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body2" className="admin-discount-date">
+                      {formatDate(descuento.fechaInicio)}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body2" className="admin-discount-date">
+                      {formatDate(descuento.fechaFin)}
+                    </Typography>
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <Switch
+                      checked={descuento.activo}
+                      onChange={() => setDiscountToToggle(descuento)}
+                      color="success"
                       size="small"
-                      onClick={() => handleOpenEdit(discount)}
-                      className="admin-icon-btn admin-icon-btn--edit"
-                      aria-label="Editar descuento"
-                    >
-                      <EditOutlinedIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => setDiscountToDelete(discount)}
-                      className="admin-icon-btn admin-icon-btn--danger"
-                      aria-label="Eliminar descuento"
-                    >
-                      <DeleteOutlineOutlinedIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                </td>
-              </tr>
-            ))}
+                    />
+                  </td>
+                  <td>
+                    <Box className="admin-actions admin-actions--end">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleOpenEdit(descuento)}
+                        className="admin-icon-btn admin-icon-btn--edit"
+                        aria-label="Editar descuento"
+                      >
+                        <EditOutlinedIcon fontSize="small" />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => setDiscountToDelete(descuento)}
+                        className="admin-icon-btn admin-icon-btn--danger"
+                        aria-label="Eliminar descuento"
+                      >
+                        <DeleteOutlineOutlinedIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  </td>
+                </tr>
+              )
+            })}
             {discounts.length === 0 && (
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: 'gray' }}>
@@ -287,14 +300,14 @@ export const AdminDiscountsSection = ({
               <InputLabel id="discount-product-select">Producto</InputLabel>
               <Select
                 labelId="discount-product-select"
-                value={form.productId}
-                onChange={(e) => setForm((prev) => ({ ...prev, productId: e.target.value }))}
+                value={form.productoId}
+                onChange={(e) => setForm((prev) => ({ ...prev, productoId: e.target.value }))}
                 label="Producto"
                 required
               >
-                {products.map((p) => (
-                  <MenuItem key={p.id} value={p.id}>
-                    {p.title}
+                {products.map((product) => (
+                  <MenuItem key={product.id} value={product.id}>
+                    {product.nombre}
                   </MenuItem>
                 ))}
               </Select>
@@ -307,16 +320,16 @@ export const AdminDiscountsSection = ({
                 placeholder="15"
                 required
                 variant="outlined"
-                value={form.percentage}
-                onChange={(e) => setForm((prev) => ({ ...prev, percentage: e.target.value }))}
+                value={form.porcentaje}
+                onChange={(e) => setForm((prev) => ({ ...prev, porcentaje: e.target.value }))}
                 slotProps={{ htmlInput: { min: 5, max: 90 } }}
               />
 
               <FormControlLabel
                 control={
                   <Switch
-                    checked={form.active}
-                    onChange={(e) => setForm((prev) => ({ ...prev, active: e.target.checked }))}
+                    checked={form.activo}
+                    onChange={(e) => setForm((prev) => ({ ...prev, activo: e.target.checked }))}
                     color="success"
                   />
                 }
@@ -331,8 +344,8 @@ export const AdminDiscountsSection = ({
                 type="date"
                 required
                 variant="outlined"
-                value={form.startDate}
-                onChange={(e) => setForm((prev) => ({ ...prev, startDate: e.target.value }))}
+                value={form.fechaInicio}
+                onChange={(e) => setForm((prev) => ({ ...prev, fechaInicio: e.target.value }))}
                 slotProps={{ inputLabel: { shrink: true } }}
               />
 
@@ -341,8 +354,8 @@ export const AdminDiscountsSection = ({
                 type="date"
                 required
                 variant="outlined"
-                value={form.endDate}
-                onChange={(e) => setForm((prev) => ({ ...prev, endDate: e.target.value }))}
+                value={form.fechaFin}
+                onChange={(e) => setForm((prev) => ({ ...prev, fechaFin: e.target.value }))}
                 slotProps={{ inputLabel: { shrink: true } }}
               />
             </Box>

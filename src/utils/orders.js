@@ -1,20 +1,6 @@
-import { apiRequest } from './apiClient';
-import { PLACEHOLDER_IMG } from './productMapper';
+import { buildImageById, getProductImageUrl, PLACEHOLDER_IMG } from './products';
 
-const base = (usuarioId) => `/usuarios/${usuarioId}/ordenes`;
-
-export const getOrdenes = (usuarioId) => apiRequest(base(usuarioId), { auth: true });
-
-export const getOrdenById = (usuarioId, ordenId) =>
-  apiRequest(`${base(usuarioId)}/${ordenId}`, { auth: true });
-
-export const createOrden = (usuarioId, payload) =>
-  apiRequest(base(usuarioId), { method: 'POST', body: payload, auth: true });
-
-export const cancelarOrden = (usuarioId, ordenId) =>
-  apiRequest(`${base(usuarioId)}/${ordenId}/cancelar`, { method: 'PUT', auth: true });
-
-export const getAllOrdenes = () => apiRequest('/ordenes', { auth: true });
+export { buildImageById };
 
 const STATUS_MAP = {
   CONFIRMADA: 'confirmada',
@@ -39,6 +25,7 @@ export const mapOrden = (orden, imageById = new Map()) => ({
   total: Number(orden.total ?? 0),
   pointsEarned: orden.puntosGenerados ?? 0,
   pointsUsed: orden.puntosUsados ?? 0,
+  customerName: orden.usuario?.nombreApellido ?? orden.usuario?.mail ?? '',
   items: (orden.items ?? []).map((item) => ({
     productId: item.producto?.id,
     name: item.producto?.nombre,

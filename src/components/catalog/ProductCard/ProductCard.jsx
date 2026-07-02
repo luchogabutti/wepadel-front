@@ -1,9 +1,9 @@
 import { Typography, IconButton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../../context/CartContext';
+import { useCart } from '../../../hooks/useCart';
 import { ProductPrice } from '../ProductPrice/ProductPrice';
-import { PLACEHOLDER_IMG } from '../../../services/productMapper';
+import { getProductImageUrl } from '../../../utils/products';
 import './styles.scss';
 
 export const ProductCard = ({ product }) => {
@@ -25,7 +25,7 @@ export const ProductCard = ({ product }) => {
     <div className="product-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="image">
         <img
-          src={product.imagen || PLACEHOLDER_IMG}
+          src={getProductImageUrl(product)}
           alt={product.nombre}
           className="img"
         />
