@@ -303,9 +303,6 @@ const productsSlice = createSlice({
         });
         state.error = null;
       })
-      .addCase(updateProductStock.rejected, (state, action) => {
-        state.error = action.payload || 'No se pudo actualizar el stock.';
-      })
 
       .addCase(toggleProductEnabled.pending, handleMutationPending)
       .addCase(toggleProductEnabled.fulfilled, (state, action) => {
