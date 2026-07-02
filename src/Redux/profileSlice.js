@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { loginUser, logout, registerUser } from './authSlice';
 import { createOrder } from './ordersSlice';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
 import { normalizeUserFetchArg } from './fetchArgs';
 
 const getAuthHeaders = (getState) => {
@@ -18,12 +18,18 @@ const resetProfileCache = (state) => {
 
 export const fetchProfile = createAsyncThunk(
   'profile/fetchProfile',
-  async (arg, { getState }) => {
-    const { usuarioId } = normalizeUserFetchArg(arg);
-    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}`, {
-      headers: getAuthHeaders(getState),
-    });
-    return { usuarioId, data };
+  async (arg, { getState, rejectWithValue }) => {
+    try {
+      const { usuarioId } = normalizeUserFetchArg(arg);
+      const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}`, {
+        headers: getAuthHeaders(getState),
+      });
+      return { usuarioId, data };
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo cargar el perfil.')
+      );
+    }
   },
   {
     condition: (arg, { getState }) => {
@@ -39,12 +45,18 @@ export const fetchProfile = createAsyncThunk(
 
 export const fetchPoints = createAsyncThunk(
   'profile/fetchPoints',
-  async (arg, { getState }) => {
-    const { usuarioId } = normalizeUserFetchArg(arg);
-    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/puntos`, {
-      headers: getAuthHeaders(getState),
-    });
-    return { usuarioId, data };
+  async (arg, { getState, rejectWithValue }) => {
+    try {
+      const { usuarioId } = normalizeUserFetchArg(arg);
+      const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/puntos`, {
+        headers: getAuthHeaders(getState),
+      });
+      return { usuarioId, data };
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudieron cargar los puntos.')
+      );
+    }
   },
   {
     condition: (arg, { getState }) => {
@@ -60,13 +72,19 @@ export const fetchPoints = createAsyncThunk(
 
 export const updateProfile = createAsyncThunk(
   'profile/updateProfile',
-  async ({ id, nombreApellido, mail }, { getState }) => {
-    const { data } = await axios.put(
-      `${API_BASE_URL}/usuarios/${id}`,
-      { nombreApellido, mail },
-      { headers: getAuthHeaders(getState) }
-    );
-    return data;
+  async ({ id, nombreApellido, mail }, { getState, rejectWithValue }) => {
+    try {
+      const { data } = await axios.put(
+        `${API_BASE_URL}/usuarios/${id}`,
+        { nombreApellido, mail },
+        { headers: getAuthHeaders(getState) }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo actualizar el perfil.')
+      );
+    }
   }
 );
 
@@ -82,37 +100,33 @@ const profileSlice = createSlice({
     loading: false,
     pointsLoading: false,
     updating: false,
-    error: null,
+    profileError: null,
+    pointsError: null,
   },
-  reducers: {
-    invalidateProfile(state) {
-      state.profileLoaded = false;
-    },
-    invalidatePoints(state) {
-      state.pointsLoaded = false;
-    },
-    invalidateProfileCache: resetProfileCache,
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchProfile.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.profileError = null;
       })
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.usuario = action.payload.data;
         state.loadedUserId = action.payload.usuarioId;
         state.profileLoaded = true;
-        state.error = null;
+        state.profileError = null;
       })
       .addCase(fetchProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.profileError = action.payload || 'No se pudo cargar el perfil.';
+        state.usuario = null;
         state.profileLoaded = false;
       })
+
       .addCase(fetchPoints.pending, (state) => {
         state.pointsLoading = true;
+        state.pointsError = null;
       })
       .addCase(fetchPoints.fulfilled, (state, action) => {
         state.pointsLoading = false;
@@ -120,25 +134,27 @@ const profileSlice = createSlice({
         state.pointsConversion = action.payload.data?.conversion ?? 5;
         state.loadedUserId = action.payload.usuarioId;
         state.pointsLoaded = true;
+        state.pointsError = null;
       })
-      .addCase(fetchPoints.rejected, (state) => {
+      .addCase(fetchPoints.rejected, (state, action) => {
         state.pointsLoading = false;
+        state.points = 0;
+        state.pointsError = action.payload || 'No se pudieron cargar los puntos.';
         state.pointsLoaded = false;
       })
+
       .addCase(updateProfile.pending, (state) => {
         state.updating = true;
-        state.error = null;
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.updating = false;
         state.usuario = action.payload;
         state.profileLoaded = true;
-        state.error = null;
       })
-      .addCase(updateProfile.rejected, (state, action) => {
+      .addCase(updateProfile.rejected, (state) => {
         state.updating = false;
-        state.error = action.error.message;
       })
+
       .addCase(createOrder.fulfilled, (state) => {
         state.pointsLoaded = false;
       })
@@ -151,11 +167,11 @@ const profileSlice = createSlice({
         state.loading = false;
         state.pointsLoading = false;
         state.updating = false;
-        state.error = null;
+        state.profileError = null;
+        state.pointsError = null;
         resetProfileCache(state);
       });
   },
 });
 
-export const { invalidateProfile, invalidatePoints, invalidateProfileCache } = profileSlice.actions;
 export default profileSlice.reducer;

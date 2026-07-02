@@ -103,8 +103,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload ?? action.error.message;
+        state.error = action.payload || 'No se pudo iniciar sesión.';
       })
+
       .addCase(registerUser.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -116,7 +117,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload ?? action.error.message;
+        state.error = action.payload || 'No se pudo crear la cuenta.';
       });
   },
 });

@@ -34,12 +34,12 @@ export const RegisterForm = () => {
           password,
         })
       );
+
       if (registerUser.rejected.match(result)) {
-        notifyError(
-          result.payload || result.error?.message || 'No se pudo crear la cuenta. Intentá de nuevo.'
-        );
+        notifyError(result.payload || 'No se pudo crear la cuenta. Intentá de nuevo.');
         return;
       }
+
       navigate('/');
     } catch (err) {
       const message = err.message || 'No se pudo crear la cuenta. Intentá de nuevo.';

@@ -1,10 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { AdminProfileSection } from '../../components/admin/profile/AdminProfileSection/AdminProfileSection';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
+import { PageHeader } from '../../components/layout/PageHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutAction, updateUser } from '../../Redux/authSlice';
 import { persistor } from '../../Redux/store';
 import { fetchProfile, updateProfile } from '../../Redux/profileSlice';
+import { withForceRefresh } from '../../Redux/fetchArgs';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +19,9 @@ const splitNombre = (nombreApellido = '') => {
 export const AdminProfileView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { usuario, loading, profileLoaded } = useSelector((state) => state.profile);
+  const { usuario, loading, profileLoaded, profileError, updating } = useSelector(
+    (state) => state.profile
+  );
   const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
@@ -32,6 +37,10 @@ export const AdminProfileView = () => {
     return { firstName, lastName, email: fuente.mail ?? '' };
   }, [usuario, user]);
 
+  const handleRetryProfile = () => {
+    if (usuarioId) dispatch(fetchProfile(withForceRefresh(usuarioId)));
+  };
+
   const handleSave = async (form) => {
     const nombreApellido = `${form.firstName} ${form.lastName}`.trim();
     const emailChanged =
@@ -46,8 +55,8 @@ export const AdminProfileView = () => {
     );
 
     if (updateProfile.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudieron guardar los datos.');
-      return;
+      notifyError(result.payload || 'No se pudieron guardar los datos.');
+      return false;
     }
 
     dispatch(updateUser({ nombreApellido, mail: form.email.trim() }));
@@ -57,14 +66,32 @@ export const AdminProfileView = () => {
       dispatch(logoutAction());
       persistor.purge();
       navigate('/login');
-      return;
+      return true;
     }
 
     notifySuccess('Datos guardados.');
+    return true;
   };
 
   if (!profileLoaded && loading) {
     return <LoadingState message="Cargando perfil..." />;
+  }
+
+  if (profileError && !profileLoaded) {
+    return (
+      <>
+        <PageHeader
+          variant="profile"
+          title="Perfil Administrador"
+          subtitle="Datos de la cuenta con acceso al panel de administración."
+        />
+        <ApiErrorState
+          error={profileError}
+          fallback="No se pudo cargar el perfil."
+          onRetry={handleRetryProfile}
+        />
+      </>
+    );
   }
 
   return (
@@ -75,6 +102,7 @@ export const AdminProfileView = () => {
       lastName={datos.lastName}
       email={datos.email}
       onSave={handleSave}
+      saving={updating}
     />
   );
 };

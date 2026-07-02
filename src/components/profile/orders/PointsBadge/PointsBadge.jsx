@@ -1,12 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, CircularProgress } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { ConfirmationDialog } from '../../../general/ConfirmationDialog/ConfirmationDialog';
 import { useSelector } from 'react-redux';
 import { getDefaultCatalogPath } from '../../../../Redux/categoriesSlice';
+import { getApiErrorMessage } from '../../../../utils/api';
 import './styles.scss';
 
-export const PointsBadge = ({ pointsValue = 500 }) => {
+export const PointsBadge = ({
+  pointsValue = 0,
+  error = null,
+  loading = false,
+  onRetry,
+}) => {
   const [usePointsDialogOpen, setUsePointsDialogOpen] = useState(false);
   const navigate = useNavigate();
   const categorias = useSelector((state) => state.categories.items);
@@ -15,6 +22,44 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
   const handleUsePoints = () => {
     setUsePointsDialogOpen(true);
   };
+
+  if (loading && !error) {
+    return (
+      <Box component="section" className="points-badge-card points-badge-card--loading">
+        <CircularProgress size={32} sx={{ color: 'primary.contrastText', zIndex: 2 }} />
+        <Typography variant="body2" sx={{ color: 'primary.contrastText', zIndex: 2, mt: 1 }}>
+          Cargando puntos...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box component="section" className="points-badge-card points-badge-card--error">
+        <Box className="card-gradient-overlay" />
+        <Box className="points-error-box">
+          <Typography variant="h6" className="points-error-title">
+            No se pudieron cargar tus puntos
+          </Typography>
+          <Typography variant="body2" className="points-error-text">
+            {getApiErrorMessage(error, 'No se pudieron cargar los puntos.')}
+          </Typography>
+          {onRetry && (
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<RefreshIcon />}
+              onClick={onRetry}
+              sx={{ mt: 2, bgcolor: 'primary.contrastText', color: 'primary.main' }}
+            >
+              Reintentar
+            </Button>
+          )}
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box component="section" className="points-badge-card">
@@ -47,7 +92,7 @@ export const PointsBadge = ({ pointsValue = 500 }) => {
         fullWidth
         variant="contained"
         onClick={handleUsePoints}
-        sx={{bgcolor: 'primary.contrastText', color: 'primary.main', py: 1.5}}
+        sx={{ bgcolor: 'primary.contrastText', color: 'primary.main', py: 1.5 }}
       >
         USAR MIS PUNTOS
       </Button>

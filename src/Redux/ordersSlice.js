@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { loginUser, logout, registerUser } from './authSlice';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
 import { normalizeUserFetchArg } from './fetchArgs';
 
 const getAuthHeaders = (getState) => {
@@ -20,12 +20,18 @@ const resetAdminOrdersCache = (state) => {
 
 export const fetchUserOrders = createAsyncThunk(
   'orders/fetchUserOrders',
-  async (arg, { getState }) => {
-    const { usuarioId } = normalizeUserFetchArg(arg);
-    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes`, {
-      headers: getAuthHeaders(getState),
-    });
-    return { usuarioId, data: data ?? [] };
+  async (arg, { getState, rejectWithValue }) => {
+    try {
+      const { usuarioId } = normalizeUserFetchArg(arg);
+      const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes`, {
+        headers: getAuthHeaders(getState),
+      });
+      return { usuarioId, data: data ?? [] };
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudieron cargar los pedidos del usuario.')
+      );
+    }
   },
   {
     condition: (arg, { getState }) => {
@@ -41,14 +47,17 @@ export const fetchUserOrders = createAsyncThunk(
 
 export const fetchAllOrders = createAsyncThunk(
   'orders/fetchAllOrders',
-  async (arg = {}, { getState }) => {
-    const forceRefresh = typeof arg === 'object' && arg !== null ? Boolean(arg.forceRefresh) : false;
-    void forceRefresh;
-
-    const { data } = await axios.get(`${API_BASE_URL}/ordenes`, {
-      headers: getAuthHeaders(getState),
-    });
-    return data ?? [];
+  async (arg = {}, { getState, rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/ordenes`, {
+        headers: getAuthHeaders(getState),
+      });
+      return data ?? [];
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudieron cargar los pedidos.')
+      );
+    }
   },
   {
     condition: (arg, { getState }) => {
@@ -61,31 +70,49 @@ export const fetchAllOrders = createAsyncThunk(
 
 export const fetchOrderById = createAsyncThunk(
   'orders/fetchOrderById',
-  async ({ usuarioId, ordenId }, { getState }) => {
-    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes/${ordenId}`, {
-      headers: getAuthHeaders(getState),
-    });
-    return data;
+  async ({ usuarioId, ordenId }, { getState, rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes/${ordenId}`, {
+        headers: getAuthHeaders(getState),
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo cargar el detalle del pedido.')
+      );
+    }
   }
 );
 
 export const createOrder = createAsyncThunk(
   'orders/createOrder',
-  async ({ usuarioId, payload }, { getState }) => {
-    const { data } = await axios.post(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes`, payload, {
-      headers: getAuthHeaders(getState),
-    });
-    return data;
+  async ({ usuarioId, payload }, { getState, rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes`, payload, {
+        headers: getAuthHeaders(getState),
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo crear el pedido.')
+      );
+    }
   }
 );
 
 export const cancelOrder = createAsyncThunk(
   'orders/cancelOrder',
-  async ({ usuarioId, ordenId }, { getState }) => {
-    await axios.put(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes/${ordenId}/cancelar`, null, {
-      headers: getAuthHeaders(getState),
-    });
-    return ordenId;
+  async ({ usuarioId, ordenId }, { getState, rejectWithValue }) => {
+    try {
+      await axios.put(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes/${ordenId}/cancelar`, null, {
+        headers: getAuthHeaders(getState),
+      });
+      return ordenId;
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo cancelar el pedido.')
+      );
+    }
   }
 );
 
@@ -101,18 +128,16 @@ const ordersSlice = createSlice({
     mutating: false,
     error: null,
   },
-  reducers: {
-    invalidateUserOrders: resetUserOrdersCache,
-    invalidateAdminOrders: resetAdminOrdersCache,
-  },
+  reducers: {},
   extraReducers: (builder) => {
     const handleListPending = (state) => {
       state.loading = true;
       state.error = null;
     };
+
     const handleListRejected = (state, action) => {
       state.loading = false;
-      state.error = action.error.message;
+      state.error = action.payload || 'No se pudieron cargar los pedidos.';
     };
 
     builder
@@ -156,8 +181,9 @@ const ordersSlice = createSlice({
       .addCase(fetchOrderById.rejected, (state, action) => {
         state.loading = false;
         state.current = null;
-        state.error = action.error.message;
+        state.error = action.payload || 'No se pudo cargar el detalle del pedido.';
       })
+
       .addCase(createOrder.pending, (state) => {
         state.mutating = true;
         state.error = null;
@@ -169,8 +195,9 @@ const ordersSlice = createSlice({
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.mutating = false;
-        state.error = action.error.message;
+        state.error = action.payload || 'No se pudo crear el pedido.';
       })
+
       .addCase(cancelOrder.pending, (state) => {
         state.mutating = true;
         state.error = null;
@@ -184,7 +211,7 @@ const ordersSlice = createSlice({
       })
       .addCase(cancelOrder.rejected, (state, action) => {
         state.mutating = false;
-        state.error = action.error.message;
+        state.error = action.payload || 'No se pudo cancelar el pedido.';
       })
       .addCase(loginUser.fulfilled, (state) => {
         state.items = [];
@@ -210,5 +237,4 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { invalidateUserOrders, invalidateAdminOrders } = ordersSlice.actions;
 export default ordersSlice.reducer;

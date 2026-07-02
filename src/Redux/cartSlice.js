@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
 import {
   applyCartAddItem,
   applyCartUpdateItem,
@@ -40,7 +40,9 @@ export const fetchCart = createAsyncThunk(
       });
       return data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo cargar el carrito.')
+      );
     }
   }
 );
@@ -63,7 +65,11 @@ export const addCartItem = createAsyncThunk(
       const currentRaw = getState().cart.raw ?? createEmptyCart();
       return applyCartAddItem(currentRaw, product, cantidad);
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(
+        typeof error === 'string'
+          ? error
+          : getAxiosErrorMessage(error, 'No se pudo agregar el producto al carrito.')
+      );
     }
   }
 );
@@ -81,7 +87,11 @@ export const updateCartItem = createAsyncThunk(
       const currentRaw = getState().cart.raw ?? createEmptyCart();
       return applyCartUpdateItem(currentRaw, productoId, cantidad);
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(
+        typeof error === 'string'
+          ? error
+          : getAxiosErrorMessage(error, 'No se pudo actualizar el producto del carrito.')
+      );
     }
   }
 );
@@ -97,7 +107,11 @@ export const removeCartItem = createAsyncThunk(
       const currentRaw = getState().cart.raw ?? createEmptyCart();
       return applyCartRemoveItem(currentRaw, productoId);
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(
+        typeof error === 'string'
+          ? error
+          : getAxiosErrorMessage(error, 'No se pudo eliminar el producto del carrito.')
+      );
     }
   }
 );
@@ -112,7 +126,11 @@ export const clearCart = createAsyncThunk(
 
       return applyCartClear();
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(
+        typeof error === 'string'
+          ? error
+          : getAxiosErrorMessage(error, 'No se pudo vaciar el carrito.')
+      );
     }
   }
 );
@@ -147,8 +165,9 @@ const cartSlice = createSlice({
       .addCase(fetchCart.rejected, (state, action) => {
         state.loading = false;
         state.raw = null;
-        state.error = action.payload || action.error.message;
+        state.error = action.payload || 'No se pudo cargar el carrito.';
       })
+
       .addCase(addCartItem.pending, (state) => {
         state.mutating = true;
         state.error = null;
@@ -160,8 +179,9 @@ const cartSlice = createSlice({
       })
       .addCase(addCartItem.rejected, (state, action) => {
         state.mutating = false;
-        state.error = action.payload || action.error.message;
+        state.error = action.payload || 'No se pudo agregar el producto al carrito.';
       })
+
       .addCase(updateCartItem.pending, (state) => {
         state.mutating = true;
         state.error = null;
@@ -173,8 +193,9 @@ const cartSlice = createSlice({
       })
       .addCase(updateCartItem.rejected, (state, action) => {
         state.mutating = false;
-        state.error = action.payload || action.error.message;
+        state.error = action.payload || 'No se pudo actualizar el producto del carrito.';
       })
+
       .addCase(removeCartItem.pending, (state) => {
         state.mutating = true;
         state.error = null;
@@ -186,8 +207,9 @@ const cartSlice = createSlice({
       })
       .addCase(removeCartItem.rejected, (state, action) => {
         state.mutating = false;
-        state.error = action.payload || action.error.message;
+        state.error = action.payload || 'No se pudo eliminar el producto del carrito.';
       })
+
       .addCase(clearCart.pending, (state) => {
         state.mutating = true;
         state.error = null;
@@ -199,8 +221,9 @@ const cartSlice = createSlice({
       })
       .addCase(clearCart.rejected, (state, action) => {
         state.mutating = false;
-        state.error = action.payload || action.error.message;
+        state.error = action.payload || 'No se pudo vaciar el carrito.';
       })
+
       .addCase(logout, (state) => {
         state.raw = null;
         state.loading = false;

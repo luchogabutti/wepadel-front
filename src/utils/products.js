@@ -12,6 +12,12 @@ export const getProductImageUrl = (product) => {
 
 export const getProductImagenId = (product) => product?.imagenPrincipal?.id ?? null;
 
+export const buildImageById = (products = []) => {
+  const map = new Map();
+  products.forEach((producto) => map.set(producto.id, getProductImageUrl(producto)));
+  return map;
+};
+
 export const toProductoPayload = (product, overrides = {}) => ({
   nombre: product.nombre,
   descripcion: product.descripcion?.trim() ? product.descripcion : product.nombre,

@@ -48,11 +48,7 @@ export const applyCartRemoveItem = (raw, productoId) => {
 
 export const applyCartClear = () => createEmptyCart();
 
-export const buildImageById = (products = []) => {
-  const map = new Map();
-  products.forEach((producto) => map.set(producto.id, getProductImageUrl(producto)));
-  return map;
-};
+export { buildImageById } from './products';
 
 export const mapCartItem = (carritoItem, imageById = new Map()) => {
   const producto = carritoItem.producto ?? {};

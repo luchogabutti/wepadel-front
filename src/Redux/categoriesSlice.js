@@ -1,15 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { mapCategorias } from '../utils/categories';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
 
 export const DEFAULT_CATEGORIA_ID = 'paletas';
 export const DEFAULT_CATALOG_PATH = '/catalogo/paletas';
 
-export const fetchCategorias = createAsyncThunk('categories/fetchCategorias', async () => {
-  const { data } = await axios.get(`${API_BASE_URL}/categorias`);
-  return mapCategorias(data);
-});
+export const fetchCategorias = createAsyncThunk(
+  'categories/fetchCategorias',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/categorias`);
+      return mapCategorias(data);
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudieron cargar las categorías.')
+      );
+    }
+  }
+);
 
 const categoriesSlice = createSlice({
   name: 'categories',
@@ -32,7 +41,7 @@ const categoriesSlice = createSlice({
       })
       .addCase(fetchCategorias.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || 'No se pudieron cargar las categorías.';
         state.items = [];
       });
   },

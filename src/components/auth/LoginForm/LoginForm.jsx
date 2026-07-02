@@ -42,11 +42,10 @@ export const LoginForm = () => {
     try {
       const result = await dispatch(loginUser({ email: email.trim(), password, remember }));
       if (loginUser.rejected.match(result)) {
-        notifyError(
-          result.payload || result.error?.message || 'No se pudo iniciar sesión. Revisá tus datos.'
-        );
+        notifyError(result.payload || 'No se pudo iniciar sesión. Revisá tus datos.');
         return;
       }
+
       navigate('/');
     } catch (err) {
       const message = err.message || 'No se pudo iniciar sesión. Revisá tus datos.';

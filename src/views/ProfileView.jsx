@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { Grid } from '@mui/material';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
 import { PageHeader } from '../components/layout/PageHeader';
 import { ProfileDataCard } from '../components/profile/ProfileDataCard/ProfileDataCard';
 import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/ProfileBenefitsGrid';
@@ -9,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutAction, updateUser } from '../Redux/authSlice';
 import { persistor } from '../Redux/store';
 import { fetchProfile, fetchPoints, updateProfile } from '../Redux/profileSlice';
+import { withForceRefresh } from '../Redux/fetchArgs';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,9 +25,17 @@ const splitNombre = (nombreApellido = '') => {
 export const ProfileView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { usuario, points, loading, pointsLoading, profileLoaded, pointsLoaded } = useSelector(
-    (state) => state.profile
-  );
+  const {
+    usuario,
+    points,
+    loading,
+    pointsLoading,
+    profileLoaded,
+    pointsLoaded,
+    profileError,
+    pointsError,
+    updating,
+  } = useSelector((state) => state.profile);
   const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
@@ -42,6 +52,14 @@ export const ProfileView = () => {
     return { firstName, lastName, email: fuente.mail ?? '' };
   }, [usuario, user]);
 
+  const handleRetryProfile = () => {
+    if (usuarioId) dispatch(fetchProfile(withForceRefresh(usuarioId)));
+  };
+
+  const handleRetryPoints = () => {
+    if (usuarioId) dispatch(fetchPoints(withForceRefresh(usuarioId)));
+  };
+
   const handleSave = async (form) => {
     const nombreApellido = `${form.firstName} ${form.lastName}`.trim();
     const emailChanged =
@@ -56,8 +74,8 @@ export const ProfileView = () => {
     );
 
     if (updateProfile.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudieron guardar los datos.');
-      return;
+      notifyError(result.payload || 'No se pudieron guardar los datos.');
+      return false;
     }
 
     dispatch(updateUser({ nombreApellido, mail: form.email.trim() }));
@@ -67,10 +85,11 @@ export const ProfileView = () => {
       dispatch(logoutAction());
       persistor.purge();
       navigate('/login');
-      return;
+      return true;
     }
 
     notifySuccess('Datos guardados.');
+    return true;
   };
 
   const isInitialLoad =
@@ -78,6 +97,23 @@ export const ProfileView = () => {
 
   if (isInitialLoad) {
     return <LoadingState message="Cargando tu perfil..." />;
+  }
+
+  if (profileError && !profileLoaded) {
+    return (
+      <>
+        <PageHeader
+          variant="profile"
+          title="Mi Perfil"
+          subtitle="Administra tu cuenta y revisa tus beneficios exclusivos."
+        />
+        <ApiErrorState
+          error={profileError}
+          fallback="No se pudo cargar tu perfil."
+          onRetry={handleRetryProfile}
+        />
+      </>
+    );
   }
 
   return (
@@ -96,10 +132,16 @@ export const ProfileView = () => {
             lastName={datos.lastName}
             email={datos.email}
             onSave={handleSave}
+            saving={updating}
           />
         </Grid>
         <Grid size={{ xs: 12, lg: 4 }}>
-          <PointsBadge pointsValue={points} />
+          <PointsBadge
+            pointsValue={points}
+            error={pointsError}
+            loading={pointsLoading}
+            onRetry={handleRetryPoints}
+          />
         </Grid>
       </Grid>
 

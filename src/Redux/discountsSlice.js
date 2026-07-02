@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
@@ -40,53 +40,72 @@ const findProductoIdByDescuento = (products, descuentoId) => {
 
 export const createDescuento = createAsyncThunk(
   'discounts/createDescuento',
-  async (descuento, { getState }) => {
-    const body = buildDescuentoBody(descuento);
-    const { data, headers } = await axios.post(`${API_BASE_URL}/descuentos`, body, {
-      headers: getAuthHeaders(getState),
-    });
+  async (descuento, { getState, rejectWithValue }) => {
+    try {
+      const body = buildDescuentoBody(descuento);
+      const { data, headers } = await axios.post(`${API_BASE_URL}/descuentos`, body, {
+        headers: getAuthHeaders(getState),
+      });
 
-    const id = data?.id ?? parseIdFromLocation(headers?.location);
+      const id = data?.id ?? parseIdFromLocation(headers?.location);
 
-    return {
-      productoId: body.productoId,
-      descuento: data ?? { id, ...body },
-    };
+      return {
+        productoId: body.productoId,
+        descuento: data ?? { id, ...body },
+      };
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo crear el descuento.')
+      );
+    }
   }
 );
 
 export const updateDescuento = createAsyncThunk(
   'discounts/updateDescuento',
-  async ({ id, descuento, overrides = {} }, { getState }) => {
-    const products = getState().products.items;
-    const previousProductoId =
-      findProductoIdByDescuento(products, id) ??
-      descuento.producto?.id ??
-      descuento.productoId;
-    const body = buildDescuentoBody(descuento, overrides);
+  async ({ id, descuento, overrides = {} }, { getState, rejectWithValue }) => {
+    try {
+      const products = getState().products.items;
+      const previousProductoId =
+        findProductoIdByDescuento(products, id) ??
+        descuento.producto?.id ??
+        descuento.productoId;
 
-    const { data } = await axios.put(`${API_BASE_URL}/descuentos/${id}`, body, {
-      headers: getAuthHeaders(getState),
-    });
+      const body = buildDescuentoBody(descuento, overrides);
 
-    return {
-      productoId: body.productoId,
-      previousProductoId,
-      descuento: data ?? { id, ...body },
-    };
+      const { data } = await axios.put(`${API_BASE_URL}/descuentos/${id}`, body, {
+        headers: getAuthHeaders(getState),
+      });
+
+      return {
+        productoId: body.productoId,
+        previousProductoId,
+        descuento: data ?? { id, ...body },
+      };
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo actualizar el descuento.')
+      );
+    }
   }
 );
 
 export const deleteDescuento = createAsyncThunk(
   'discounts/deleteDescuento',
-  async (id, { getState }) => {
-    const productoId = findProductoIdByDescuento(getState().products.items, id);
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      const productoId = findProductoIdByDescuento(getState().products.items, id);
 
-    await axios.delete(`${API_BASE_URL}/descuentos/${id}`, {
-      headers: getAuthHeaders(getState),
-    });
+      await axios.delete(`${API_BASE_URL}/descuentos/${id}`, {
+        headers: getAuthHeaders(getState),
+      });
 
-    return { id, productoId };
+      return { id, productoId };
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo eliminar el descuento.')
+      );
+    }
   }
 );
 
@@ -102,25 +121,30 @@ const discountsSlice = createSlice({
       state.mutating = true;
       state.error = null;
     };
+
     const handleMutationFulfilled = (state) => {
       state.mutating = false;
       state.error = null;
     };
+
     const handleMutationRejected = (state, action) => {
       state.mutating = false;
-      state.error = action.error.message;
+      state.error = action.payload || 'No se pudo completar la operación con descuentos.';
     };
 
     builder
       .addCase(createDescuento.pending, handleMutationPending)
       .addCase(createDescuento.fulfilled, handleMutationFulfilled)
       .addCase(createDescuento.rejected, handleMutationRejected)
+
       .addCase(updateDescuento.pending, handleMutationPending)
       .addCase(updateDescuento.fulfilled, handleMutationFulfilled)
       .addCase(updateDescuento.rejected, handleMutationRejected)
+
       .addCase(deleteDescuento.pending, handleMutationPending)
       .addCase(deleteDescuento.fulfilled, handleMutationFulfilled)
       .addCase(deleteDescuento.rejected, handleMutationRejected)
+
       .addCase(logout, (state) => {
         state.mutating = false;
         state.error = null;

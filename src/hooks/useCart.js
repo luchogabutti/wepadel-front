@@ -39,13 +39,16 @@ export const useCart = () => {
   const refresh = useCallback(async () => {
     if (!isCliente || !usuarioId) {
       dispatch(resetCart());
-      return;
+      return null;
     }
 
     const result = await dispatch(fetchCart(usuarioId));
+
     if (fetchCart.rejected.match(result)) {
-      notifyError(result.payload || result.error?.message || 'No se pudo cargar el carrito.');
+      notifyError(result.payload || 'No se pudo cargar el carrito.');
     }
+
+    return result;
   }, [dispatch, isCliente, usuarioId]);
 
   const addItem = useCallback(
@@ -54,6 +57,7 @@ export const useCart = () => {
         navigate('/login');
         return;
       }
+
       if (!isCliente || !usuarioId) return;
 
       const result = await dispatch(
@@ -65,7 +69,7 @@ export const useCart = () => {
         return;
       }
 
-      notifyError(result.payload || result.error?.message || 'No se pudo agregar el producto al carrito.');
+      notifyError(result.payload || 'No se pudo agregar el producto al carrito.');
     },
     [dispatch, isAuthenticated, isCliente, usuarioId, navigate]
   );
@@ -79,7 +83,7 @@ export const useCart = () => {
       );
 
       if (updateCartItem.rejected.match(result)) {
-        notifyError(result.payload || result.error?.message || 'No se pudo actualizar la cantidad.');
+        notifyError(result.payload || 'No se pudo actualizar la cantidad.');
       }
     },
     [dispatch, isCliente, usuarioId]
@@ -92,7 +96,7 @@ export const useCart = () => {
       const result = await dispatch(removeCartItem({ usuarioId, productoId: id }));
 
       if (removeCartItem.rejected.match(result)) {
-        notifyError(result.payload || result.error?.message || 'No se pudo quitar el producto del carrito.');
+        notifyError(result.payload || 'No se pudo quitar el producto del carrito.');
       }
     },
     [dispatch, isCliente, usuarioId]
@@ -104,7 +108,7 @@ export const useCart = () => {
     const result = await dispatch(clearCart(usuarioId));
 
     if (clearCart.rejected.match(result)) {
-      notifyError(result.payload || result.error?.message || 'No se pudo vaciar el carrito.');
+      notifyError(result.payload || 'No se pudo vaciar el carrito.');
     }
   }, [dispatch, isCliente, usuarioId]);
 

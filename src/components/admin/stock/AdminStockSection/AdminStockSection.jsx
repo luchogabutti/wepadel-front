@@ -43,7 +43,7 @@ export const AdminStockSection = ({
   }, [products])
 
   const handleStockChange = (productId, newStock) => {
-    const stockVal = Math.max(0, parseInt(newStock) || 0)
+    const stockVal = Math.max(0, parseInt(newStock, 10) || 0)
     setLocalStocks((prev) => ({
       ...prev,
       [productId]: stockVal,

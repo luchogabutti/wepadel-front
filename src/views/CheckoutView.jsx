@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Stack } from '@mui/material';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
 import { LoadingState } from '../components/general/LoadingState/LoadingState';
+import { ApiErrorState } from '../components/general/ApiErrorState/ApiErrorState';
 import { CheckoutProductSummary } from '../components/checkout/CheckoutProductSummary/CheckoutProductSummary';
 import { CheckoutShippingCard } from '../components/checkout/CheckoutShippingCard/CheckoutShippingCard';
 import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/CheckoutPaymentForm';
@@ -12,6 +13,7 @@ import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDet
 import { useCart } from '../hooks/useCart';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPoints } from '../Redux/profileSlice';
+import { fetchCart } from '../Redux/cartSlice';
 import { withForceRefresh } from '../Redux/fetchArgs';
 import { createOrder } from '../Redux/ordersSlice';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
@@ -28,12 +30,15 @@ export const CheckoutView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { points, pointsConversion, pointsLoading } = useSelector((state) => state.profile);
+  const { points, pointsConversion, pointsLoading, pointsError } = useSelector(
+    (state) => state.profile
+  );
   const mutating = useSelector((state) => state.orders.mutating);
   const { items, subtotal, refresh, loading: cartLoading } = useCart();
   const { notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const [checkoutSynced, setCheckoutSynced] = useState(false);
+  const [syncError, setSyncError] = useState(null);
 
   const [shippingData, setShippingData] = useState({
     address: '',
@@ -54,26 +59,48 @@ export const CheckoutView = () => {
   const [manualPoints, setManualPoints] = useState('');
   const [showPaymentValidation, setShowPaymentValidation] = useState(false);
 
+  const syncCheckoutData = useCallback(async () => {
+    if (!usuarioId) return;
+
+    setCheckoutSynced(false);
+    setSyncError(null);
+
+    const [pointsResult, cartResult] = await Promise.all([
+      dispatch(fetchPoints(withForceRefresh(usuarioId))),
+      refresh(),
+    ]);
+
+    if (fetchCart.rejected.match(cartResult)) {
+      setSyncError(cartResult.payload || 'No se pudo cargar el carrito.');
+    }
+
+    if (fetchPoints.rejected.match(pointsResult)) {
+      setUsePoints(false);
+    }
+
+    setCheckoutSynced(true);
+  }, [dispatch, usuarioId, refresh]);
+
   useEffect(() => {
     if (!usuarioId) return;
 
     let cancelled = false;
 
-    const syncCheckoutData = async () => {
-      setCheckoutSynced(false);
-      await Promise.all([
-        dispatch(fetchPoints(withForceRefresh(usuarioId))),
-        refresh(),
-      ]);
-      if (!cancelled) setCheckoutSynced(true);
+    const runSync = async () => {
+      await syncCheckoutData();
+      if (cancelled) return;
     };
 
-    syncCheckoutData();
+    runSync();
 
     return () => {
       cancelled = true;
     };
-  }, [dispatch, usuarioId, refresh]);
+  }, [usuarioId, syncCheckoutData]);
+
+  const handleRetryPoints = () => {
+    if (usuarioId) dispatch(fetchPoints(withForceRefresh(usuarioId)));
+  };
 
   const availablePoints = points;
   const conversion = pointsConversion || 1;
@@ -140,7 +167,7 @@ export const CheckoutView = () => {
     );
 
     if (createOrder.rejected.match(result)) {
-      notifyError(result.error?.message || 'No se pudo confirmar la compra. Intentá nuevamente.');
+      notifyError(result.payload || 'No se pudo confirmar la compra. Intentá nuevamente.');
       return;
     }
 
@@ -155,6 +182,22 @@ export const CheckoutView = () => {
     return (
       <PageContainer>
         <LoadingState message="Preparando checkout..." />
+      </PageContainer>
+    );
+  }
+
+  if (syncError) {
+    return (
+      <PageContainer>
+        <PageHeader
+          title="Checkout"
+          subtitle="Revisá tu pedido y completá tu envio antes de finalizar la compra."
+        />
+        <ApiErrorState
+          error={syncError}
+          fallback="No se pudo cargar el carrito."
+          onRetry={syncCheckoutData}
+        />
       </PageContainer>
     );
   }
@@ -196,6 +239,9 @@ export const CheckoutView = () => {
               onPointsModeChange={setPointsMode}
               manualPoints={manualPoints}
               onManualPointsChange={handleManualPointsChange}
+              loadError={pointsError}
+              onRetryLoad={handleRetryPoints}
+              pointsLoading={pointsLoading}
             />
             <CheckoutPaymentDetail
               subtotal={subtotal}
