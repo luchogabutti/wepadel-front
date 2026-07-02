@@ -59,10 +59,24 @@ export const Footer = () => {
 
           <FooterColumn title="Novedades del deporte">
             <div className="social-icons">
-              <IconButton className="icon-btn" onClick={() => window.open('https://premierpadel.com/es', '_blank')}>
+              <IconButton
+                component="a"
+                href="https://premierpadel.com/es"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="icon-btn"
+                aria-label="Ir a Premier Padel"
+              >
                 <CallMadeIcon />
               </IconButton>
-              <IconButton className="icon-btn" onClick={() => window.open('https://www.instagram.com/premierpadel/', '_blank')}>
+              <IconButton
+                component="a"
+                href="https://www.instagram.com/premierpadel/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="icon-btn"
+                aria-label="Ir a Instagram de Premier Padel"
+              >
                 <InstagramIcon />
               </IconButton>
             </div>
