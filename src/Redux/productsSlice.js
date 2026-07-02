@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { logout } from './authSlice';
+import { createDescuento, updateDescuento, deleteDescuento } from './discountsSlice';
 import {
   mapProductsFromApi,
   buildProductFromMutation,
@@ -7,8 +9,15 @@ import {
   saveProductImageRequest,
   getProductImagenId,
 } from '../utils/products';
+import { enrichProductoConDescuento } from '../utils/discountUtils';
+import { API_BASE_URL } from '../utils/api';
 
-const URL = 'http://localhost:8080';
+const applyDescuentosToProduct = (product, descuentos) => {
+  product.descuentos = descuentos;
+  const enriched = enrichProductoConDescuento(product, descuentos);
+  product.precioConDescuento = enriched.precioConDescuento;
+  product.descuentoPorcentaje = enriched.descuentoPorcentaje;
+};
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
@@ -16,14 +25,14 @@ const getAuthHeaders = (getState) => {
 };
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  const { data } = await axios.get(`${URL}/productos`);
+  const { data } = await axios.get(`${API_BASE_URL}/productos`);
   return mapProductsFromApi(data);
 });
 
 export const fetchAdminProducts = createAsyncThunk(
   'products/fetchAdminProducts',
   async (_, { getState }) => {
-    const { data } = await axios.get(`${URL}/productos`, {
+    const { data } = await axios.get(`${API_BASE_URL}/productos`, {
       headers: getAuthHeaders(getState),
     });
     return mapProductsFromApi(data);
@@ -37,7 +46,7 @@ export const createProductWithDetails = createAsyncThunk(
     const config = { headers: authHeaders };
 
     const { data: creado } = await axios.post(
-      `${URL}/productos`,
+      `${API_BASE_URL}/productos`,
       toProductoPayload(savedProduct),
       config
     );
@@ -45,7 +54,7 @@ export const createProductWithDetails = createAsyncThunk(
     let stock = Number(savedProduct.stock) || 0;
     if (savedProduct.stock) {
       const { data: stockData } = await axios.put(
-        `${URL}/stocks/producto/${creado.id}`,
+        `${API_BASE_URL}/stocks/producto/${creado.id}`,
         { cantidad: stock },
         config
       );
@@ -74,14 +83,14 @@ export const updateProductWithDetails = createAsyncThunk(
     const imagenId = getProductImagenId(updatedProduct);
 
     const { data: actualizado } = await axios.put(
-      `${URL}/productos/${updatedProduct.id}`,
+      `${API_BASE_URL}/productos/${updatedProduct.id}`,
       toProductoPayload(updatedProduct),
       config
     );
 
     const stock = Number(updatedProduct.stock) || 0;
     const { data: stockData } = await axios.put(
-      `${URL}/stocks/producto/${updatedProduct.id}`,
+      `${API_BASE_URL}/stocks/producto/${updatedProduct.id}`,
       { cantidad: stock },
       config
     );
@@ -119,7 +128,7 @@ export const updateProductWithDetails = createAsyncThunk(
 export const deleteProducto = createAsyncThunk(
   'products/deleteProducto',
   async (productId, { getState }) => {
-    await axios.delete(`${URL}/productos/${productId}`, {
+    await axios.delete(`${API_BASE_URL}/productos/${productId}`, {
       headers: getAuthHeaders(getState),
     });
     return productId;
@@ -134,7 +143,7 @@ export const updateProductStock = createAsyncThunk(
 
     await Promise.all(
       changes.map(({ id, stock }) =>
-        axios.put(`${URL}/stocks/producto/${id}`, { cantidad: Number(stock) }, config)
+        axios.put(`${API_BASE_URL}/stocks/producto/${id}`, { cantidad: Number(stock) }, config)
       )
     );
 
@@ -146,7 +155,7 @@ export const toggleProductEnabled = createAsyncThunk(
   'products/toggleProductEnabled',
   async ({ product, nextEnabled }, { getState }) => {
     await axios.put(
-      `${URL}/productos/${product.id}`,
+      `${API_BASE_URL}/productos/${product.id}`,
       toProductoPayload(product, { estaHabilitado: nextEnabled }),
       { headers: getAuthHeaders(getState) }
     );
@@ -161,6 +170,7 @@ const productsSlice = createSlice({
     items: [],
     loading: false,
     error: null,
+    adminLoaded: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -178,14 +188,26 @@ const productsSlice = createSlice({
       state.error = action.error.message;
       state.items = [];
     };
+    const handleAdminFetchFulfilled = (state, action) => {
+      state.loading = false;
+      state.items = action.payload;
+      state.error = null;
+      state.adminLoaded = true;
+    };
+    const handleAdminFetchRejected = (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      state.items = [];
+      state.adminLoaded = false;
+    };
 
     builder
       .addCase(fetchProducts.pending, handleFetchPending)
       .addCase(fetchProducts.fulfilled, handleFetchFulfilled)
       .addCase(fetchProducts.rejected, handleFetchRejected)
       .addCase(fetchAdminProducts.pending, handleFetchPending)
-      .addCase(fetchAdminProducts.fulfilled, handleFetchFulfilled)
-      .addCase(fetchAdminProducts.rejected, handleFetchRejected)
+      .addCase(fetchAdminProducts.fulfilled, handleAdminFetchFulfilled)
+      .addCase(fetchAdminProducts.rejected, handleAdminFetchRejected)
       .addCase(createProductWithDetails.fulfilled, (state, action) => {
         state.items.push(action.payload);
       })
@@ -211,6 +233,50 @@ const productsSlice = createSlice({
         if (item) {
           item.estaHabilitado = action.payload.estaHabilitado;
         }
+      })
+      .addCase(createDescuento.fulfilled, (state, action) => {
+        const { productoId, descuento } = action.payload;
+        const product = state.items.find((item) => item.id === productoId);
+        if (!product) return;
+        applyDescuentosToProduct(product, [...(product.descuentos ?? []), descuento]);
+      })
+      .addCase(updateDescuento.fulfilled, (state, action) => {
+        const { productoId, previousProductoId, descuento } = action.payload;
+
+        if (previousProductoId && previousProductoId !== productoId) {
+          const previousProduct = state.items.find((item) => item.id === previousProductoId);
+          if (previousProduct) {
+            applyDescuentosToProduct(
+              previousProduct,
+              (previousProduct.descuentos ?? []).filter((item) => item.id !== descuento.id)
+            );
+          }
+          const product = state.items.find((item) => item.id === productoId);
+          if (product) {
+            applyDescuentosToProduct(product, [...(product.descuentos ?? []), descuento]);
+          }
+          return;
+        }
+
+        const product = state.items.find((item) => item.id === productoId);
+        if (!product) return;
+        const descuentos = (product.descuentos ?? []).map((item) =>
+          item.id === descuento.id ? descuento : item
+        );
+        applyDescuentosToProduct(product, descuentos);
+      })
+      .addCase(deleteDescuento.fulfilled, (state, action) => {
+        const { id, productoId } = action.payload;
+        if (!productoId) return;
+        const product = state.items.find((item) => item.id === productoId);
+        if (!product) return;
+        applyDescuentosToProduct(
+          product,
+          (product.descuentos ?? []).filter((descuento) => descuento.id !== id)
+        );
+      })
+      .addCase(logout, (state) => {
+        state.adminLoaded = false;
       });
   },
 });

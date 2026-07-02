@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
-
-const URL = 'http://localhost:8080';
+import { API_BASE_URL } from '../utils/api';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
@@ -20,7 +19,7 @@ export const fetchCart = createAsyncThunk(
     if (!canUseCart(getState, usuarioId)) return null;
 
     try {
-      const { data } = await axios.get(`${URL}/usuarios/${usuarioId}/carrito`, {
+      const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/carrito`, {
         headers: getAuthHeaders(getState),
       });
       return data;
@@ -35,7 +34,7 @@ export const addCartItem = createAsyncThunk(
   async ({ usuarioId, productoId, cantidad = 1 }, { dispatch, getState, rejectWithValue }) => {
     try {
       await axios.post(
-        `${URL}/usuarios/${usuarioId}/carrito/items`,
+        `${API_BASE_URL}/usuarios/${usuarioId}/carrito/items`,
         { productoId, cantidad },
         { headers: getAuthHeaders(getState) }
       );
@@ -51,7 +50,7 @@ export const updateCartItem = createAsyncThunk(
   async ({ usuarioId, productoId, cantidad }, { dispatch, getState, rejectWithValue }) => {
     try {
       await axios.put(
-        `${URL}/usuarios/${usuarioId}/carrito/items/${productoId}`,
+        `${API_BASE_URL}/usuarios/${usuarioId}/carrito/items/${productoId}`,
         { productoId, cantidad },
         { headers: getAuthHeaders(getState) }
       );
@@ -66,7 +65,7 @@ export const removeCartItem = createAsyncThunk(
   'cart/removeCartItem',
   async ({ usuarioId, productoId }, { dispatch, getState, rejectWithValue }) => {
     try {
-      await axios.delete(`${URL}/usuarios/${usuarioId}/carrito/items/${productoId}`, {
+      await axios.delete(`${API_BASE_URL}/usuarios/${usuarioId}/carrito/items/${productoId}`, {
         headers: getAuthHeaders(getState),
       });
       return dispatch(fetchCart(usuarioId)).unwrap();
@@ -80,7 +79,7 @@ export const clearCart = createAsyncThunk(
   'cart/clearCart',
   async (usuarioId, { dispatch, getState, rejectWithValue }) => {
     try {
-      await axios.delete(`${URL}/usuarios/${usuarioId}/carrito`, {
+      await axios.delete(`${API_BASE_URL}/usuarios/${usuarioId}/carrito`, {
         headers: getAuthHeaders(getState),
       });
       return dispatch(fetchCart(usuarioId)).unwrap();

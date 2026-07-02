@@ -1,24 +1,38 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { mapAuthResponse } from '../utils/auth';
+import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
 
-const URL = 'http://localhost:8080';
-
-export const loginUser = createAsyncThunk('auth/loginUser', async ({ email, password }) => {
-  const { data } = await axios.post(`${URL}/api/v1/auth/authenticate`, { email, password });
-  return mapAuthResponse(data);
-});
+export const loginUser = createAsyncThunk(
+  'auth/loginUser',
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/authenticate`, { email, password });
+      return mapAuthResponse(data);
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo iniciar sesión. Revisá tus datos.')
+      );
+    }
+  }
+);
 
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
-  async ({ nombreApellido, email, password, role = 'CLIENTE' }) => {
-    const { data } = await axios.post(`${URL}/api/v1/auth/register`, {
-      nombreApellido,
-      email,
-      password,
-      role,
-    });
-    return mapAuthResponse(data);
+  async ({ nombreApellido, email, password, role = 'CLIENTE' }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/register`, {
+        nombreApellido,
+        email,
+        password,
+        role,
+      });
+      return mapAuthResponse(data);
+    } catch (error) {
+      return rejectWithValue(
+        getAxiosErrorMessage(error, 'No se pudo crear la cuenta. Intentá de nuevo.')
+      );
+    }
   }
 );
 
@@ -53,7 +67,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload ?? action.error.message;
       })
       .addCase(registerUser.pending, (state) => {
         state.status = 'loading';
@@ -66,7 +80,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload ?? action.error.message;
       });
   },
 });

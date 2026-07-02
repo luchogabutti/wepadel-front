@@ -2,7 +2,7 @@ import { Alert, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from '../../../Redux/productsSlice';
-import { getApiErrorMessage } from '../../../services/apiClient';
+import { getApiErrorMessage } from '../../../utils/api';
 
 export const ProductsErrorBanner = () => {
   const dispatch = useDispatch();

@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
-
-const URL = 'http://localhost:8080';
+import { API_BASE_URL } from '../utils/api';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
@@ -12,7 +11,7 @@ const getAuthHeaders = (getState) => {
 export const fetchUserOrders = createAsyncThunk(
   'orders/fetchUserOrders',
   async (usuarioId, { getState }) => {
-    const { data } = await axios.get(`${URL}/usuarios/${usuarioId}/ordenes`, {
+    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes`, {
       headers: getAuthHeaders(getState),
     });
     return data ?? [];
@@ -20,7 +19,7 @@ export const fetchUserOrders = createAsyncThunk(
 );
 
 export const fetchAllOrders = createAsyncThunk('orders/fetchAllOrders', async (_, { getState }) => {
-  const { data } = await axios.get(`${URL}/ordenes`, {
+  const { data } = await axios.get(`${API_BASE_URL}/ordenes`, {
     headers: getAuthHeaders(getState),
   });
   return data ?? [];
@@ -29,7 +28,7 @@ export const fetchAllOrders = createAsyncThunk('orders/fetchAllOrders', async (_
 export const fetchOrderById = createAsyncThunk(
   'orders/fetchOrderById',
   async ({ usuarioId, ordenId }, { getState }) => {
-    const { data } = await axios.get(`${URL}/usuarios/${usuarioId}/ordenes/${ordenId}`, {
+    const { data } = await axios.get(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes/${ordenId}`, {
       headers: getAuthHeaders(getState),
     });
     return data;
@@ -39,7 +38,7 @@ export const fetchOrderById = createAsyncThunk(
 export const createOrder = createAsyncThunk(
   'orders/createOrder',
   async ({ usuarioId, payload }, { getState }) => {
-    const { data } = await axios.post(`${URL}/usuarios/${usuarioId}/ordenes`, payload, {
+    const { data } = await axios.post(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes`, payload, {
       headers: getAuthHeaders(getState),
     });
     return data;
@@ -49,7 +48,7 @@ export const createOrder = createAsyncThunk(
 export const cancelOrder = createAsyncThunk(
   'orders/cancelOrder',
   async ({ usuarioId, ordenId }, { getState }) => {
-    await axios.put(`${URL}/usuarios/${usuarioId}/ordenes/${ordenId}/cancelar`, null, {
+    await axios.put(`${API_BASE_URL}/usuarios/${usuarioId}/ordenes/${ordenId}/cancelar`, null, {
       headers: getAuthHeaders(getState),
     });
     return ordenId;

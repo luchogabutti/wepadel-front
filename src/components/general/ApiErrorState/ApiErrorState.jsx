@@ -1,6 +1,6 @@
 import { Alert, Box, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { getApiErrorMessage } from '../../../services/apiClient';
+import { getApiErrorMessage } from '../../../utils/api';
 
 export const ApiErrorState = ({
   error,

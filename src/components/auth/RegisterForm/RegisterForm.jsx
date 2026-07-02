@@ -35,7 +35,9 @@ export const RegisterForm = () => {
         })
       );
       if (registerUser.rejected.match(result)) {
-        notifyError(result.error?.message || 'No se pudo crear la cuenta. Intentá de nuevo.');
+        notifyError(
+          result.payload || result.error?.message || 'No se pudo crear la cuenta. Intentá de nuevo.'
+        );
         return;
       }
       navigate('/');
