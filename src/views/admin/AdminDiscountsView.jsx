@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
@@ -30,10 +30,6 @@ export const AdminDiscountsView = () => {
       ),
     [products]
   );
-
-  useEffect(() => {
-    dispatch(fetchAdminProducts());
-  }, [dispatch]);
 
   const reloadProducts = async () => {
     const result = await dispatch(fetchAdminProducts());

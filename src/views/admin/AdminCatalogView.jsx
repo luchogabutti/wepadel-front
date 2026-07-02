@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
@@ -27,10 +27,6 @@ export const AdminCatalogView = () => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [productToToggle, setProductToToggle] = useState(null);
-
-  useEffect(() => {
-    dispatch(fetchAdminProducts());
-  }, [dispatch]);
 
   const nextProductEnabled = productToToggle ? !productToToggle.estaHabilitado : false;
 

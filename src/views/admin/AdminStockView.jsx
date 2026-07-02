@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { ApiErrorState } from '../../components/general/ApiErrorState/ApiErrorState';
@@ -15,10 +15,6 @@ export const AdminStockView = () => {
   const products = items;
   const { notifySuccess, notifyError } = useAppSnackbar();
   const [pendingStockSave, setPendingStockSave] = useState(null);
-
-  useEffect(() => {
-    dispatch(fetchAdminProducts());
-  }, [dispatch]);
 
   const handleRequestSaveStock = (updatedProducts) => {
     setPendingStockSave(updatedProducts);

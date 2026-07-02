@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { logout } from './authSlice';
 import {
   mapProductsFromApi,
   buildProductFromMutation,
@@ -161,6 +162,7 @@ const productsSlice = createSlice({
     items: [],
     loading: false,
     error: null,
+    adminLoaded: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -178,14 +180,26 @@ const productsSlice = createSlice({
       state.error = action.error.message;
       state.items = [];
     };
+    const handleAdminFetchFulfilled = (state, action) => {
+      state.loading = false;
+      state.items = action.payload;
+      state.error = null;
+      state.adminLoaded = true;
+    };
+    const handleAdminFetchRejected = (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      state.items = [];
+      state.adminLoaded = false;
+    };
 
     builder
       .addCase(fetchProducts.pending, handleFetchPending)
       .addCase(fetchProducts.fulfilled, handleFetchFulfilled)
       .addCase(fetchProducts.rejected, handleFetchRejected)
       .addCase(fetchAdminProducts.pending, handleFetchPending)
-      .addCase(fetchAdminProducts.fulfilled, handleFetchFulfilled)
-      .addCase(fetchAdminProducts.rejected, handleFetchRejected)
+      .addCase(fetchAdminProducts.fulfilled, handleAdminFetchFulfilled)
+      .addCase(fetchAdminProducts.rejected, handleAdminFetchRejected)
       .addCase(createProductWithDetails.fulfilled, (state, action) => {
         state.items.push(action.payload);
       })
@@ -211,6 +225,9 @@ const productsSlice = createSlice({
         if (item) {
           item.estaHabilitado = action.payload.estaHabilitado;
         }
+      })
+      .addCase(logout, (state) => {
+        state.adminLoaded = false;
       });
   },
 });
