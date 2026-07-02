@@ -8,3 +8,5 @@ export const normalizeUserFetchArg = (arg) => {
 
   return { usuarioId: arg, forceRefresh: false };
 };
+
+export const withForceRefresh = (usuarioId) => ({ usuarioId, forceRefresh: true });
