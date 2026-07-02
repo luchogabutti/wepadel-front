@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
+import { createDescuento, updateDescuento, deleteDescuento } from './discountsSlice';
 import {
   mapProductsFromApi,
   buildProductFromMutation,
@@ -8,6 +9,14 @@ import {
   saveProductImageRequest,
   getProductImagenId,
 } from '../utils/products';
+import { enrichProductoConDescuento } from '../utils/discountUtils';
+
+const applyDescuentosToProduct = (product, descuentos) => {
+  product.descuentos = descuentos;
+  const enriched = enrichProductoConDescuento(product, descuentos);
+  product.precioConDescuento = enriched.precioConDescuento;
+  product.descuentoPorcentaje = enriched.descuentoPorcentaje;
+};
 
 const URL = 'http://localhost:8080';
 
@@ -225,6 +234,47 @@ const productsSlice = createSlice({
         if (item) {
           item.estaHabilitado = action.payload.estaHabilitado;
         }
+      })
+      .addCase(createDescuento.fulfilled, (state, action) => {
+        const { productoId, descuento } = action.payload;
+        const product = state.items.find((item) => item.id === productoId);
+        if (!product) return;
+        applyDescuentosToProduct(product, [...(product.descuentos ?? []), descuento]);
+      })
+      .addCase(updateDescuento.fulfilled, (state, action) => {
+        const { productoId, previousProductoId, descuento } = action.payload;
+
+        if (previousProductoId && previousProductoId !== productoId) {
+          const previousProduct = state.items.find((item) => item.id === previousProductoId);
+          if (previousProduct) {
+            applyDescuentosToProduct(
+              previousProduct,
+              (previousProduct.descuentos ?? []).filter((item) => item.id !== descuento.id)
+            );
+          }
+          const product = state.items.find((item) => item.id === productoId);
+          if (product) {
+            applyDescuentosToProduct(product, [...(product.descuentos ?? []), descuento]);
+          }
+          return;
+        }
+
+        const product = state.items.find((item) => item.id === productoId);
+        if (!product) return;
+        const descuentos = (product.descuentos ?? []).map((item) =>
+          item.id === descuento.id ? descuento : item
+        );
+        applyDescuentosToProduct(product, descuentos);
+      })
+      .addCase(deleteDescuento.fulfilled, (state, action) => {
+        const { id, productoId } = action.payload;
+        if (!productoId) return;
+        const product = state.items.find((item) => item.id === productoId);
+        if (!product) return;
+        applyDescuentosToProduct(
+          product,
+          (product.descuentos ?? []).filter((descuento) => descuento.id !== id)
+        );
       })
       .addCase(logout, (state) => {
         state.adminLoaded = false;

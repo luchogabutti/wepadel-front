@@ -12,6 +12,7 @@ export const AdminDiscountsView = () => {
   const products = useSelector((state) => state.products.items);
   const productsLoading = useSelector((state) => state.products.loading);
   const productsError = useSelector((state) => state.products.error);
+  const adminLoaded = useSelector((state) => state.products.adminLoaded);
   const mutating = useSelector((state) => state.discounts.mutating);
   const { notifySuccess, notifyError } = useAppSnackbar();
 
@@ -31,20 +32,10 @@ export const AdminDiscountsView = () => {
     [products]
   );
 
-  const reloadProducts = async () => {
-    const result = await dispatch(fetchAdminProducts());
-    return fetchAdminProducts.fulfilled.match(result);
-  };
-
   const handleAddDiscount = async (descuento) => {
     const result = await dispatch(createDescuento(descuento));
     if (createDescuento.rejected.match(result)) {
       notifyError(result.error?.message || 'No se pudo aplicar el descuento.');
-      return;
-    }
-    const reloaded = await reloadProducts();
-    if (!reloaded) {
-      notifyError('El descuento se creó pero no se pudo actualizar la lista.');
       return;
     }
     notifySuccess('¡Descuento aplicado con éxito!');
@@ -54,11 +45,6 @@ export const AdminDiscountsView = () => {
     const result = await dispatch(deleteDescuento(discountId));
     if (deleteDescuento.rejected.match(result)) {
       notifyError(result.error?.message || 'No se pudo eliminar el descuento.');
-      return;
-    }
-    const reloaded = await reloadProducts();
-    if (!reloaded) {
-      notifyError('El descuento se eliminó pero no se pudo actualizar la lista.');
       return;
     }
     notifySuccess('¡Descuento eliminado con éxito!');
@@ -75,11 +61,6 @@ export const AdminDiscountsView = () => {
       notifyError(result.error?.message || 'No se pudo actualizar el descuento.');
       return;
     }
-    const reloaded = await reloadProducts();
-    if (!reloaded) {
-      notifyError('El descuento se actualizó pero no se pudo refrescar la lista.');
-      return;
-    }
     notifySuccess(nextActivo ? 'Descuento activado.' : 'Descuento desactivado.');
   };
 
@@ -89,15 +70,10 @@ export const AdminDiscountsView = () => {
       notifyError(result.error?.message || 'No se pudo actualizar el descuento.');
       return;
     }
-    const reloaded = await reloadProducts();
-    if (!reloaded) {
-      notifyError('El descuento se actualizó pero no se pudo refrescar la lista.');
-      return;
-    }
     notifySuccess('Descuento actualizado con éxito.');
   };
 
-  if (productsLoading || mutating) {
+  if (!adminLoaded || productsLoading) {
     return <LoadingState message="Cargando descuentos..." />;
   }
 
@@ -109,6 +85,10 @@ export const AdminDiscountsView = () => {
         onRetry={() => dispatch(fetchAdminProducts())}
       />
     );
+  }
+
+  if (mutating) {
+    return <LoadingState message="Guardando descuento..." />;
   }
 
   return (
