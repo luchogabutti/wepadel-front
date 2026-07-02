@@ -4,6 +4,7 @@ import { Divider, IconButton, ListItemText, Menu, MenuItem, Typography } from '@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutAction } from '../../../../Redux/authSlice';
+import { persistor } from '../../../../Redux/store';
 import { ConfirmationDialog } from '../../ConfirmationDialog/ConfirmationDialog';
 
 export const UserLogin = () => {
@@ -40,6 +41,7 @@ export const UserLogin = () => {
   const handleLogout = () => {
     handleClose();
     dispatch(logoutAction());
+    persistor.purge();
     navigate('/login');
   };
 

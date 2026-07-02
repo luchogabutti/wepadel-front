@@ -2,12 +2,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { mapAuthResponse } from '../utils/auth';
 import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
+import { setRememberSession } from './authPersistStorage';
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async ({ email, password }, { rejectWithValue }) => {
+  async ({ email, password, remember = false }, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/authenticate`, { email, password });
+      setRememberSession(remember);
       return mapAuthResponse(data);
     } catch (error) {
       return rejectWithValue(
@@ -27,6 +29,7 @@ export const registerUser = createAsyncThunk(
         password,
         role,
       });
+      setRememberSession(true);
       return mapAuthResponse(data);
     } catch (error) {
       return rejectWithValue(

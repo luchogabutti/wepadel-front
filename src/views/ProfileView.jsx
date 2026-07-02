@@ -7,6 +7,7 @@ import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/P
 import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutAction, updateUser } from '../Redux/authSlice';
+import { persistor } from '../Redux/store';
 import { fetchProfile, fetchPoints, updateProfile } from '../Redux/profileSlice';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { useNavigate } from 'react-router-dom';
@@ -62,6 +63,7 @@ export const ProfileView = () => {
     if (emailChanged) {
       notifySuccess('Email actualizado. Iniciá sesión con tu nuevo email.');
       dispatch(logoutAction());
+      persistor.purge();
       navigate('/login');
       return;
     }
