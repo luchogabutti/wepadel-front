@@ -11,6 +11,7 @@ export const AdminOrdersView = () => {
   const ordersRaw = useSelector((state) => state.orders.items);
   const loading = useSelector((state) => state.orders.loading);
   const error = useSelector((state) => state.orders.error);
+  const adminOrdersLoaded = useSelector((state) => state.orders.adminOrdersLoaded);
 
   useEffect(() => {
     dispatch(fetchAllOrders());
@@ -23,12 +24,14 @@ export const AdminOrdersView = () => {
     [ordersRaw, imageById]
   );
 
+  const isInitialLoad = !adminOrdersLoaded && loading;
+
   return (
     <OrdersListSection
       title="Pedidos de la tienda"
       subtitle="Vista global de todos los pedidos de clientes."
       orders={ordersList}
-      loading={loading}
+      loading={isInitialLoad}
       error={error}
       loadingMessage="Cargando pedidos..."
       errorFallback="No se pudieron cargar los pedidos."

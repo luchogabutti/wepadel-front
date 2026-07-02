@@ -15,7 +15,7 @@ const splitNombre = (nombreApellido = '') => {
 export const AdminProfileView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { usuario, loading } = useSelector((state) => state.profile);
+  const { usuario, loading, profileLoaded } = useSelector((state) => state.profile);
   const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ export const AdminProfileView = () => {
     notifySuccess('Datos guardados.');
   };
 
-  if (loading) {
+  if (!profileLoaded && loading) {
     return <LoadingState message="Cargando perfil..." />;
   }
 

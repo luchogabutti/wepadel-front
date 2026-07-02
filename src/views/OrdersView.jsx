@@ -15,6 +15,7 @@ export const OrdersView = () => {
   const loading = useSelector((state) => state.orders.loading);
   const mutating = useSelector((state) => state.orders.mutating);
   const error = useSelector((state) => state.orders.error);
+  const userOrdersLoaded = useSelector((state) => state.orders.userOrdersLoaded);
   const { addItem } = useCart();
   const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
@@ -41,11 +42,7 @@ export const OrdersView = () => {
       notifyError(result.error?.message || 'No se pudo cancelar la orden.');
       return;
     }
-    const reload = await dispatch(fetchUserOrders(usuarioId));
-    if (fetchUserOrders.rejected.match(reload)) {
-      notifyError('La orden se canceló pero no se pudo actualizar la lista.');
-      return;
-    }
+
     notifySuccess('Orden cancelada.');
   };
 
@@ -61,12 +58,14 @@ export const OrdersView = () => {
     }
   };
 
+  const isInitialLoad = !userOrdersLoaded && loading;
+
   return (
     <OrdersListSection
       title="Historial de Órdenes"
       subtitle="Revisa y gestiona tus pedidos recientes de equipo de alto rendimiento."
       orders={ordersList}
-      loading={loading || mutating}
+      loading={isInitialLoad}
       error={error}
       loadingMessage="Cargando tus pedidos..."
       errorFallback="No se pudieron cargar tus pedidos."
