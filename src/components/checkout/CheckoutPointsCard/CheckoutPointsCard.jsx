@@ -1,6 +1,8 @@
-import { Typography, Switch, Radio, RadioGroup, FormControlLabel, TextField } from '@mui/material';
+import { Typography, Switch, Radio, RadioGroup, FormControlLabel, TextField, Alert, Button } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import { formatManualPoints } from '../../../utils/checkoutValidation';
+import { getApiErrorMessage } from '../../../utils/api';
 import './styles.scss';
 
 export const CheckoutPointsCard = ({
@@ -11,6 +13,9 @@ export const CheckoutPointsCard = ({
   onPointsModeChange,
   manualPoints,
   onManualPointsChange,
+  loadError = null,
+  onRetryLoad,
+  pointsLoading = false,
 }) => {
   const handleManualChange = (e) => {
     onManualPointsChange(formatManualPoints(e.target.value, availablePoints));
@@ -21,6 +26,8 @@ export const CheckoutPointsCard = ({
     pointsMode === 'manual' &&
     manualPoints !== '' &&
     parseInt(manualPoints, 10) < 1;
+
+  const pointsUnavailable = Boolean(loadError);
 
   return (
     <div className="surface-card checkout-points-card">
@@ -35,12 +42,29 @@ export const CheckoutPointsCard = ({
           className="points-switch"
           checked={usePoints}
           onChange={(e) => onTogglePoints(e.target.checked)}
+          disabled={pointsUnavailable || pointsLoading}
         />
       </div>
 
-      <Typography className="points-available">{availablePoints} puntos disponibles</Typography>
+      {pointsUnavailable ? (
+        <Alert
+          severity="warning"
+          sx={{ mb: 2 }}
+          action={
+            onRetryLoad ? (
+              <Button color="inherit" size="small" startIcon={<RefreshIcon />} onClick={onRetryLoad}>
+                Reintentar
+              </Button>
+            ) : null
+          }
+        >
+          {getApiErrorMessage(loadError, 'No se pudieron cargar tus puntos. Podés continuar sin usarlos.')}
+        </Alert>
+      ) : (
+        <Typography className="points-available">{availablePoints} puntos disponibles</Typography>
+      )}
 
-      {usePoints && (
+      {usePoints && !pointsUnavailable && (
         <RadioGroup value={pointsMode} onChange={(e) => onPointsModeChange(e.target.value)}>
           <FormControlLabel
             value="all"
@@ -61,7 +85,7 @@ export const CheckoutPointsCard = ({
         </RadioGroup>
       )}
 
-      {usePoints && pointsMode === 'manual' && (
+      {usePoints && pointsMode === 'manual' && !pointsUnavailable && (
         <>
           <TextField
             fullWidth

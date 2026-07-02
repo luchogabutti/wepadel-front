@@ -39,7 +39,7 @@ export const useCart = () => {
   const refresh = useCallback(async () => {
     if (!isCliente || !usuarioId) {
       dispatch(resetCart());
-      return;
+      return null;
     }
 
     const result = await dispatch(fetchCart(usuarioId));
@@ -47,6 +47,8 @@ export const useCart = () => {
     if (fetchCart.rejected.match(result)) {
       notifyError(result.payload || 'No se pudo cargar el carrito.');
     }
+
+    return result;
   }, [dispatch, isCliente, usuarioId]);
 
   const addItem = useCallback(

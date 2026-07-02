@@ -10,6 +10,7 @@ export const AdminProfileSection = ({
   email,
   onSave,
   onProfileSaved,
+  saving = false,
 }) => (
   <>
     <PageHeader variant="profile" title={title} subtitle={subtitle} />
@@ -21,6 +22,7 @@ export const AdminProfileSection = ({
       email={email}
       onSave={onSave}
       onSaved={onProfileSaved}
+      saving={saving}
     />
   </>
 );
