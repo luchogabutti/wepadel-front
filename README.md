@@ -11,7 +11,7 @@ E-commerce de productos de pádel desarrollado como proyecto universitario en **
 - **React Router DOM** — navegación y rutas
 - **Sass (SCSS)** — estilos por componente y clases globales
 - **notistack** — notificaciones toast (éxito/error)
-- **Redux Toolkit** + **React Redux** + **Axios** — estado global en `src/Redux/` (auth, categories, products, profile, discounts, orders, cart)
+- **Redux Toolkit** + **React Redux** + **redux-persist** + **Axios** — estado global en `src/Redux/` (auth, categories, products, profile, discounts, orders, cart)
 
 La app consume una **API REST** (productos, carrito, órdenes, auth, perfil, admin).
 
@@ -24,7 +24,7 @@ src/
 │   └── admin/            # Vistas del panel de administración
 ├── components/           # UI por dominio
 │   ├── admin/            # Catálogo, stock, descuentos, perfil admin
-│   ├── auth/             # Login y registro
+│   ├── auth/             # Login, registro y recuperación de contraseña
 │   ├── cart/             # Carrito
 │   ├── catalog/          # Catálogo, filtros, detalle de producto
 │   ├── checkout/         # Envío, pago y confirmación
@@ -33,9 +33,9 @@ src/
 │   ├── layout/           # Wrappers de página reutilizables (PageContainer, etc.)
 │   └── profile/          # Datos de usuario y órdenes
 ├── config/               # Configuración de UI (sidebar)
-├── Redux/                # Store y slices (auth, categories, products, profile, discounts, orders, cart)
-├── hooks/                # Hooks reutilizables (snackbar, paginación, carrito)
-├── utils/                # Mappers, validaciones y helpers (auth, api, checkout, perfil, productos, órdenes, carrito)
+├── Redux/                # Store, slices, persistencia de auth y helpers de fetch
+├── hooks/                # Hooks reutilizables (carrito, snackbar, paginación)
+├── utils/                # API, mappers y helpers (auth, products, cart, orders, categories, checkout, perfil)
 └── styles/
     ├── theme.js          # Tokens MUI + overrides de componentes
     └── globals.scss      # Clases reutilizables (.surface-card, etc.)
@@ -45,21 +45,25 @@ src/
 
 #### Redux (`src/Redux/`)
 
-`Provider` en `main.jsx`. Patrón: `createAsyncThunk` + axios + `useSelector` / `useDispatch`.
+`Provider` + `PersistGate` en `main.jsx`. Patrón: `createAsyncThunk` + axios + `rejectWithValue` + `useSelector` / `useDispatch`.
 
 | Slice | Rol |
 |-------|-----|
-| `authSlice` | Login, registro, logout, `updateUser` |
+| `authSlice` | Login, registro, logout, `updateUser`, olvidé/restablecer contraseña |
 | `categoriesSlice` | `GET /categorias` (+ íconos MUI en `utils/categories.js`) |
 | `productsSlice` | Catálogo tienda/admin, CRUD, stock, toggle habilitado; `GET /productos` enriched (`stock`, `imagenPrincipal`, `descuentos[]`) |
-| `profileSlice` | Perfil, puntos y checkout; limpia estado al logout |
+| `profileSlice` | Perfil, puntos y actualización de datos; limpia estado al logout |
 | `discountsSlice` | Mutaciones admin (`POST`/`PUT`/`DELETE` en `/descuentos`); listado derivado de `productos.descuentos[]` |
 | `ordersSlice` | Pedidos usuario/admin, checkout, cancelación; mapper en `utils/orders.js` |
 | `cartSlice` | Carrito cliente (`GET/POST/PUT/DELETE` en `/usuarios/{id}/carrito`); hook `useCart` |
 
-**Pendiente:** `redux-persist` (sesión).
+**Persistencia:** `redux-persist` guarda `auth.user` con storage custom (`authPersistStorage.js`): sesión en `sessionStorage` o `localStorage` según “Recordarme” en el login.
 
-`MainLayout` dispara `fetchCategorias()`, `fetchProducts()` y `fetchCart()` (solo clientes) al iniciar.
+**Caché:** `fetchArgs.js` expone `withForceRefresh` para re-fetch forzado en perfil y pedidos (thunks con `condition`).
+
+**Errores:** mensajes en español vía `getAxiosErrorMessage` / `getApiErrorMessage` (`utils/api.js`); vistas críticas usan `ApiErrorState` con retry.
+
+`MainLayout` dispara `fetchCategorias()`, `fetchProducts()` y `fetchCart()` (solo clientes autenticados) al iniciar.
 
 ### Configuración (`src/config/`)
 
@@ -86,7 +90,8 @@ Las rutas de perfil y admin están protegidas con `ProtectedRoute` (requieren lo
 | `/checkout/confirmacion/:orderId` | CheckoutSuccessView | Confirmación de compra |
 | `/login` | AuthView | Inicio de sesión |
 | `/registro` | AuthView | Registro |
-| `/recuperar-contrasena` | ForgotPasswordView | Placeholder (sin endpoint) |
+| `/recuperar-contrasena` | ForgotPasswordView | Solicitud de recuperación de contraseña |
+| `/reset-password` | ResetPasswordView | Restablecer contraseña (`?token=...`) |
 | `/mis-pedidos` | — | Redirige a `/perfil/ordenes` |
 | `/sobre-nosotros` | AboutUsView | Información institucional |
 | `/politica-de-privacidad` | PrivacyPolicyView | Política de privacidad |
@@ -256,12 +261,13 @@ Las variables del cliente deben usar el prefijo `VITE_`.
 
 ## Integración con API
 
-Configuración compartida de API: `src/utils/api.js` (`API_BASE_URL`, `getApiErrorMessage`, `PLACEHOLDER_IMG`).
+Configuración compartida de API: `src/utils/api.js` (`API_BASE_URL`, `getAxiosErrorMessage`, `getApiErrorMessage`, `PLACEHOLDER_IMG`).
 
 - Base URL desde `VITE_API_URL` (fallback `http://localhost:8080`).
-- Header `Authorization: Bearer <token>` en slices Redux.
-- El token se lee desde `state.auth.user.token`.
-- Llamadas de dominio viven en `src/Redux/*Slice.js` con axios.
+- Header `Authorization: Bearer <token>` en slices Redux autenticados.
+- El token se lee desde `state.auth.user.token` (persistido con redux-persist).
+- Llamadas de dominio viven en `src/Redux/*Slice.js` con axios; errores se propagan con `rejectWithValue`.
+- Estados de carga/error: `loading` / `mutating` / `status` en slices; UI con `LoadingState`, `ApiErrorState` y snackbars.
 
 Notificaciones de éxito/error: **notistack** (`SnackbarProvider` en `main.jsx`, hook `useAppSnackbar`).
 
@@ -286,6 +292,8 @@ Catálogo, stock y descuentos usan `fetchAdminProducts()` → mismo `GET /produc
 |--------|----------|------|
 | POST | `/api/v1/auth/authenticate` | No |
 | POST | `/api/v1/auth/register` | No |
+| POST | `/api/v1/auth/forgot-password` | No |
+| POST | `/api/v1/auth/reset-password` | No |
 
 #### Categorías — `categoriesSlice.js`
 
