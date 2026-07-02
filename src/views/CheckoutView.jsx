@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Grid, Stack } from '@mui/material';
 import { PageContainer } from '../components/layout/PageContainer';
 import { PageHeader } from '../components/layout/PageHeader';
+import { LoadingState } from '../components/general/LoadingState/LoadingState';
 import { CheckoutProductSummary } from '../components/checkout/CheckoutProductSummary/CheckoutProductSummary';
 import { CheckoutShippingCard } from '../components/checkout/CheckoutShippingCard/CheckoutShippingCard';
 import { CheckoutPaymentForm } from '../components/checkout/CheckoutPaymentForm/CheckoutPaymentForm';
@@ -11,6 +12,7 @@ import { CheckoutPaymentDetail } from '../components/checkout/CheckoutPaymentDet
 import { useCart } from '../hooks/useCart';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPoints } from '../Redux/profileSlice';
+import { withForceRefresh } from '../Redux/fetchArgs';
 import { createOrder } from '../Redux/ordersSlice';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import {
@@ -26,11 +28,12 @@ export const CheckoutView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { points, pointsConversion } = useSelector((state) => state.profile);
+  const { points, pointsConversion, pointsLoading } = useSelector((state) => state.profile);
   const mutating = useSelector((state) => state.orders.mutating);
-  const { items, subtotal, refresh } = useCart();
+  const { items, subtotal, refresh, loading: cartLoading } = useCart();
   const { notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
+  const [checkoutSynced, setCheckoutSynced] = useState(false);
 
   const [shippingData, setShippingData] = useState({
     address: '',
@@ -53,8 +56,24 @@ export const CheckoutView = () => {
 
   useEffect(() => {
     if (!usuarioId) return;
-    dispatch(fetchPoints(usuarioId));
-  }, [dispatch, usuarioId]);
+
+    let cancelled = false;
+
+    const syncCheckoutData = async () => {
+      setCheckoutSynced(false);
+      await Promise.all([
+        dispatch(fetchPoints(withForceRefresh(usuarioId))),
+        refresh(),
+      ]);
+      if (!cancelled) setCheckoutSynced(true);
+    };
+
+    syncCheckoutData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [dispatch, usuarioId, refresh]);
 
   const availablePoints = points;
   const conversion = pointsConversion || 1;
@@ -71,7 +90,8 @@ export const CheckoutView = () => {
   const total = Math.max(subtotal + MONTO_ENVIO - pointsDiscount, 0);
 
   const hasItems = items.length > 0;
-  const canConfirm = hasItems && isCheckoutReady(shippingCompleted, formData, pointsState);
+  const isSyncing = !checkoutSynced || pointsLoading || cartLoading;
+  const canConfirm = hasItems && isCheckoutReady(shippingCompleted, formData, pointsState) && !isSyncing;
 
   const validationMessage = !hasItems
     ? 'Tu carrito está vacío. Agregá productos antes de finalizar la compra.'
@@ -130,6 +150,14 @@ export const CheckoutView = () => {
       state: { pointsEarned: orden.puntosGenerados },
     });
   };
+
+  if (isSyncing) {
+    return (
+      <PageContainer>
+        <LoadingState message="Preparando checkout..." />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>

@@ -1,4 +1,52 @@
 import { getProductImageUrl, PLACEHOLDER_IMG } from './products';
+import { getPrecioEfectivo } from './discountUtils';
+
+export const createEmptyCart = () => ({ items: [], subtotal: 0 });
+
+const getLineUnitPrice = (item) => {
+  const producto = item.producto ?? {};
+  return Number(item.precioUnitarioConDescuento ?? producto.precio ?? 0);
+};
+
+export const recalculateCartSubtotal = (items = []) =>
+  items.reduce((sum, item) => sum + getLineUnitPrice(item) * Number(item.cantidad ?? 0), 0);
+
+const buildCartLineItem = (product, cantidad) => {
+  const hasDiscount = product.precioConDescuento != null;
+  return {
+    producto: product,
+    cantidad,
+    ...(hasDiscount ? { precioUnitarioConDescuento: getPrecioEfectivo(product) } : {}),
+  };
+};
+
+export const applyCartAddItem = (raw, product, cantidad = 1) => {
+  const items = [...(raw?.items ?? [])];
+  const index = items.findIndex((item) => item.producto?.id === product.id);
+
+  if (index >= 0) {
+    items[index] = buildCartLineItem(product, items[index].cantidad + cantidad);
+  } else {
+    items.push(buildCartLineItem(product, cantidad));
+  }
+
+  return { items, subtotal: recalculateCartSubtotal(items) };
+};
+
+export const applyCartUpdateItem = (raw, productoId, cantidad) => {
+  const items = (raw?.items ?? []).map((item) =>
+    item.producto?.id === productoId ? { ...item, cantidad } : item
+  );
+
+  return { items, subtotal: recalculateCartSubtotal(items) };
+};
+
+export const applyCartRemoveItem = (raw, productoId) => {
+  const items = (raw?.items ?? []).filter((item) => item.producto?.id !== productoId);
+  return { items, subtotal: recalculateCartSubtotal(items) };
+};
+
+export const applyCartClear = () => createEmptyCart();
 
 export const buildImageById = (products = []) => {
   const map = new Map();

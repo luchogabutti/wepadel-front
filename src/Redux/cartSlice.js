@@ -2,6 +2,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './authSlice';
 import { API_BASE_URL, getAxiosErrorMessage } from '../utils/api';
+import {
+  applyCartAddItem,
+  applyCartUpdateItem,
+  applyCartRemoveItem,
+  applyCartClear,
+  createEmptyCart,
+} from '../utils/cart';
 
 const getAuthHeaders = (getState) => {
   const token = getState().auth.user?.token;
@@ -11,6 +18,15 @@ const getAuthHeaders = (getState) => {
 const canUseCart = (getState, usuarioId) => {
   const user = getState().auth.user;
   return Boolean(usuarioId && user?.token && user?.rol !== 'ADMINISTRADOR');
+};
+
+const findProductForCart = (getState, productoId) => {
+  const fromCatalog = getState().products.items.find((product) => product.id === productoId);
+  if (fromCatalog) return fromCatalog;
+
+  return (
+    getState().cart.raw?.items?.find((item) => item.producto?.id === productoId)?.producto ?? null
+  );
 };
 
 export const fetchCart = createAsyncThunk(
@@ -33,14 +49,21 @@ export const fetchCart = createAsyncThunk(
 
 export const addCartItem = createAsyncThunk(
   'cart/addCartItem',
-  async ({ usuarioId, productoId, cantidad = 1 }, { dispatch, getState, rejectWithValue }) => {
+  async ({ usuarioId, productoId, cantidad = 1 }, { getState, rejectWithValue }) => {
     try {
       await axios.post(
         `${API_BASE_URL}/usuarios/${usuarioId}/carrito/items`,
         { productoId, cantidad },
         { headers: getAuthHeaders(getState) }
       );
-      return dispatch(fetchCart(usuarioId)).unwrap();
+
+      const product = findProductForCart(getState, productoId);
+      if (!product) {
+        return rejectWithValue('No se encontró el producto para actualizar el carrito.');
+      }
+
+      const currentRaw = getState().cart.raw ?? createEmptyCart();
+      return applyCartAddItem(currentRaw, product, cantidad);
     } catch (error) {
       return rejectWithValue(
         typeof error === 'string'
@@ -53,14 +76,16 @@ export const addCartItem = createAsyncThunk(
 
 export const updateCartItem = createAsyncThunk(
   'cart/updateCartItem',
-  async ({ usuarioId, productoId, cantidad }, { dispatch, getState, rejectWithValue }) => {
+  async ({ usuarioId, productoId, cantidad }, { getState, rejectWithValue }) => {
     try {
       await axios.put(
         `${API_BASE_URL}/usuarios/${usuarioId}/carrito/items/${productoId}`,
         { productoId, cantidad },
         { headers: getAuthHeaders(getState) }
       );
-      return dispatch(fetchCart(usuarioId)).unwrap();
+
+      const currentRaw = getState().cart.raw ?? createEmptyCart();
+      return applyCartUpdateItem(currentRaw, productoId, cantidad);
     } catch (error) {
       return rejectWithValue(
         typeof error === 'string'
@@ -73,12 +98,14 @@ export const updateCartItem = createAsyncThunk(
 
 export const removeCartItem = createAsyncThunk(
   'cart/removeCartItem',
-  async ({ usuarioId, productoId }, { dispatch, getState, rejectWithValue }) => {
+  async ({ usuarioId, productoId }, { getState, rejectWithValue }) => {
     try {
       await axios.delete(`${API_BASE_URL}/usuarios/${usuarioId}/carrito/items/${productoId}`, {
         headers: getAuthHeaders(getState),
       });
-      return dispatch(fetchCart(usuarioId)).unwrap();
+
+      const currentRaw = getState().cart.raw ?? createEmptyCart();
+      return applyCartRemoveItem(currentRaw, productoId);
     } catch (error) {
       return rejectWithValue(
         typeof error === 'string'
@@ -91,12 +118,13 @@ export const removeCartItem = createAsyncThunk(
 
 export const clearCart = createAsyncThunk(
   'cart/clearCart',
-  async (usuarioId, { dispatch, getState, rejectWithValue }) => {
+  async (usuarioId, { getState, rejectWithValue }) => {
     try {
       await axios.delete(`${API_BASE_URL}/usuarios/${usuarioId}/carrito`, {
         headers: getAuthHeaders(getState),
       });
-      return dispatch(fetchCart(usuarioId)).unwrap();
+
+      return applyCartClear();
     } catch (error) {
       return rejectWithValue(
         typeof error === 'string'

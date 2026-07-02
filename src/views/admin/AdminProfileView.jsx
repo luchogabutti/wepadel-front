@@ -3,6 +3,7 @@ import { AdminProfileSection } from '../../components/admin/profile/AdminProfile
 import { LoadingState } from '../../components/general/LoadingState/LoadingState';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutAction, updateUser } from '../../Redux/authSlice';
+import { persistor } from '../../Redux/store';
 import { fetchProfile, updateProfile } from '../../Redux/profileSlice';
 import { useAppSnackbar } from '../../hooks/useAppSnackbar';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +16,7 @@ const splitNombre = (nombreApellido = '') => {
 export const AdminProfileView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { usuario, loading } = useSelector((state) => state.profile);
+  const { usuario, loading, profileLoaded } = useSelector((state) => state.profile);
   const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ export const AdminProfileView = () => {
     if (emailChanged) {
       notifySuccess('Email actualizado. Iniciá sesión con tu nuevo email.');
       dispatch(logoutAction());
+      persistor.purge();
       navigate('/login');
       return;
     }
@@ -61,7 +63,7 @@ export const AdminProfileView = () => {
     notifySuccess('Datos guardados.');
   };
 
-  if (loading) {
+  if (!profileLoaded && loading) {
     return <LoadingState message="Cargando perfil..." />;
   }
 

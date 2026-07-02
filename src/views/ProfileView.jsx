@@ -7,6 +7,7 @@ import { ProfileBenefitsGrid } from '../components/profile/ProfileBenefitsGrid/P
 import { PointsBadge } from '../components/profile/orders/PointsBadge/PointsBadge';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutAction, updateUser } from '../Redux/authSlice';
+import { persistor } from '../Redux/store';
 import { fetchProfile, fetchPoints, updateProfile } from '../Redux/profileSlice';
 import { useAppSnackbar } from '../hooks/useAppSnackbar';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +23,9 @@ const splitNombre = (nombreApellido = '') => {
 export const ProfileView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const { usuario, points, loading, pointsLoading } = useSelector((state) => state.profile);
+  const { usuario, points, loading, pointsLoading, profileLoaded, pointsLoaded } = useSelector(
+    (state) => state.profile
+  );
   const { notifySuccess, notifyError } = useAppSnackbar();
   const usuarioId = user?.id;
   const navigate = useNavigate();
@@ -62,6 +65,7 @@ export const ProfileView = () => {
     if (emailChanged) {
       notifySuccess('Email actualizado. Iniciá sesión con tu nuevo email.');
       dispatch(logoutAction());
+      persistor.purge();
       navigate('/login');
       return;
     }
@@ -69,7 +73,10 @@ export const ProfileView = () => {
     notifySuccess('Datos guardados.');
   };
 
-  if (loading || pointsLoading) {
+  const isInitialLoad =
+    (!profileLoaded && loading) || (!pointsLoaded && pointsLoading);
+
+  if (isInitialLoad) {
     return <LoadingState message="Cargando tu perfil..." />;
   }
 

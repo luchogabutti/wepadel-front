@@ -5,6 +5,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { ConfirmationDialog } from '../ConfirmationDialog/ConfirmationDialog';
 import { useDispatch } from 'react-redux';
 import { logout as logoutAction } from '../../../Redux/authSlice';
+import { persistor } from '../../../Redux/store';
 import './styles.scss';
 
 const isItemActive = (pathname, item) => {
@@ -23,6 +24,7 @@ export const Sidebar = ({ user, items }) => {
 
   const handleLogout = () => {
     dispatch(logoutAction());
+    persistor.purge();
     navigate('/login');
   };
 
